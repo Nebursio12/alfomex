@@ -1,102 +1,94 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alfomex - Diseña tu Alfombra</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diseña tu Alfombra</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js"></script>
   <style>
-    :root {
-      --text: #000;
-      --card: rgba(255,255,255,0.95);
-    }
     body {
-      background: white;
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
+      background-color: #fff;
+    }
+    header {
+      background: #3b5998;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .container {
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      color: var(--text);
-    }
-    header {
-      width: 100%;
-      background: #3b5998;
-      padding: 15px 30px;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-sizing: border-box;
-    }
-    header .logo {
-      font-size: 1.8rem;
-      font-weight: bold;
     }
     canvas {
       border: 3px solid black;
-      background: white;
       margin-top: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      background-color: #fff;
     }
-    .upload-btn, .send-btn {
+    .btn {
       margin-top: 15px;
-      padding: 12px 20px;
-      background: #3b5998;
-      color: white;
+      padding: 10px 20px;
       font-weight: bold;
+      background-color: #3b5998;
+      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s;
-    }
-    .upload-btn:hover, .send-btn:hover {
-      background: #2d4373;
     }
     input[type="file"] {
       display: none;
     }
-    .social-links {
-      margin-top: 30px;
-      text-align: center;
-    }
-    .social-links a {
-      margin: 0 10px;
-      font-size: 1.8rem;
-      color: #3b5998;
-      transition: transform 0.2s;
-    }
-    .social-links a:hover {
-      transform: scale(1.2);
+    label.upload-btn {
+      background: #3b5998;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">Alfomex</div>
-  </header>
-
-  <label class="upload-btn" for="imgInput">Subir Imagen</label>
-  <input type="file" id="imgInput" accept="image/png, image/jpeg">
-
-  <canvas id="lienzo" width="500" height="500"></canvas>
-
-  <button class="send-btn" onclick="enviarPorCorreo()">Enviar Diseño</button>
-
-  <div class="social-links">
-    <p>Síguenos en redes sociales:</p>
-    <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
-    <a href="https://www.instagram.com/_alfomex/" target="_blank"><i class="fab fa-instagram"></i></a>
+  <header>Alfomex</header>
+  <div class="container">
+    <label class="upload-btn" for="imgInput">Subir Imagen</label>
+    <input type="file" id="imgInput" accept="image/*">
+    <canvas id="lienzo" width="500" height="500"></canvas>
+    <button class="btn" onclick="enviarDiseno()">Enviar diseño</button>
   </div>
 
-  <script>
-    const canvas = document.getElementById('lienzo');
-    const ctx = canvas.getContext('2d');
-    const imgInput = document.getElementById('imgInput');
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+      authDomain: "alfomex-f4efa.firebaseapp.com",
+      projectId: "alfomex-f4efa",
+      storageBucket: "alfomex-f4efa.appspot.com",
+      messagingSenderId: "1090528818564",
+      appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const canvas = document.getElementById("lienzo");
+    const ctx = canvas.getContext("2d");
     const pxPorCm = canvas.width / 100;
+
     let img = new Image();
     let dragging = false;
     let offsetX = 0, offsetY = 0;
@@ -105,14 +97,12 @@
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       for (let i = 0; i <= 100; i++) {
         const px = i * pxPorCm;
         ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
         ctx.fillRect(px, 0, 1, canvas.height);
         ctx.fillRect(0, px, canvas.width, 1);
       }
-
       ctx.strokeStyle = '#999';
       for (let i = 0; i <= 100; i += 10) {
         const px = i * pxPorCm;
@@ -123,55 +113,77 @@
         ctx.fillText(`${i}cm`, px + 2, 12);
         ctx.fillText(`${i}cm`, 2, px + 10);
       }
-
       ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
     }
 
-    imgInput.addEventListener('change', e => {
+    document.getElementById("imgInput").addEventListener("change", e => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(evt) {
+      reader.onload = evt => {
         img = new Image();
-        img.onload = function() {
+        img.onload = () => {
           scale = 1;
           imgX = (canvas.width - img.width) / 2;
           imgY = (canvas.height - img.height) / 2;
           draw();
-        }
+        };
         img.src = evt.target.result;
-      }
+      };
       reader.readAsDataURL(file);
     });
 
-    canvas.addEventListener('mousedown', e => {
+    canvas.addEventListener("mousedown", e => {
       dragging = true;
       offsetX = e.offsetX - imgX;
       offsetY = e.offsetY - imgY;
     });
-
-    canvas.addEventListener('mousemove', e => {
+    canvas.addEventListener("mousemove", e => {
       if (dragging) {
         imgX = e.offsetX - offsetX;
         imgY = e.offsetY - offsetY;
         draw();
       }
     });
-
-    canvas.addEventListener('mouseup', () => { dragging = false; });
-    canvas.addEventListener('wheel', e => {
+    canvas.addEventListener("mouseup", () => { dragging = false; });
+    canvas.addEventListener("wheel", e => {
       e.preventDefault();
-      scale += (e.deltaY > 0 ? -0.05 : 0.05);
+      scale += e.deltaY > 0 ? -0.05 : 0.05;
       if (scale < 0.1) scale = 0.1;
       draw();
     });
 
-    function enviarPorCorreo() {
-      const link = document.createElement('a');
-      link.href = `mailto:tu_correo@ejemplo.com?subject=Dise%C3%B1o%20para%20alfombra&body=Hola,%20te%20env%C3%ADo%20mi%20dise%C3%B1o%20para%20cotizaci%C3%B3n.`;
-      link.click();
+    async function enviarDiseno() {
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = canvas.width;
+      exportCanvas.height = canvas.height;
+      const exportCtx = exportCanvas.getContext('2d');
+      exportCtx.fillStyle = '#fff';
+      exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      exportCtx.drawImage(canvas, 0, 0);
+
+      const imgData = exportCanvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      pdf.text("Pedido de Alfombra - Alfomex", 10, 10);
+      pdf.addImage(imgData, 'PNG', 10, 20, 180, 180);
+      pdf.text("Costos aproximados:", 10, 210);
+      pdf.text("- Estambre: $XX", 10, 220);
+      pdf.text("- Tela base: $XX", 10, 230);
+      pdf.text("- Fieltro: $XX", 10, 240);
+      pdf.text("- Total: $XXX", 10, 250);
+
+      const blob = pdf.output("blob");
+      const nombrePDF = `pedido_${Date.now()}.pdf`;
+      const pdfRef = ref(storage, `pedidos/${nombrePDF}`);
+      await uploadBytes(pdfRef, blob);
+      const url = await getDownloadURL(pdfRef);
+      await addDoc(collection(db, "pedidos"), {
+        fecha: new Date().toISOString(),
+        archivo: url
+      });
+      alert("Pedido enviado correctamente.");
     }
   </script>
 </body>
 </html>
-
