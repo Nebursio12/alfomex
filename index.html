@@ -476,6 +476,22 @@
       }
     };
 
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  
+
+    // Función para formatear el precio como moneda
+    function formatearPrecio(valor) {
+      return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+      }).format(valor);
+    }
+
     async function cargarAlfombras() {
       const contenedor = document.getElementById("catalogo");
       const querySnapshot = await getDocs(collection(db, "alfombras"));
@@ -486,7 +502,7 @@
         div.innerHTML = `
           <img src="${data.imagen}" alt="${data.nombre}" />
           <h4>${data.nombre}</h4>
-          <p>${data.precio}</p>
+          <p>${formatearPrecio(data.precio)}</p>
         `;
         contenedor.appendChild(div);
       });
