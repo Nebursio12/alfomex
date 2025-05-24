@@ -23,7 +23,11 @@
       font-size: 1.5rem;
       font-weight: bold;
     }
-    nav button {
+    nav {
+      display: flex;
+      align-items: center;
+    }
+    nav button, nav span {
       background: white;
       color: #3b5998;
       border: none;
@@ -32,7 +36,7 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    nav button:hover {
+    nav button:hover, nav span:hover {
       background: #ddd;
     }
     .carrusel {
@@ -70,24 +74,40 @@
 <body>
   <header>
     <div class="logo">ALFOMEX</div>
-    <nav>
-      <button onclick="location.href='alfomex.html'">Pedido personalizado</button>
-      <button onclick="alert('Próximamente')">Categorías</button>
+    <nav id="navOptions">
+      <span>Cargando...</span>
     </nav>
   </header>
 
   <section class="carrusel">
-    <img src="C:\Users\ruben\Desktop\ALFOMEX\1.jpg" alt="Alfombra 1">
-    <img src="C:\Users\ruben\Desktop\ALFOMEX\2.jpg" alt="Alfombra 2">
-    <img src="C:\Users\ruben\Desktop\ALFOMEX\3.jpg" alt="Alfombra 3">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+1" alt="Alfombra 1">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+2" alt="Alfombra 2">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+3" alt="Alfombra 3">
   </section>
 
   <section class="catalogo" id="catalogo">
     <!-- Aquí se cargarán las alfombras desde Firestore -->
   </section>
 
+  <div class="modal" id="loginModal">
+    <h3>Iniciar Sesión</h3>
+    <input type="email" id="email" placeholder="Correo electrónico">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="iniciarSesion()">Entrar</button>
+    <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      setPersistence,
+      browserLocalPersistence,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -101,7 +121,54 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
+
+    const navOptions = document.getElementById("navOptions");
+
+    window.abrirModal = () => {
+      document.getElementById("loginModal").classList.add("active");
+    };
+    window.cerrarModal = () => {
+      document.getElementById("loginModal").classList.remove("active");
+    };
+    window.iniciarSesion = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.textContent = "";
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        window.location.reload();
+      } catch (error) {
+        errorMsg.textContent = "Correo o contraseña incorrectos.";
+      }
+    };
+    window.cerrarSesion = async () => {
+      await signOut(auth);
+      window.location.reload();
+    };
+
+    onAuthStateChanged(auth, user => {
+      let contenido = `
+        <button onclick="location.href='alfomex.html'">Pedido personalizado</button>
+        <button onclick="alert('Próximamente')">Categorías</button>
+      `;
+      if (user) {
+        const nombre = user.email.split("@")[0];
+        contenido += `
+          <span onclick="location.href='perfil.html'">${nombre}</span>
+          <button onclick="cerrarSesion()">Cerrar sesión</button>
+        `;
+      } else {
+        contenido += `
+          <button onclick="abrirModal()">Iniciar sesión</button>
+          <button onclick="location.href='register.html'">Registrarse</button>
+        `;
+      }
+      navOptions.innerHTML = contenido;
+    });
 
     async function cargarAlfombras() {
       const contenedor = document.getElementById("catalogo");
