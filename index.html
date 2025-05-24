@@ -33,25 +33,18 @@
       font-weight: bold;
     }
 
-    nav {
-      display: flex;
-      align-items: center;
-    }
-
-    nav button,
-    nav span {
-      background: white;
-      color: #3b5998;
+    /* Botón de menú en la esquina izquierda */
+    #menuBtn {
+      font-size: 1.5rem;
+      color: white;
+      background: none;
       border: none;
-      padding: 10px 15px;
-      margin-left: 10px;
-      border-radius: 6px;
       cursor: pointer;
     }
 
-    nav button:hover,
-    nav span:hover {
-      background: #ddd;
+    nav {
+      display: flex;
+      align-items: center;
     }
 
     /* Barra lateral */
@@ -255,8 +248,8 @@
 </head>
 <body>
   <header>
-    <div class="logo">ALFOMEX</div>
     <button id="menuBtn" onclick="openNav()">☰</button>
+    <div class="logo">ALFOMEX</div>
     <nav id="navOptions">
       <span>Cargando...</span>
     </nav>
@@ -265,8 +258,8 @@
   <!-- Barra lateral -->
   <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
-    <a href="alfomex.html">Pedido personalizado</a>
-    <a href="javascript:void(0)">Categorías</a>
+    <a href="alfomex.html" id="pedidoPersonalizado">Pedido personalizado</a>
+    <a href="javascript:void(0)" id="categorias">Categorías</a>
   </div>
 
   <section class="carrusel">
@@ -332,11 +325,11 @@
 
     window.openNav = () => {
       document.getElementById("mySidenav").style.width = "250px";
-    }
+    };
 
     window.closeNav = () => {
       document.getElementById("mySidenav").style.width = "0";
-    }
+    };
 
     window.abrirModal = () => {
       document.getElementById("loginModal").classList.add("active");
