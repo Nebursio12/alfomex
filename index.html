@@ -61,7 +61,6 @@
       background: #ddd;
     }
 
-    /* Barra lateral con efecto deslizante */
     .sidenav {
       height: 100%;
       width: 250px;
@@ -141,8 +140,27 @@
       border-radius: 8px;
     }
 
+    /* Fondo oscuro del modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Modal */
     .modal {
-      display: none;
       position: fixed;
       top: 50%;
       left: 50%;
@@ -153,10 +171,14 @@
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
       z-index: 9999;
       min-width: 300px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
 
     .modal.active {
-      display: block;
+      opacity: 1;
+      pointer-events: all;
     }
 
     .modal h3 {
@@ -261,22 +283,6 @@
         padding: 8px;
       }
     }
-
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      width: 100vw;
-      background: rgba(0, 0, 0, 0.5); /* oscuridad */
-      z-index: 9998; /* debajo del modal */
-    }
-
-    .modal-overlay.active {
-      display: block;
-    }
-
   </style>
 </head>
 <body>
@@ -294,14 +300,10 @@
     <a href="javascript:void(0)">Categorías</a>
   </div>
 
-  <section class="carrusel">
-    <img src="https://via.placeholder.com/600x300?text=Alfombra+1" alt="Alfombra 1" />
-    <img src="https://via.placeholder.com/600x300?text=Alfombra+2" alt="Alfombra 2" />
-    <img src="https://via.placeholder.com/600x300?text=Alfombra+3" alt="Alfombra 3" />
-  </section>
-
-  <section class="catalogo" id="catalogo"></section>
+  <!-- Fondo oscuro del modal -->
   <div class="modal-overlay" id="modalOverlay"></div>
+
+  <!-- Modal de inicio de sesión -->
   <div class="modal" id="loginModal">
     <h3>Iniciar Sesión</h3>
     <input type="email" id="email" placeholder="Correo electrónico" />
@@ -324,6 +326,14 @@
     </div>
     <div class="error" id="errorMsg"></div>
   </div>
+
+  <section class="carrusel">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+1" alt="Alfombra 1" />
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+2" alt="Alfombra 2" />
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+3" alt="Alfombra 3" />
+  </section>
+
+  <section class="catalogo" id="catalogo"></section>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
@@ -367,15 +377,23 @@
     };
 
     window.cerrarModal = () => {
-      document.getElementById("loginModal").classList.remove("active");
-      document.getElementById("modalOverlay").classList.remove("active");
-      document.getElementById("errorMsg").textContent = "";
-      document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
-      document.getElementById("email").value = "";
-      document.getElementById("password").value = "";
-      document.getElementById("recuperacion").style.display = "none";
-      document.getElementById("emailRecuperar").value = "";
+      const modal = document.getElementById("loginModal");
+      const overlay = document.getElementById("modalOverlay");
+
+      modal.classList.remove("active");
+      overlay.classList.remove("active");
+
+      setTimeout(() => {
+        document.getElementById("errorMsg").textContent = "";
+        document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("recuperacion").style.display = "none";
+        document.getElementById("emailRecuperar").value = "";
+      }, 300);
     };
+
+    document.getElementById("modalOverlay").addEventListener("click", cerrarModal);
 
     window.iniciarSesion = async () => {
       const email = document.getElementById("email").value;
