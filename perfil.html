@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Alfomex</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 40px;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    input[readonly] {
+      background-color: #eee;
+      color: #666;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #3b5998;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 15px;
+    }
+    button:hover {
+      background-color: #2d4373;
+    }
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Mi Perfil</h2>
+    <input type="text" id="nombre1" placeholder="Primer nombre" readonly>
+    <input type="text" id="nombre2" placeholder="Segundo nombre" readonly>
+    <input type="text" id="apellido1" placeholder="Primer apellido" readonly>
+    <input type="text" id="apellido2" placeholder="Segundo apellido" readonly>
+    <input type="date" id="nacimiento" placeholder="Fecha de nacimiento" readonly>
+    <input type="email" id="email" placeholder="Correo" readonly>
+    <input type="tel" id="telefono" placeholder="Teléfono" readonly>
+
+    <input type="text" id="estado" placeholder="Estado">
+    <input type="text" id="ciudad" placeholder="Ciudad">
+    <button onclick="actualizarDatos()">Actualizar ciudad y estado</button>
+
+    <h3 style="margin-top: 30px;">Cambiar contraseña</h3>
+    <input type="password" id="newPassword" placeholder="Nueva contraseña">
+    <button onclick="cambiarContrasena()">Cambiar contraseña</button>
+
+    <div class="success" id="successMsg"></div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLL1c",
+      authDomain: "alfomex-f4efa.firebaseapp.com",
+      projectId: "alfomex-f4efa",
+      storageBucket: "alfomex-f4efa.appspot.com",
+      messagingSenderId: "1090528818564",
+      appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
+      measurementId: "G-SW633HRXVI"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const uid = user.uid;
+        const usuarioRef = doc(db, "usuarios", uid);
+        const docSnap = await getDoc(usuarioRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("nombre1").value = data.nombre1 || "";
+          document.getElementById("nombre2").value = data.nombre2 || "";
+          document.getElementById("apellido1").value = data.apellido1 || "";
+          document.getElementById("apellido2").value = data.apellido2 || "";
+          document.getElementById("nacimiento").value = data.nacimiento || "";
+          document.getElementById("email").value = data.email || "";
+          document.getElementById("telefono").value = data.telefono || "";
+          document.getElementById("estado").value = data.estado || "";
+          document.getElementById("ciudad").value = data.ciudad || "";
+          window.usuarioRef = usuarioRef;
+        } else {
+          document.getElementById("errorMsg").textContent = "Usuario no encontrado en la base de datos.";
+        }
+      });
+    });
+
+    window.actualizarDatos = async function () {
+      const estado = document.getElementById("estado").value;
+      const ciudad = document.getElementById("ciudad").value;
+      const success = document.getElementById("successMsg");
+      const error = document.getElementById("errorMsg");
+      success.textContent = "";
+      error.textContent = "";
+
+      try {
+        if (!window.usuarioRef) throw new Error("Usuario no autenticado");
+        await updateDoc(window.usuarioRef, { estado, ciudad });
+        success.textContent = "Datos actualizados correctamente.";
+      } catch (e) {
+        error.textContent = e.message;
+      }
+    };
+
+    window.cambiarContrasena = async function () {
+      const newPass = document.getElementById("newPassword").value;
+      const error = document.getElementById("errorMsg");
+      const success = document.getElementById("successMsg");
+      error.textContent = "";
+      success.textContent = "";
+
+      if (newPass.length < 6) {
+        error.textContent = "La contraseña debe tener al menos 6 caracteres.";
+        return;
+      }
+
+      try {
+        const user = auth.currentUser;
+        await updatePassword(user, newPass);
+        success.textContent = "Contraseña actualizada correctamente.";
+      } catch (e) {
+        error.textContent = e.message;
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alfomex - Inicio</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+    }
+    header {
+      background-color: #1a1a1a;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+    }
+    header img {
+      height: 50px;
+    }
+    nav {
+      display: flex;
+      gap: 15px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      background-color: #3b5998;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      background-color: #2d4373;
+    }
+    .catalogo {
+      padding: 40px 20px;
+    }
+    .catalogo h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .producto {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .producto img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    .producto h3 {
+      margin: 10px 0 5px;
+    }
+    .producto p {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Alfomex Logo">
+    <nav>
+      <a href="perfil.html">Mi Perfil</a>
+      <a href="alfomex.html">Pedido Personalizado</a>
+    </nav>
+  </header>
+
+  <div class="catalogo">
+    <h2>Catálogo de Alfombras</h2>
+    <div class="productos">
+      <!-- Ejemplos de productos -->
+      <div class="producto">
+        <img src="https://via.placeholder.com/300x200?text=Alfombra+1" alt="Alfombra 1">
+        <h3>Alfombra Moderna</h3>
+        <p>Estilo elegante para tu sala.</p>
+      </div>
+      <div class="producto">
+        <img src="https://via.placeholder.com/300x200?text=Alfombra+2" alt="Alfombra 2">
+        <h3>Alfombra Clásica</h3>
+        <p>Ideal para espacios tradicionales.</p>
+      </div>
+      <!-- Puedes agregar más productos aquí -->
+    </div>
+  </div>
+</body>
+</html>

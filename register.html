@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro - Alfomex</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #3b5998, #8b9dc3, #e1306c);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .register-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+      overflow-y: auto;
+      max-height: 95vh;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    .invalid {
+      border-color: #d00000 !important;
+    }
+    .criteria {
+      font-size: 0.85rem;
+      margin-top: -5px;
+      margin-bottom: 10px;
+    }
+    .criteria span {
+      display: block;
+    }
+    .criteria .valid {
+      color: green;
+    }
+    .criteria .invalid {
+      color: #d00000;
+    }
+    .toggle-btn {
+      font-size: 0.9rem;
+      background: none;
+      border: none;
+      color: #3b5998;
+      cursor: pointer;
+      margin-bottom: 10px;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #3b5998;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #2d4373;
+    }
+    .error {
+      color: #d00000;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .link a {
+      color: #3b5998;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-box">
+    <h2>Crear cuenta</h2>
+    <input type="text" id="nombre1" placeholder="Primer Nombre" required />
+    <input type="text" id="nombre2" placeholder="Segundo Nombre (opcional)" />
+    <input type="text" id="apellido1" placeholder="Primer Apellido" required />
+    <input type="text" id="apellido2" placeholder="Segundo Apellido (opcional)" />
+    <input type="date" id="nacimiento" placeholder="Fecha de Nacimiento" required />
+    <input type="tel" id="telefono" placeholder="Número Telefónico" required />
+    <select id="pais" required>
+      <option value="">Selecciona un país</option>
+      <option value="MEXICO">México</option>
+      <option value="ESTADOS_UNIDOS">Estados Unidos</option>
+    </select>
+    <input type="email" id="email" placeholder="Correo electrónico" required />
+    <input type="password" id="password" placeholder="Contraseña" required />
+    <div class="criteria" id="criterios">
+      <span id="criterio-long" class="invalid">❌ Mínimo 6 caracteres</span>
+      <span id="criterio-mayus" class="invalid">❌ Al menos una mayúscula</span>
+      <span id="criterio-simbolo" class="invalid">❌ Al menos un símbolo (!@#$%)</span>
+    </div>
+    <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required />
+    <button class="toggle-btn" type="button" onmousedown="mostrarAmbas()" onmouseup="ocultarAmbas()" onmouseleave="ocultarAmbas()">
+      Mantener presionado para mostrar contraseñas
+    </button>
+    <button onclick="registrar()">Registrarse</button>
+    <div class="error" id="errorMsg"></div>
+    <div class="link">
+      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+    </div>
+  </div>
+  <script>
+    async function loadFirebase() {
+      const appModule = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js");
+      const authModule = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js");
+      const firestoreModule = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+
+      const firebaseConfig = {
+         apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+         authDomain: "alfomex-f4efa.firebaseapp.com",
+         projectId: "alfomex-f4efa",
+         storageBucket: "alfomex-f4efa.firebasestorage.app",
+         messagingSenderId: "1090528818564",
+         appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
+         measurementId: "G-SW633HRXV1"
+      };
+
+      const app = appModule.initializeApp(firebaseConfig);
+      window.auth = authModule.getAuth(app);
+      window.db = firestoreModule.getFirestore(app);
+      window.createUserWithEmailAndPassword = authModule.createUserWithEmailAndPassword;
+      window.collection = firestoreModule.collection;
+      window.setDoc = firestoreModule.setDoc;
+      window.doc = firestoreModule.doc;
+      window.query = firestoreModule.query;
+      window.where = firestoreModule.where;
+      window.getDocs = firestoreModule.getDocs;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadFirebase();
+      document.getElementById("password").addEventListener("input", validarCriterios);
+      document.getElementById("confirmPassword").addEventListener("input", validarCriterios);
+    });
+
+    function validarCriterios() {
+      const pass = document.getElementById("password").value;
+      const long = document.getElementById("criterio-long");
+      const mayus = document.getElementById("criterio-mayus");
+      const simbolo = document.getElementById("criterio-simbolo");
+
+      long.className = pass.length >= 6 ? "valid" : "invalid";
+      long.textContent = pass.length >= 6 ? "✅ Mínimo 6 caracteres" : "❌ Mínimo 6 caracteres";
+
+      mayus.className = /[A-Z]/.test(pass) ? "valid" : "invalid";
+      mayus.textContent = /[A-Z]/.test(pass) ? "✅ Al menos una mayúscula" : "❌ Al menos una mayúscula";
+
+      simbolo.className = /[^A-Za-z0-9]/.test(pass) ? "valid" : "invalid";
+      simbolo.textContent = /[^A-Za-z0-9]/.test(pass) ? "✅ Al menos un símbolo (!@#$%)" : "❌ Al menos un símbolo (!@#$%)";
+    }
+
+    function mostrarAmbas() {
+      document.getElementById("password").type = "text";
+      document.getElementById("confirmPassword").type = "text";
+    }
+
+    function ocultarAmbas() {
+      document.getElementById("password").type = "password";
+      document.getElementById("confirmPassword").type = "password";
+    }
+
+    async function registrar() {
+      const nombre1 = document.getElementById("nombre1").value;
+      const nombre2 = document.getElementById("nombre2").value;
+      const apellido1 = document.getElementById("apellido1").value;
+      const apellido2 = document.getElementById("apellido2").value;
+      const nacimiento = document.getElementById("nacimiento").value;
+      const telefono = document.getElementById("telefono").value;
+      const pais = document.getElementById("pais").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      errorMsg.textContent = "";
+      document.getElementById("confirmPassword").classList.remove("invalid");
+
+      if (!nombre1 || !apellido1 || !nacimiento || !telefono || !pais || !email || !password || !confirmPassword) {
+        errorMsg.textContent = "Por favor, completa todos los campos obligatorios.";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = "Las contraseñas no coinciden.";
+        document.getElementById("confirmPassword").classList.add("invalid");
+        return;
+      }
+
+      if (password.length < 6 || !/[A-Z]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+        errorMsg.textContent = "La contraseña no cumple con los requisitos.";
+        return;
+      }
+
+      try {
+        const snapshotEmail = await getDocs(query(collection(db, "usuarios"), where("email", "==", email)));
+        if (!snapshotEmail.empty) {
+          errorMsg.textContent = "Este correo electrónico ya está registrado.";
+          return;
+        }
+
+        const snapshotTel = await getDocs(query(collection(db, "usuarios"), where("telefono", "==", telefono)));
+        if (!snapshotTel.empty) {
+          errorMsg.textContent = "Este número telefónico ya está registrado.";
+          return;
+        }
+
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "usuarios", user.uid), {
+          nombre1,
+          nombre2,
+          apellido1,
+          apellido2,
+          nacimiento,
+          telefono,
+          pais,
+          email,
+          estado: "",
+          ciudad: "",
+          timestamp: new Date()
+        });
+
+        window.location.href = user.email === "alfomexgo@gmail.com" ? "admin.html" : "index.html";
+      } catch (error) {
+        errorMsg.textContent = error.message;
+      }
+    }
+
+    window.mostrarAmbas = mostrarAmbas;
+    window.ocultarAmbas = ocultarAmbas;
+    window.registrar = registrar;
+  </script>
+</body>
+</html>
