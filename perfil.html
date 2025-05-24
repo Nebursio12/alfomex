@@ -74,11 +74,18 @@
 
     <input type="text" id="estado" placeholder="Estado">
     <input type="text" id="ciudad" placeholder="Ciudad">
-    <button onclick="actualizarDatos()">Actualizar ciudad y estado</button>
+    <button id="btnActualizar" onclick="actualizarDatos()">Actualizar ciudad y estado</button>
 
     <h3 style="margin-top: 30px;">Cambiar contraseña</h3>
     <input type="password" id="newPassword" placeholder="Nueva contraseña">
+    <div class="criteria" id="criterios">
+      <span id="criterio-long" class="invalid">❌ Mínimo 6 caracteres</span>
+      <span id="criterio-mayus" class="invalid">❌ Al menos una mayúscula</span>
+      <span id="criterio-simbolo" class="invalid">❌ Al menos un símbolo (!@#$%)</span>
+    </div>
     <button onclick="cambiarContrasena()">Cambiar contraseña</button>
+
+    <button onclick="cerrarSesion()" style="background-color: crimson;">Cerrar sesión</button>
 
     <div class="success" id="successMsg"></div>
     <div class="error" id="errorMsg"></div>
@@ -86,7 +93,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -103,7 +110,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         onAuthStateChanged(auth, async (user) => {
           if (!user) {
@@ -126,12 +133,21 @@
             document.getElementById("telefono").value = data.telefono || "";
             document.getElementById("estado").value = data.estado || "";
             document.getElementById("ciudad").value = data.ciudad || "";
+
+            if (data.estado && data.ciudad) {
+              document.getElementById("estado").readOnly = true;
+              document.getElementById("ciudad").readOnly = true;
+              document.getElementById("btnActualizar").disabled = true;
+            }
+
             window.usuarioRef = usuarioRef;
           } else {
             document.getElementById("errorMsg").textContent = "Usuario no encontrado en Firestore.";
           }
         });
-      }, 300); // pequeña espera para asegurar que Firebase esté listo
+
+        document.getElementById("newPassword").addEventListener("input", validarCriterios);
+      }, 300);
     });
 
     window.actualizarDatos = async function () {
@@ -144,12 +160,33 @@
 
       try {
         if (!window.usuarioRef) throw new Error("No se encontró sesión activa.");
+        if (!estado || !ciudad) throw new Error("Por favor ingresa estado y ciudad.");
+
         await updateDoc(window.usuarioRef, { estado, ciudad });
+        document.getElementById("estado").readOnly = true;
+        document.getElementById("ciudad").readOnly = true;
+        document.getElementById("btnActualizar").disabled = true;
         success.textContent = "Datos actualizados correctamente.";
       } catch (e) {
         error.textContent = e.message;
       }
     };
+
+    function validarCriterios() {
+      const pass = document.getElementById("newPassword").value;
+      const long = document.getElementById("criterio-long");
+      const mayus = document.getElementById("criterio-mayus");
+      const simbolo = document.getElementById("criterio-simbolo");
+
+      long.className = pass.length >= 6 ? "valid" : "invalid";
+      long.textContent = pass.length >= 6 ? "✅ Mínimo 6 caracteres" : "❌ Mínimo 6 caracteres";
+
+      mayus.className = /[A-Z]/.test(pass) ? "valid" : "invalid";
+      mayus.textContent = /[A-Z]/.test(pass) ? "✅ Al menos una mayúscula" : "❌ Al menos una mayúscula";
+
+      simbolo.className = /[^A-Za-z0-9]/.test(pass) ? "valid" : "invalid";
+      simbolo.textContent = /[^A-Za-z0-9]/.test(pass) ? "✅ Al menos un símbolo (!@#$%)" : "❌ Al menos un símbolo (!@#$%)";
+    }
 
     window.cambiarContrasena = async function () {
       const newPass = document.getElementById("newPassword").value;
@@ -158,8 +195,8 @@
       error.textContent = "";
       success.textContent = "";
 
-      if (newPass.length < 6) {
-        error.textContent = "La contraseña debe tener al menos 6 caracteres.";
+      if (newPass.length < 6 || !/[A-Z]/.test(newPass) || !/[^A-Za-z0-9]/.test(newPass)) {
+        error.textContent = "La contraseña no cumple con los requisitos.";
         return;
       }
 
@@ -169,6 +206,15 @@
         success.textContent = "Contraseña actualizada correctamente.";
       } catch (e) {
         error.textContent = e.message;
+      }
+    };
+
+    window.cerrarSesion = async function () {
+      try {
+        await signOut(auth);
+        window.location.href = "login.html";
+      } catch (e) {
+        alert("Error al cerrar sesión: " + e.message);
       }
     };
   </script>
