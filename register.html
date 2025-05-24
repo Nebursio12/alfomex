@@ -29,12 +29,6 @@
       margin-bottom: 20px;
       color: #333;
     }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-      color: #444;
-    }
     input, select {
       width: 100%;
       padding: 10px;
@@ -69,6 +63,7 @@
     .link a {
       color: #3b5998;
       text-decoration: none;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -79,11 +74,16 @@
     <input type="text" id="nombre2" placeholder="Segundo Nombre (opcional)" />
     <input type="text" id="apellido1" placeholder="Primer Apellido" required />
     <input type="text" id="apellido2" placeholder="Segundo Apellido (opcional)" />
-
-    <label for="nacimiento">Fecha de nacimiento (debes ser mayor de 18 años)</label>
     <input type="date" id="nacimiento" max="" required />
 
-    <input type="tel" id="telefono" placeholder="Número Telefónico" maxlength="10" pattern="[0-9]{10}" title="Solo 10 dígitos numéricos" required />
+    <input
+      type="tel"
+      id="telefono"
+      placeholder="Número Telefónico"
+      maxlength="10"
+      required
+      oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+    />
 
     <select id="pais" required>
       <option value="">Selecciona un país</option>
@@ -99,7 +99,7 @@
     <button onclick="registrar()">Registrarse</button>
     <div class="error" id="errorMsg"></div>
     <div class="link">
-      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+      ¿Ya tienes cuenta? <a onclick="window.location.href='index.html'">Inicia sesión</a>
     </div>
   </div>
 
