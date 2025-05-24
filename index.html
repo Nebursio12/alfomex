@@ -131,9 +131,7 @@
     <img src="https://via.placeholder.com/600x300?text=Alfombra+3" alt="Alfombra 3">
   </section>
 
-  <section class="catalogo" id="catalogo">
-    <!-- Aquí se cargarán las alfombras desde Firestore -->
-  </section>
+  <section class="catalogo" id="catalogo"></section>
 
   <div class="modal" id="loginModal">
     <h3>Iniciar Sesión</h3>
@@ -177,7 +175,6 @@
     window.abrirModal = () => {
       document.getElementById("loginModal").classList.add("active");
     };
-
     window.cerrarModal = () => {
       document.getElementById("loginModal").classList.remove("active");
     };
@@ -189,7 +186,7 @@
       errorMsg.textContent = "";
       try {
         await setPersistence(auth, browserLocalPersistence);
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         window.location.reload();
       } catch (error) {
         errorMsg.textContent = "Correo o contraseña incorrectos.";
@@ -198,10 +195,11 @@
 
     window.cerrarSesion = async () => {
       await signOut(auth);
-      window.location.reload();
+      window.location.href = "index.html";
     };
 
     onAuthStateChanged(auth, user => {
+      const nav = document.getElementById("navOptions");
       let contenido = `
         <button onclick="location.href='alfomex.html'">Pedido personalizado</button>
         <button onclick="alert('Próximamente')">Categorías</button>
@@ -218,7 +216,7 @@
           <button onclick="location.href='register.html'">Registrarse</button>
         `;
       }
-      navOptions.innerHTML = contenido;
+      nav.innerHTML = contenido;
     });
 
     async function cargarAlfombras() {
