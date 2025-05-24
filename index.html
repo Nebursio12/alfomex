@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catálogo - Alfomex</title>
   <style>
     body {
@@ -131,6 +131,34 @@
     .error-anim {
       animation: fadeInOut 4s forwards;
     }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      header {
+        padding: 10px 20px;
+      }
+
+      .logo {
+        font-size: 1.2rem;
+      }
+
+      nav button, nav span {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+
+      .catalogo {
+        padding: 15px;
+      }
+
+      .alfombra {
+        padding: 10px;
+      }
+
+      .modal {
+        width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -208,7 +236,6 @@
 
     window.cerrarModal = () => {
       document.getElementById("loginModal").classList.remove("active");
-      // limpiar mensajes y campos
       document.getElementById("errorMsg").textContent = "";
       document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
       document.getElementById("email").value = "";
