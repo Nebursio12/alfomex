@@ -101,7 +101,8 @@
     <input type="text" id="apellido1" placeholder="Primer Apellido" required />
     <input type="text" id="apellido2" placeholder="Segundo Apellido (opcional)" />
     <input type="date" id="nacimiento" placeholder="Fecha de Nacimiento" required />
-    <input type="tel" id="telefono" placeholder="Número Telefónico" required />
+    <input type="tel" id="telefono" placeholder="Número Telefónico" required
+           maxlength="10" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
     <select id="pais" required>
       <option value="">Selecciona un país</option>
       <option value="MEXICO">México</option>
@@ -202,6 +203,11 @@
 
       if (!nombre1 || !apellido1 || !nacimiento || !telefono || !pais || !email || !password || !confirmPassword) {
         errorMsg.textContent = "Por favor, completa todos los campos obligatorios.";
+        return;
+      }
+      
+      if (!/^[0-9]{10}$/.test(telefono)) {
+        errorMsg.textContent = "El número telefónico debe tener exactamente 10 dígitos numéricos.";
         return;
       }
 
