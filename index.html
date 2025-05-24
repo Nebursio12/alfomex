@@ -69,6 +69,52 @@
       height: auto;
       border-radius: 8px;
     }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+      min-width: 300px;
+    }
+    .modal.active {
+      display: block;
+    }
+    .modal h3 {
+      margin-top: 0;
+      color: #3b5998;
+    }
+    .modal input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .modal button {
+      width: 48%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-right: 2%;
+      background-color: #3b5998;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .modal .close-btn {
+      background-color: crimson;
+    }
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -93,8 +139,10 @@
     <h3>Iniciar Sesión</h3>
     <input type="email" id="email" placeholder="Correo electrónico">
     <input type="password" id="password" placeholder="Contraseña">
-    <button onclick="iniciarSesion()">Entrar</button>
-    <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+    <div style="display: flex; justify-content: space-between;">
+      <button onclick="iniciarSesion()">Entrar</button>
+      <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+    </div>
     <div class="error" id="errorMsg"></div>
   </div>
 
@@ -129,9 +177,11 @@
     window.abrirModal = () => {
       document.getElementById("loginModal").classList.add("active");
     };
+
     window.cerrarModal = () => {
       document.getElementById("loginModal").classList.remove("active");
     };
+
     window.iniciarSesion = async () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -145,6 +195,7 @@
         errorMsg.textContent = "Correo o contraseña incorrectos.";
       }
     };
+
     window.cerrarSesion = async () => {
       await signOut(auth);
       window.location.reload();
