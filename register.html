@@ -321,7 +321,7 @@
       }
 
       try {
-        const { auth, createUserWithEmailAndPassword } = await import("./auth.js");
+        const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
         const userCredential = await createUserWithEmailAndPassword(auth, document.getElementById("email").value.trim(), password);
         const user = userCredential.user;
         // Guardar en Firestore
