@@ -91,8 +91,6 @@
       font-size: 1rem;
     }
 
-    
-
     .error {
       color: #d00000;
       text-align: center;
@@ -107,6 +105,18 @@
     .link a {
       color: #3b5998;
       text-decoration: none;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.3s;
     }
 
     @media (max-width: 768px) {
@@ -169,7 +179,7 @@
 
     <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required />
 
-    <!-- Botón único para mostrar/ocultar ambas contraseñas -->
+    <!-- Botón único para mostrar/ocultar contraseñas -->
     <button
       id="toggleBtn"
       class="toggle-btn"
@@ -231,40 +241,78 @@
       btn.textContent = "🔒 Mantén presionado para ver";
     }
 
-    async function registrar() {
-      const nombre1 = document.getElementById("nombre1").value.trim();
-      const apellido1 = document.getElementById("apellido1").value.trim();
-      const nacimiento = document.getElementById("nacimiento").value.trim();
-      const telefono = document.getElementById("telefono").value.trim();
-      const pais = document.getElementById("pais").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
-      const errorMsg = document.getElementById("errorMsg");
+    function aplicarSacudida(elemento) {
+      elemento.classList.add("shake");
+      setTimeout(() => {
+        elemento.classList.remove("shake");
+        elemento.focus();
+      }, 300);
+    }
 
+    async function registrar() {
+      const campos = [
+        { id: "nombre1", obligatorio: true },
+        { id: "apellido1", obligatorio: true },
+        { id: "nacimiento", obligatorio: true },
+        { id: "telefono", obligatorio: true },
+        { id: "pais", obligatorio: true },
+        { id: "email", obligatorio: true },
+        { id: "password", obligatorio: true },
+        { id: "confirmPassword", obligatorio: true },
+      ];
+
+      let hayErrores = false;
+      let primerCampoInvalido = null;
+      const errorMsg = document.getElementById("errorMsg");
       errorMsg.textContent = "";
 
-      // Validar campos obligatorios
-      if (!nombre1 || !apellido1 || !nacimiento || !telefono || !pais || !email || !password || !confirmPassword) {
-        errorMsg.textContent = "Por favor, llena todos los campos obligatorios.";
+      campos.forEach(campo => {
+        document.getElementById(campo.id).classList.remove("invalid");
+      });
+
+      campos.forEach(campo => {
+        const input = document.getElementById(campo.id);
+        if (campo.obligatorio && input.value.trim() === "") {
+          input.classList.add("invalid");
+          aplicarSacudida(input);
+          if (!primerCampoInvalido) primerCampoInvalido = input;
+          hayErrores = true;
+        }
+      });
+
+      if (hayErrores) {
+        errorMsg.textContent = "Por favor, completa todos los campos obligatorios.";
+        primerCampoInvalido.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
 
-      // Validar coincidencia de contraseñas
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
       if (password !== confirmPassword) {
+        const pass1 = document.getElementById("password");
+        const pass2 = document.getElementById("confirmPassword");
+        pass1.classList.add("invalid");
+        pass2.classList.add("invalid");
+        aplicarSacudida(pass1);
+        aplicarSacudida(pass2);
+        pass1.scrollIntoView({ behavior: "smooth", block: "center" });
         errorMsg.textContent = "Las contraseñas no coinciden.";
         return;
       }
 
-      // Validar criterios de seguridad
       if (password.length < 6 || !/[A-Z]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+        const pass1 = document.getElementById("password");
+        pass1.classList.add("invalid");
+        aplicarSacudida(pass1);
+        pass1.scrollIntoView({ behavior: "smooth", block: "center" });
         errorMsg.textContent = "La contraseña no cumple con los requisitos.";
         return;
       }
 
       try {
         const { auth, createUserWithEmailAndPassword } = await import("./auth.js");
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, document.getElementById("email").value.trim(), password);
         const user = userCredential.user;
         window.location.href = user.email === "alfomexgo@gmail.com" ? "admin.html" : "index.html";
       } catch (error) {
