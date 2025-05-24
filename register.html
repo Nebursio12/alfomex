@@ -89,7 +89,7 @@
     <input type="text" id="apellido1" placeholder="Primer Apellido" required />
     <input type="text" id="apellido2" placeholder="Segundo Apellido (opcional)" />
 
-    <input type="date" id="nacimiento" max="" required />
+    <input type="date" id="nacimiento" />
 
     <input
       type="tel"
@@ -128,13 +128,7 @@
   import { auth, createUserWithEmailAndPassword } from './auth.js';
 
   document.addEventListener('DOMContentLoaded', () => {
-    const nacimiento = document.getElementById('nacimiento');
-    const hoy = new Date();
-    const añoMax = hoy.getFullYear() - 18;
-    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-    const dia = String(hoy.getDate()).padStart(2, '0');
-    nacimiento.max = `${añoMax}-${mes}-${dia}`;
-
+    // Escuchar input para validar contraseña en tiempo real
     document.getElementById('password').addEventListener('input', validarCriterios);
   });
 
@@ -175,30 +169,7 @@
     }
   }
 
-  function validarRegistro() {
-    const fechaNac = new Date(document.getElementById('nacimiento').value);
-    const hoy = new Date();
-    const edadMinima = 18;
-    const correo = document.getElementById('email').value.trim();
-
-    const fecha18 = new Date(hoy.getFullYear() - edadMinima, hoy.getMonth(), hoy.getDate());
-    if (fechaNac > fecha18 || isNaN(fechaNac.getTime())) {
-      alert('Debes ser mayor de 18 años para registrarte.');
-      return false;
-    }
-
-    const regexCorreo = /^[a-zA-Z0-9._%+-]+@(?:gmail\\.com|hotmail\\.com|outlook\\.com|yahoo\\.com)$/i;
-    if (!regexCorreo.test(correo)) {
-      alert('Solo se permiten correos de gmail.com, hotmail.com, outlook.com o yahoo.com');
-      return false;
-    }
-
-    return true;
-  }
-
   async function registrar() {
-    if (!validarRegistro()) return;
-
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
