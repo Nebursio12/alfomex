@@ -1,38 +1,18 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo - Alfomex</title>
   <style>
-    :root {
-      --bg-color-light: #f0f0f0;
-      --text-color-light: #000;
-      --bg-color-dark: #1a1a1a;
-      --text-color-dark: #f0f0f0;
-      --primary: #3b5998;
-      --accent: #e1306c;
-    }
-
-    [data-theme="light"] body {
-      background-color: var(--bg-color-light);
-      color: var(--text-color-light);
-    }
-
-    [data-theme="dark"] body {
-      background-color: var(--bg-color-dark);
-      color: var(--text-color-dark);
-    }
-
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      transition: background-color 0.3s, color 0.3s;
+      background: #f0f0f0;
     }
-
     header {
-      background: var(--primary);
+      background: #3b5998;
       color: white;
       padding: 15px 30px;
       display: flex;
@@ -49,17 +29,21 @@
     }
     nav button, nav span {
       background: white;
-      color: var(--primary);
+      color: #3b5998;
       border: none;
       padding: 10px 15px;
       margin-left: 10px;
       border-radius: 6px;
       cursor: pointer;
     }
+    nav span {
+      background: #fff;
+      color: #3b5998;
+      font-weight: bold;
+    }
     nav button:hover, nav span:hover {
       background: #ddd;
     }
-
     .catalogo {
       padding: 40px;
       text-align: center;
@@ -79,6 +63,9 @@
     .modal.active {
       display: block;
     }
+    .modal h3 {
+      margin-top: 0;
+    }
     .modal input {
       width: 100%;
       padding: 10px;
@@ -90,7 +77,7 @@
       width: 100%;
       padding: 10px;
       margin-top: 10px;
-      background-color: var(--primary);
+      background-color: #3b5998;
       color: white;
       border: none;
       border-radius: 4px;
@@ -98,6 +85,7 @@
     }
     .close-btn {
       background: crimson;
+      margin-top: 10px;
     }
     .error {
       color: red;
@@ -111,7 +99,6 @@
     <div class="logo">ALFOMEX</div>
     <nav id="navOptions">
       <span>Cargando...</span>
-      <button onclick="toggleTheme()" title="Modo claro/oscuro">🌙</button>
     </nav>
   </header>
 
@@ -184,37 +171,19 @@
     };
 
     onAuthStateChanged(auth, user => {
-      const themeBtn = `<button onclick="toggleTheme()" title="Modo claro/oscuro">🌙</button>`;
       if (user) {
         const nombre = user.email.split("@")[0];
         navOptions.innerHTML = `
           <span onclick="location.href='perfil.html'">${nombre}</span>
           <button onclick="cerrarSesion()">Cerrar sesión</button>
-          ${themeBtn}
         `;
       } else {
         navOptions.innerHTML = `
           <button onclick="abrirModal()">Iniciar sesión</button>
           <button onclick="location.href='register.html'">Registrarse</button>
-          ${themeBtn}
         `;
       }
     });
-
-    // 🌙☀️ MODO OSCURO/CLARO
-    function setTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-    }
-
-    function toggleTheme() {
-      const current = localStorage.getItem('theme') || 'light';
-      setTheme(current === 'light' ? 'dark' : 'light');
-    }
-
-    // Al cargar la página, aplicar el tema guardado
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
   </script>
 </body>
 </html>
