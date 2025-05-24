@@ -141,6 +141,13 @@
       <button onclick="iniciarSesion()">Entrar</button>
       <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
     </div>
+    <div style="margin-top: 10px; text-align: center;">
+      <button onclick="mostrarRecuperacion()" style="background: transparent; color: #3b5998; border: none; cursor: pointer;">¿Olvidaste tu contraseña?</button>
+    </div>
+    <div id="recuperacion" style="display: none; margin-top: 15px;">
+      <input type="email" id="emailRecuperar" placeholder="Correo para recuperar">
+      <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 8px;">Enviar enlace</button>
+    </div>
     <div class="error" id="errorMsg"></div>
   </div>
 
@@ -152,7 +159,8 @@
       setPersistence,
       browserLocalPersistence,
       signOut,
-      onAuthStateChanged
+      onAuthStateChanged,
+      sendPasswordResetEmail
     } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -175,6 +183,7 @@
     window.abrirModal = () => {
       document.getElementById("loginModal").classList.add("active");
     };
+
     window.cerrarModal = () => {
       document.getElementById("loginModal").classList.remove("active");
     };
@@ -196,6 +205,24 @@
     window.cerrarSesion = async () => {
       await signOut(auth);
       window.location.href = "index.html";
+    };
+
+    window.mostrarRecuperacion = () => {
+      document.getElementById("recuperacion").style.display = "block";
+    };
+
+    window.enviarRecuperacion = async () => {
+      const correo = document.getElementById("emailRecuperar").value;
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.textContent = "";
+      try {
+        await sendPasswordResetEmail(auth, correo);
+        errorMsg.style.color = "green";
+        errorMsg.textContent = "Se envió el enlace al correo.";
+      } catch (error) {
+        errorMsg.style.color = "red";
+        errorMsg.textContent = "Error: " + error.message;
+      }
     };
 
     onAuthStateChanged(auth, user => {
