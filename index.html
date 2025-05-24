@@ -12,6 +12,7 @@
       background: #f0f0f0;
     }
 
+    /* Encabezado */
     header {
       background: #3b5998;
       color: white;
@@ -53,7 +54,44 @@
       background: #ddd;
     }
 
-    /* Carrusel */
+    /* Barra lateral */
+    .sidenav {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #3b5998;
+      padding-top: 60px;
+      transition: 0.3s;
+      overflow-x: hidden;
+      padding-left: 15px;
+      z-index: 200;
+    }
+
+    .sidenav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidenav a:hover {
+      color: #ddd;
+    }
+
+    .sidenav .close-btn {
+      color: white;
+      font-size: 36px;
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     .carrusel {
       display: flex;
       overflow-x: auto;
@@ -91,6 +129,7 @@
       border-radius: 8px;
     }
 
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -151,7 +190,6 @@
       color: green;
     }
 
-    /* Animación */
     @keyframes fadeInOut {
       0% { opacity: 0; }
       10% { opacity: 1; }
@@ -218,10 +256,18 @@
 <body>
   <header>
     <div class="logo">ALFOMEX</div>
+    <button id="menuBtn" onclick="openNav()">☰</button>
     <nav id="navOptions">
       <span>Cargando...</span>
     </nav>
   </header>
+
+  <!-- Barra lateral -->
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
+    <a href="alfomex.html">Pedido personalizado</a>
+    <a href="javascript:void(0)">Categorías</a>
+  </div>
 
   <section class="carrusel">
     <img src="https://via.placeholder.com/600x300?text=Alfombra+1" alt="Alfombra 1" />
@@ -283,6 +329,14 @@
     const db = getFirestore(app);
 
     const navOptions = document.getElementById("navOptions");
+
+    window.openNav = () => {
+      document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    window.closeNav = () => {
+      document.getElementById("mySidenav").style.width = "0";
+    }
 
     window.abrirModal = () => {
       document.getElementById("loginModal").classList.add("active");
