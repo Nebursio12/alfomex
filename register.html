@@ -13,7 +13,6 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      padding: 0;
     }
 
     .register-box {
@@ -30,7 +29,6 @@
     h2 {
       text-align: center;
       margin-bottom: 20px;
-      color: #333;
     }
 
     input, select {
@@ -39,39 +37,19 @@
       margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 6px;
-      box-sizing: border-box;
     }
 
     .invalid {
       border-color: #d00000 !important;
     }
 
-    .criteria {
-      font-size: 0.85rem;
-      margin-top: -5px;
-      margin-bottom: 10px;
-    }
-
-    .criteria span {
-      display: block;
-    }
-
-    .criteria .valid {
-      color: green;
-    }
-
-    .criteria .invalid {
-      color: #d00000;
-    }
-
     .toggle-btn {
-      font-size: 0.9rem;
       background: none;
       border: none;
       color: #3b5998;
       cursor: pointer;
-      margin-bottom: 10px;
       float: right;
+      margin-bottom: 10px;
       user-select: none;
     }
 
@@ -87,12 +65,12 @@
       color: white;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
       font-size: 1rem;
+      cursor: pointer;
     }
 
     .error {
-      color: #d00000;
+      color: red;
       text-align: center;
       margin-top: 10px;
     }
@@ -102,53 +80,15 @@
       margin-top: 15px;
     }
 
-    .link a {
-      color: #3b5998;
-      text-decoration: none;
-    }
-
     @keyframes shake {
-      0% { transform: translateX(0); }
+      0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
       50% { transform: translateX(5px); }
       75% { transform: translateX(-5px); }
-      100% { transform: translateX(0); }
     }
 
     .shake {
       animation: shake 0.3s;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-
-      .register-box {
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      input, select, button {
-        padding: 12px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h2 {
-        font-size: 1.3rem;
-      }
-
-      input, select, button {
-        padding: 10px;
-      }
-
-      .criteria {
-        font-size: 0.8rem;
-      }
     }
   </style>
 </head>
@@ -159,31 +99,19 @@
     <input type="text" id="nombre2" placeholder="Segundo Nombre (opcional)" />
     <input type="text" id="apellido1" placeholder="Primer Apellido" required />
     <input type="text" id="apellido2" placeholder="Segundo Apellido (opcional)" />
-    <input type="date" id="nacimiento" placeholder="Fecha de Nacimiento" required />
+    <input type="date" id="nacimiento" required />
     <input type="tel" id="telefono" placeholder="Número Telefónico" required maxlength="10"
       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
-
     <select id="pais" required>
       <option value="">Selecciona un país</option>
       <option value="MEXICO">México</option>
       <option value="ESTADOS_UNIDOS">Estados Unidos</option>
     </select>
-
     <input type="email" id="email" placeholder="Correo electrónico" required />
     <input type="password" id="password" placeholder="Contraseña" required />
-    <div class="criteria" id="criterios">
-      <span id="criterio-long" class="invalid">❌ Mínimo 6 caracteres</span>
-      <span id="criterio-mayus" class="invalid">❌ Al menos una mayúscula</span>
-      <span id="criterio-simbolo" class="invalid">❌ Al menos un símbolo (!@#$%)</span>
-    </div>
-
     <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required />
 
-    <!-- Botón único para mostrar/ocultar contraseñas -->
-    <button
-      id="toggleBtn"
-      class="toggle-btn"
-      type="button"
+    <button id="toggleBtn" class="toggle-btn" type="button"
       onmousedown="mostrarPasswords()"
       onmouseup="ocultarPasswords()"
       onmouseleave="ocultarPasswords()"
@@ -194,52 +122,43 @@
 
     <button onclick="registrar()">Registrarse</button>
     <div class="error" id="errorMsg"></div>
-    <div class="link">
-      ¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a>
-    </div>
+    <div class="link">¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a></div>
   </div>
 
-  <script src="./auth.js" type="module"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const passwordInput = document.getElementById("password");
-      passwordInput.addEventListener("input", validarCriterios);
-    });
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-    function validarCriterios() {
-      const pass = document.getElementById("password").value;
-      const long = document.getElementById("criterio-long");
-      const mayus = document.getElementById("criterio-mayus");
-      const simbolo = document.getElementById("criterio-simbolo");
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+      authDomain: "alfomex-f4efa.firebaseapp.com",
+      projectId: "alfomex-f4efa",
+      storageBucket: "alfomex-f4efa.firebasestorage.app",
+      messagingSenderId: "1090528818564",
+      appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
+      measurementId: "G-SW633HRXV1"
+    };
 
-      long.classList.toggle("valid", pass.length >= 6);
-      long.classList.toggle("invalid", pass.length < 6);
-      long.textContent = (pass.length >= 6 ? "✅" : "❌") + " Mínimo 6 caracteres";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-      mayus.classList.toggle("valid", /[A-Z]/.test(pass));
-      mayus.classList.toggle("invalid", !/[A-Z]/.test(pass));
-      mayus.textContent = (/[A-Z]/.test(pass) ? "✅" : "❌") + " Al menos una mayúscula";
-
-      simbolo.classList.toggle("valid", /[^A-Za-z0-9]/.test(pass));
-      simbolo.classList.toggle("invalid", !/[^A-Za-z0-9]/.test(pass));
-      simbolo.textContent = (/[^A-Za-z0-9]/.test(pass) ? "✅" : "❌") + " Al menos un símbolo (!@#$%)";
-    }
-
-    function mostrarPasswords() {
+    window.mostrarPasswords = () => {
       document.getElementById("password").type = "text";
       document.getElementById("confirmPassword").type = "text";
       const btn = document.getElementById("toggleBtn");
       btn.classList.add("active");
       btn.textContent = "🔓 Soltar para ocultar";
-    }
+    };
 
-    function ocultarPasswords() {
+    window.ocultarPasswords = () => {
       document.getElementById("password").type = "password";
       document.getElementById("confirmPassword").type = "password";
       const btn = document.getElementById("toggleBtn");
       btn.classList.remove("active");
       btn.textContent = "🔒 Mantén presionado para ver";
-    }
+    };
 
     function aplicarSacudida(elemento) {
       elemento.classList.add("shake");
@@ -248,87 +167,101 @@
         elemento.focus();
       }, 300);
     }
+
     function validarFormatoCorreo(correo) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(correo);
     }
-    async function registrar() {
+
+    function validarTelefono(numero) {
+      return /^\\d{10}$/.test(numero);
+    }
+
+    window.registrar = async () => {
       const campos = [
-        { id: "nombre1", obligatorio: true },
-        { id: "apellido1", obligatorio: true },
-        { id: "nacimiento", obligatorio: true },
-        { id: "telefono", obligatorio: true },
-        { id: "pais", obligatorio: true },
-        { id: "email", obligatorio: true },
-        { id: "password", obligatorio: true },
-        { id: "confirmPassword", obligatorio: true },
+        "nombre1", "apellido1", "nacimiento", "telefono", "pais", "email", "password", "confirmPassword"
       ];
 
-      let hayErrores = false;
-      let primerCampoInvalido = null;
+      let primerInvalido = null;
+      let error = false;
       const errorMsg = document.getElementById("errorMsg");
       errorMsg.textContent = "";
 
-      campos.forEach(campo => {
-        document.getElementById(campo.id).classList.remove("invalid");
-      });
-
-      campos.forEach(campo => {
-        const input = document.getElementById(campo.id);
-        if (campo.obligatorio && input.value.trim() === "") {
+      campos.forEach(id => {
+        const input = document.getElementById(id);
+        input.classList.remove("invalid");
+        if (!input.value.trim()) {
           input.classList.add("invalid");
           aplicarSacudida(input);
-          if (!primerCampoInvalido) primerCampoInvalido = input;
-          hayErrores = true;
+          if (!primerInvalido) primerInvalido = input;
+          error = true;
         }
       });
 
-      if (hayErrores) {
+      if (error) {
         errorMsg.textContent = "Por favor, completa todos los campos obligatorios.";
-        primerCampoInvalido.scrollIntoView({ behavior: "smooth", block: "center" });
+        primerInvalido.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
-      
-      const email = document.getElementById("email");
-      if (!validarFormatoCorreo(email.value.trim())) {
-        email.classList.add("invalid");
-        aplicarSacudida(email);
-        email.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      const email = document.getElementById("email").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+
+      if (!validarFormatoCorreo(email)) {
+        const input = document.getElementById("email");
+        input.classList.add("invalid");
+        aplicarSacudida(input);
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
         errorMsg.textContent = "El correo electrónico no es válido.";
         return;
       }
+
+      if (!validarTelefono(telefono)) {
+        const input = document.getElementById("telefono");
+        input.classList.add("invalid");
+        aplicarSacudida(input);
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+        errorMsg.textContent = "El número telefónico debe tener 10 dígitos.";
+        return;
+      }
+
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
 
       if (password !== confirmPassword) {
-        const pass1 = document.getElementById("password");
-        const pass2 = document.getElementById("confirmPassword");
-        pass1.classList.add("invalid");
-        pass2.classList.add("invalid");
-        aplicarSacudida(pass1);
-        aplicarSacudida(pass2);
-        pass1.scrollIntoView({ behavior: "smooth", block: "center" });
+        const p1 = document.getElementById("password");
+        const p2 = document.getElementById("confirmPassword");
+        p1.classList.add("invalid");
+        p2.classList.add("invalid");
+        aplicarSacudida(p1);
+        aplicarSacudida(p2);
+        p1.scrollIntoView({ behavior: "smooth", block: "center" });
         errorMsg.textContent = "Las contraseñas no coinciden.";
         return;
       }
 
-      if (password.length < 6 || !/[A-Z]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
-        const pass1 = document.getElementById("password");
-        pass1.classList.add("invalid");
-        aplicarSacudida(pass1);
-        pass1.scrollIntoView({ behavior: "smooth", block: "center" });
-        errorMsg.textContent = "La contraseña no cumple con los requisitos.";
-        return;
-      }
-
       try {
-        const { auth, createUserWithEmailAndPassword } = await import("./auth.js");
-        const userCredential = await createUserWithEmailAndPassword(auth, document.getElementById("email").value.trim(), password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        window.location.href = user.email === "alfomexgo@gmail.com" ? "admin.html" : "index.html";
-      } catch (error) {
-        errorMsg.textContent = error.message;
+        const uid = user.uid;
+
+        await setDoc(doc(db, "usuarios", uid), {
+          nombre1: document.getElementById("nombre1").value.trim(),
+          nombre2: document.getElementById("nombre2").value.trim(),
+          apellido1: document.getElementById("apellido1").value.trim(),
+          apellido2: document.getElementById("apellido2").value.trim(),
+          nacimiento: document.getElementById("nacimiento").value.trim(),
+          telefono,
+          email,
+          pais: document.getElementById("pais").value.trim(),
+          estado: "",
+          ciudad: ""
+        });
+
+        window.location.href = email === "alfomexgo@gmail.com" ? "admin.html" : "index.html";
+      } catch (err) {
+        errorMsg.textContent = err.message;
       }
-    }
+    };
   </script>
 </body>
 </html>
