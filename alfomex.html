@@ -1,95 +1,124 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alfomex - Diseña tu Alfombra</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root {
-      --bg: linear-gradient(to right, #3b5998, #8b9dc3, #e1306c);
-      --text: #000;
-      --card: rgba(255,255,255,0.95);
-    }
     body {
-      background: var(--bg);
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
+      background: linear-gradient(to right, #3b5998, #8b9dc3, #e1306c);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      color: var(--text);
+      color: #333;
     }
+
     header {
-      width: 100%;
       background: white;
+      width: 100%;
       padding: 15px 25px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 15px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
+
     header img {
       height: 50px;
+      margin-right: 15px;
     }
+
     header h1 {
-      margin: 0;
       font-size: 2rem;
-      color: black;
+      margin: 0;
+      color: #3b5998;
     }
-    canvas {
-      border: 3px solid black;
+
+    main {
       background: white;
-      margin-top: 20px;
+      margin: 30px 20px;
+      border-radius: 12px;
+      padding: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
     }
+
     .upload-btn, .send-btn {
-      margin-top: 15px;
-      padding: 12px 20px;
-      background: white;
-      color: black;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      background: #3b5998;
+      color: white;
       font-weight: bold;
-      border: 2px solid black;
+      border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: background 0.3s;
     }
+
     .upload-btn:hover, .send-btn:hover {
-      background: #f0f0f0;
+      background: #2d4373;
     }
+
     input[type="file"] {
       display: none;
     }
-    .social-links {
-      margin-top: 30px;
-      text-align: center;
+
+    canvas {
+      border: 2px solid #3b5998;
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      margin: 20px auto;
+      display: block;
     }
+
+    .social-links {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .social-links p {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
     .social-links a {
       margin: 0 10px;
       font-size: 1.8rem;
-      color: black;
+      color: #3b5998;
       transition: transform 0.2s;
     }
+
     .social-links a:hover {
       transform: scale(1.2);
+      color: #2d4373;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo Alfomex" />
+    <img src="logo.png" alt="Logo Alfomex">
     <h1>Diseña tu Alfombra</h1>
   </header>
 
-  <label class="upload-btn" for="imgInput">Subir Imagen</label>
-  <input type="file" id="imgInput" accept="image/png, image/jpeg">
+  <main>
+    <label class="upload-btn" for="imgInput">Subir Imagen</label>
+    <input type="file" id="imgInput" accept="image/png, image/jpeg">
 
-  <canvas id="lienzo" width="500" height="500"></canvas>
+    <canvas id="lienzo" width="500" height="500"></canvas>
 
-  <button class="send-btn" onclick="enviarPorCorreo()">Enviar Diseño</button>
+    <button class="send-btn" onclick="enviarPorCorreo()">Enviar Diseño</button>
+  </main>
 
   <div class="social-links">
     <p>Síguenos en redes sociales:</p>
@@ -130,7 +159,9 @@
         ctx.fillText(`${i}cm`, 2, px + 10);
       }
 
-      ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+      if (img.src) {
+        ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+      }
     }
 
     imgInput.addEventListener('change', e => {
