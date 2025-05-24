@@ -26,6 +26,9 @@ const auth = getAuth(app);
 
 export {
   auth,
+  db,
+  doc,
+  setDoc,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
