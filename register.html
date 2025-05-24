@@ -232,18 +232,31 @@
     }
 
     async function registrar() {
-      const email = document.getElementById("email").value;
+      const nombre1 = document.getElementById("nombre1").value.trim();
+      const apellido1 = document.getElementById("apellido1").value.trim();
+      const nacimiento = document.getElementById("nacimiento").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const pais = document.getElementById("pais").value.trim();
+      const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
       const errorMsg = document.getElementById("errorMsg");
 
       errorMsg.textContent = "";
 
+      // Validar campos obligatorios
+      if (!nombre1 || !apellido1 || !nacimiento || !telefono || !pais || !email || !password || !confirmPassword) {
+        errorMsg.textContent = "Por favor, llena todos los campos obligatorios.";
+        return;
+      }
+
+      // Validar coincidencia de contraseñas
       if (password !== confirmPassword) {
         errorMsg.textContent = "Las contraseñas no coinciden.";
         return;
       }
 
+      // Validar criterios de seguridad
       if (password.length < 6 || !/[A-Z]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
         errorMsg.textContent = "La contraseña no cumple con los requisitos.";
         return;
