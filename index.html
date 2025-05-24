@@ -11,6 +11,7 @@
       padding: 0;
       background: #f0f0f0;
     }
+
     header {
       background: #3b5998;
       color: white;
@@ -18,15 +19,24 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 100%;
+      box-sizing: border-box;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
     }
+
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
     }
+
     nav {
       display: flex;
       align-items: center;
     }
+
     nav button,
     nav span {
       background: white;
@@ -37,15 +47,20 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     nav button:hover,
     nav span:hover {
       background: #ddd;
     }
+
+    /* Carrusel */
     .carrusel {
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
+      margin-top: 70px;
     }
+
     .carrusel img {
       width: 100%;
       max-width: 600px;
@@ -53,12 +68,15 @@
       scroll-snap-align: center;
       margin: auto;
     }
+
     .catalogo {
       padding: 20px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
+      margin-top: 20px;
     }
+
     .alfombra {
       background: white;
       padding: 15px;
@@ -66,11 +84,13 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       text-align: center;
     }
+
     .alfombra img {
       width: 100%;
       height: auto;
       border-radius: 8px;
     }
+
     .modal {
       display: none;
       position: fixed;
@@ -84,13 +104,16 @@
       z-index: 9999;
       min-width: 300px;
     }
+
     .modal.active {
       display: block;
     }
+
     .modal h3 {
       margin-top: 0;
       color: #3b5998;
     }
+
     .modal input {
       width: 100%;
       padding: 10px;
@@ -98,6 +121,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+
     .modal button {
       width: 48%;
       padding: 10px;
@@ -109,25 +133,32 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     .modal .close-btn {
       background-color: crimson;
     }
+
     .error {
       font-size: 0.9rem;
       margin-top: 10px;
     }
+
     .error.red {
       color: red;
     }
+
     .error.green {
       color: green;
     }
+
+    /* Animación */
     @keyframes fadeInOut {
       0% { opacity: 0; }
       10% { opacity: 1; }
       90% { opacity: 1; }
       100% { opacity: 0; }
     }
+
     .error-anim {
       animation: fadeInOut 4s forwards;
     }
@@ -157,6 +188,29 @@
 
       .modal {
         width: 90%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 10px;
+      }
+
+      .logo {
+        font-size: 1rem;
+      }
+
+      nav button, nav span {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+
+      .catalogo {
+        padding: 10px;
+      }
+
+      .alfombra {
+        padding: 8px;
       }
     }
   </style>
