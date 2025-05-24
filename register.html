@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro - Alfomex</title>
   <style>
     body {
@@ -29,6 +29,12 @@
       margin-bottom: 20px;
       color: #333;
     }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+      color: #444;
+    }
     input, select {
       width: 100%;
       padding: 10px;
@@ -36,32 +42,6 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       box-sizing: border-box;
-    }
-    .invalid {
-      border-color: #d00000 !important;
-    }
-    .criteria {
-      font-size: 0.85rem;
-      margin-top: -5px;
-      margin-bottom: 10px;
-    }
-    .criteria span {
-      display: block;
-    }
-    .criteria .valid {
-      color: green;
-    }
-    .criteria .invalid {
-      color: #d00000;
-    }
-    .toggle-btn {
-      font-size: 0.9rem;
-      background: none;
-      border: none;
-      color: #3b5998;
-      cursor: pointer;
-      margin-bottom: 10px;
-      float: right;
     }
     button {
       width: 100%;
@@ -72,12 +52,13 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 1rem;
+      margin-top: 15px;
     }
     button:hover {
       background-color: #2d4373;
     }
     .error {
-      color: #d00000;
+      color: red;
       text-align: center;
       margin-top: 10px;
     }
@@ -98,9 +79,11 @@
     <input type="text" id="nombre2" placeholder="Segundo Nombre (opcional)" />
     <input type="text" id="apellido1" placeholder="Primer Apellido" required />
     <input type="text" id="apellido2" placeholder="Segundo Apellido (opcional)" />
-    <input type="date" id="nacimiento" placeholder="Fecha de Nacimiento" required />
-    <input type="tel" id="telefono" placeholder="Número Telefónico" required maxlength="10"
-      oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
+
+    <label for="nacimiento">Fecha de nacimiento (debes ser mayor de 18 años)</label>
+    <input type="date" id="nacimiento" max="" required />
+
+    <input type="tel" id="telefono" placeholder="Número Telefónico" maxlength="10" pattern="[0-9]{10}" title="Solo 10 dígitos numéricos" required />
 
     <select id="pais" required>
       <option value="">Selecciona un país</option>
@@ -111,103 +94,70 @@
     <input type="email" id="email" placeholder="Correo electrónico" required />
 
     <input type="password" id="password" placeholder="Contraseña" required />
-    <button class="toggle-btn" type="button" onclick="togglePassword('password')">Mostrar/Ocultar</button>
-    <div class="criteria" id="criterios">
-      <span id="criterio-long" class="invalid">❌ Mínimo 6 caracteres</span>
-      <span id="criterio-mayus" class="invalid">❌ Al menos una mayúscula</span>
-      <span id="criterio-simbolo" class="invalid">❌ Al menos un símbolo (!@#$%)</span>
-    </div>
-
     <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required />
-    <button class="toggle-btn" type="button" onclick="togglePassword('confirmPassword')">Mostrar/Ocultar</button>
 
     <button onclick="registrar()">Registrarse</button>
     <div class="error" id="errorMsg"></div>
     <div class="link">
-      ¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a>
+      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
     </div>
   </div>
 
-  <script src="./auth.js" type="module"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const passwordInput = document.getElementById("password");
-      passwordInput.addEventListener("input", validarCriterios);
+  <script type="module">
+    import { auth, createUserWithEmailAndPassword } from './auth.js';
+
+    // Establecer max para fecha (hoy - 18 años)
+    document.addEventListener('DOMContentLoaded', () => {
+      const nacimiento = document.getElementById('nacimiento');
+      const hoy = new Date();
+      const añoMax = hoy.getFullYear() - 18;
+      const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+      const dia = String(hoy.getDate()).padStart(2, '0');
+      nacimiento.max = `${añoMax}-${mes}-${dia}`;
     });
 
-    function validarCriterios() {
-      const pass = document.getElementById("password").value;
-      const long = document.getElementById("criterio-long");
-      const mayus = document.getElementById("criterio-mayus");
-      const simbolo = document.getElementById("criterio-simbolo");
+    function validarRegistro() {
+      const fechaNac = new Date(document.getElementById('nacimiento').value);
+      const hoy = new Date();
+      const edadMinima = 18;
+      const correo = document.getElementById('email').value.trim();
 
-      if (pass.length >= 6) {
-        long.classList.add("valid");
-        long.classList.remove("invalid");
-        long.textContent = "✅ Mínimo 6 caracteres";
-      } else {
-        long.classList.add("invalid");
-        long.classList.remove("valid");
-        long.textContent = "❌ Mínimo 6 caracteres";
+      // Validar fecha mayor de edad
+      const fecha18 = new Date(hoy.getFullYear() - edadMinima, hoy.getMonth(), hoy.getDate());
+      if (fechaNac > fecha18 || isNaN(fechaNac.getTime())) {
+        alert('Debes ser mayor de 18 años para registrarte.');
+        return false;
       }
 
-      if (/[A-Z]/.test(pass)) {
-        mayus.classList.add("valid");
-        mayus.classList.remove("invalid");
-        mayus.textContent = "✅ Al menos una mayúscula";
-      } else {
-        mayus.classList.add("invalid");
-        mayus.classList.remove("valid");
-        mayus.textContent = "❌ Al menos una mayúscula";
+      // Validar correo válido y dominio permitido
+      const regexCorreo = /^[a-zA-Z0-9._%+-]+@(?:gmail\\.com|hotmail\\.com|outlook\\.com|yahoo\\.com)$/i;
+      if (!regexCorreo.test(correo)) {
+        alert('Solo se permiten correos de gmail.com, hotmail.com, outlook.com o yahoo.com');
+        return false;
       }
 
-      if (/[^A-Za-z0-9]/.test(pass)) {
-        simbolo.classList.add("valid");
-        simbolo.classList.remove("invalid");
-        simbolo.textContent = "✅ Al menos un símbolo (!@#$%)";
-      } else {
-        simbolo.classList.add("invalid");
-        simbolo.classList.remove("valid");
-        simbolo.textContent = "❌ Al menos un símbolo (!@#$%)";
-      }
-    }
-
-    function togglePassword(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === "password" ? "text" : "password";
+      return true;
     }
 
     async function registrar() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
-      const telefono = document.getElementById("telefono").value.trim();
-      const errorMsg = document.getElementById("errorMsg");
+      if (!validarRegistro()) return;
 
-      errorMsg.textContent = "";
-      document.getElementById("confirmPassword").classList.remove("invalid");
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorMsg = document.getElementById('errorMsg');
 
-      if (!/^[0-9]{10}$/.test(telefono)) {
-        errorMsg.textContent = "El número telefónico debe tener exactamente 10 dígitos numéricos.";
-        return;
-      }
+      errorMsg.textContent = '';
 
       if (password !== confirmPassword) {
-        errorMsg.textContent = "Las contraseñas no coinciden.";
-        document.getElementById("confirmPassword").classList.add("invalid");
-        return;
-      }
-
-      if (password.length < 6 || !/[A-Z]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
-        errorMsg.textContent = "La contraseña no cumple con los requisitos.";
+        errorMsg.textContent = 'Las contraseñas no coinciden.';
         return;
       }
 
       try {
-        const { auth, createUserWithEmailAndPassword } = await import("./auth.js");
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        window.location.href = user.email === "alfomexgo@gmail.com" ? "admin.html" : "index.html";
+        window.location.href = user.email === 'alfomexgo@gmail.com' ? 'admin.html' : 'index.html';
       } catch (error) {
         errorMsg.textContent = error.message;
       }
