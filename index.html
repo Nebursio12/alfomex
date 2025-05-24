@@ -12,7 +12,6 @@
       background: #f0f0f0;
     }
 
-    /* Encabezado */
     header {
       background: #3b5998;
       color: white;
@@ -33,7 +32,6 @@
       font-weight: bold;
     }
 
-    /* Botón de menú en la esquina izquierda */
     #menuBtn {
       font-size: 1.5rem;
       color: white;
@@ -63,19 +61,24 @@
       background: #ddd;
     }
 
-    /* Barra lateral */
+    /* Barra lateral con efecto deslizante */
     .sidenav {
       height: 100%;
-      width: 0;
+      width: 250px;
       position: fixed;
       top: 0;
-      left: 0;
+      left: -250px;
       background-color: #3b5998;
       padding-top: 60px;
-      transition: 0.3s;
-      overflow-x: hidden;
       padding-left: 15px;
+      transition: left 0.3s ease;
+      overflow-x: hidden;
       z-index: 200;
+      box-sizing: border-box;
+    }
+
+    .sidenav.open {
+      left: 0;
     }
 
     .sidenav a {
@@ -138,7 +141,6 @@
       border-radius: 8px;
     }
 
-    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -210,7 +212,6 @@
       animation: fadeInOut 4s forwards;
     }
 
-    /* Media Queries */
     @media (max-width: 768px) {
       header {
         padding: 10px 20px;
@@ -271,7 +272,6 @@
     </nav>
   </header>
 
-  <!-- Barra lateral -->
   <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
     <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
@@ -337,14 +337,12 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const navOptions = document.getElementById("navOptions");
-
     window.openNav = () => {
-      document.getElementById("mySidenav").style.width = "250px";
+      document.getElementById("mySidenav").classList.add("open");
     };
 
     window.closeNav = () => {
-      document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("mySidenav").classList.remove("open");
     };
 
     window.abrirModal = () => {
@@ -409,9 +407,7 @@
 
     onAuthStateChanged(auth, (user) => {
       const nav = document.getElementById("navOptions");
-      let contenido = `
-       
-      `;
+      let contenido = ``;
       if (user) {
         const nombre = user.email.split("@")[0];
         contenido += `
