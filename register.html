@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registro - Alfomex</title>
   <style>
     body {
@@ -72,6 +72,11 @@
       cursor: pointer;
       margin-bottom: 10px;
       float: right;
+      user-select: none;
+    }
+
+    .toggle-btn.active {
+      color: #2d4373;
     }
 
     button {
@@ -156,7 +161,6 @@
     </select>
 
     <input type="email" id="email" placeholder="Correo electrónico" required />
-
     <input type="password" id="password" placeholder="Contraseña" required />
     <div class="criteria" id="criterios">
       <span id="criterio-long" class="invalid">❌ Mínimo 6 caracteres</span>
@@ -168,12 +172,16 @@
 
     <!-- Botón único para mostrar/ocultar ambas contraseñas -->
     <button
+      id="toggleBtn"
       class="toggle-btn"
       type="button"
       onmousedown="mostrarPasswords()"
       onmouseup="ocultarPasswords()"
       onmouseleave="ocultarPasswords()"
-    >🔓 Mantén presionado para ver contraseñas</button>
+      ontouchstart="mostrarPasswords()"
+      ontouchend="ocultarPasswords()"
+      oncontextmenu="return false;"
+    >🔒 Mantén presionado para ver</button>
 
     <button onclick="registrar()">Registrarse</button>
     <div class="error" id="errorMsg"></div>
@@ -211,11 +219,17 @@
     function mostrarPasswords() {
       document.getElementById("password").type = "text";
       document.getElementById("confirmPassword").type = "text";
+      const btn = document.getElementById("toggleBtn");
+      btn.classList.add("active");
+      btn.textContent = "🔓 Soltar para ocultar";
     }
 
     function ocultarPasswords() {
       document.getElementById("password").type = "password";
       document.getElementById("confirmPassword").type = "password";
+      const btn = document.getElementById("toggleBtn");
+      btn.classList.remove("active");
+      btn.textContent = "🔒 Mantén presionado para ver";
     }
 
     async function registrar() {
