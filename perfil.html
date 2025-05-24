@@ -49,6 +49,9 @@
     button:hover {
       background-color: #2d4373;
     }
+    .logout-btn {
+      background-color: crimson;
+    }
     .success {
       color: green;
       text-align: center;
@@ -58,6 +61,16 @@
       color: red;
       text-align: center;
       margin-top: 10px;
+    }
+    .criteria span {
+      display: block;
+      font-size: 0.9rem;
+    }
+    .valid {
+      color: green;
+    }
+    .invalid {
+      color: red;
     }
   </style>
 </head>
@@ -78,14 +91,15 @@
 
     <h3 style="margin-top: 30px;">Cambiar contraseña</h3>
     <input type="password" id="newPassword" placeholder="Nueva contraseña">
-    <div class="criteria" id="criterios">
+    <div class="criteria">
       <span id="criterio-long" class="invalid">❌ Mínimo 6 caracteres</span>
       <span id="criterio-mayus" class="invalid">❌ Al menos una mayúscula</span>
       <span id="criterio-simbolo" class="invalid">❌ Al menos un símbolo (!@#$%)</span>
+      <span id="criterio-diferente" class="invalid">❌ Debe ser diferente a la contraseña anterior</span>
     </div>
     <button onclick="cambiarContrasena()">Cambiar contraseña</button>
 
-    <button onclick="cerrarSesion()" style="background-color: crimson;">Cerrar sesión</button>
+    <button class="logout-btn" onclick="cerrarSesion()">Cerrar sesión</button>
 
     <div class="success" id="successMsg"></div>
     <div class="error" id="errorMsg"></div>
@@ -109,100 +123,76 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    let currentUser = null;
 
     document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(() => {
-        onAuthStateChanged(auth, async (user) => {
-          if (!user) {
-            window.location.href = "login.html";
-            return;
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) return window.location.href = "login.html";
+        currentUser = user;
+        const uid = user.uid;
+        const usuarioRef = doc(db, "usuarios", uid);
+        const docSnap = await getDoc(usuarioRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("nombre1").value = data.nombre1 || "";
+          document.getElementById("nombre2").value = data.nombre2 || "";
+          document.getElementById("apellido1").value = data.apellido1 || "";
+          document.getElementById("apellido2").value = data.apellido2 || "";
+          document.getElementById("nacimiento").value = data.nacimiento || "";
+          document.getElementById("email").value = data.email || "";
+          document.getElementById("telefono").value = data.telefono || "";
+          document.getElementById("estado").value = data.estado || "";
+          document.getElementById("ciudad").value = data.ciudad || "";
+
+          if (data.estado && data.ciudad) {
+            document.getElementById("estado").readOnly = true;
+            document.getElementById("ciudad").readOnly = true;
+            document.getElementById("btnActualizar").disabled = true;
           }
+        }
+      });
 
-          const uid = user.uid;
-          const usuarioRef = doc(db, "usuarios", uid);
-          const docSnap = await getDoc(usuarioRef);
-
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            document.getElementById("nombre1").value = data.nombre1 || "";
-            document.getElementById("nombre2").value = data.nombre2 || "";
-            document.getElementById("apellido1").value = data.apellido1 || "";
-            document.getElementById("apellido2").value = data.apellido2 || "";
-            document.getElementById("nacimiento").value = data.nacimiento || "";
-            document.getElementById("email").value = data.email || "";
-            document.getElementById("telefono").value = data.telefono || "";
-            document.getElementById("estado").value = data.estado || "";
-            document.getElementById("ciudad").value = data.ciudad || "";
-
-            if (data.estado && data.ciudad) {
-              document.getElementById("estado").readOnly = true;
-              document.getElementById("ciudad").readOnly = true;
-              document.getElementById("btnActualizar").disabled = true;
-            }
-
-            window.usuarioRef = usuarioRef;
-          } else {
-            document.getElementById("errorMsg").textContent = "Usuario no encontrado en Firestore.";
-          }
-        });
-
-        document.getElementById("newPassword").addEventListener("input", validarCriterios);
-      }, 300);
+      document.getElementById("newPassword").addEventListener("input", validarCriterios);
     });
+
+    function validarCriterios() {
+      const pass = document.getElementById("newPassword").value;
+      const currentEmail = auth.currentUser?.email || "";
+
+      document.getElementById("criterio-long").className = pass.length >= 6 ? "valid" : "invalid";
+      document.getElementById("criterio-mayus").className = /[A-Z]/.test(pass) ? "valid" : "invalid";
+      document.getElementById("criterio-simbolo").className = /[^A-Za-z0-9]/.test(pass) ? "valid" : "invalid";
+      document.getElementById("criterio-diferente").className = (currentUser && currentUser.email && !pass.includes(currentEmail)) ? "valid" : "invalid";
+    }
 
     window.actualizarDatos = async function () {
       const estado = document.getElementById("estado").value;
       const ciudad = document.getElementById("ciudad").value;
-      const success = document.getElementById("successMsg");
-      const error = document.getElementById("errorMsg");
-      success.textContent = "";
-      error.textContent = "";
-
-      try {
-        if (!window.usuarioRef) throw new Error("No se encontró sesión activa.");
-        if (!estado || !ciudad) throw new Error("Por favor ingresa estado y ciudad.");
-
-        await updateDoc(window.usuarioRef, { estado, ciudad });
-        document.getElementById("estado").readOnly = true;
-        document.getElementById("ciudad").readOnly = true;
-        document.getElementById("btnActualizar").disabled = true;
-        success.textContent = "Datos actualizados correctamente.";
-      } catch (e) {
-        error.textContent = e.message;
-      }
+      if (!estado || !ciudad) return alert("Llena ambos campos");
+      const uid = currentUser.uid;
+      const usuarioRef = doc(db, "usuarios", uid);
+      await updateDoc(usuarioRef, { estado, ciudad });
+      document.getElementById("estado").readOnly = true;
+      document.getElementById("ciudad").readOnly = true;
+      document.getElementById("btnActualizar").disabled = true;
+      document.getElementById("successMsg").textContent = "Ciudad y estado guardados.";
     };
 
-    function validarCriterios() {
-      const pass = document.getElementById("newPassword").value;
-      const long = document.getElementById("criterio-long");
-      const mayus = document.getElementById("criterio-mayus");
-      const simbolo = document.getElementById("criterio-simbolo");
-
-      long.className = pass.length >= 6 ? "valid" : "invalid";
-      long.textContent = pass.length >= 6 ? "✅ Mínimo 6 caracteres" : "❌ Mínimo 6 caracteres";
-
-      mayus.className = /[A-Z]/.test(pass) ? "valid" : "invalid";
-      mayus.textContent = /[A-Z]/.test(pass) ? "✅ Al menos una mayúscula" : "❌ Al menos una mayúscula";
-
-      simbolo.className = /[^A-Za-z0-9]/.test(pass) ? "valid" : "invalid";
-      simbolo.textContent = /[^A-Za-z0-9]/.test(pass) ? "✅ Al menos un símbolo (!@#$%)" : "❌ Al menos un símbolo (!@#$%)";
-    }
-
     window.cambiarContrasena = async function () {
-      const newPass = document.getElementById("newPassword").value;
+      const pass = document.getElementById("newPassword").value;
       const error = document.getElementById("errorMsg");
       const success = document.getElementById("successMsg");
       error.textContent = "";
       success.textContent = "";
 
-      if (newPass.length < 6 || !/[A-Z]/.test(newPass) || !/[^A-Za-z0-9]/.test(newPass)) {
+      const esValida = pass.length >= 6 && /[A-Z]/.test(pass) && /[^A-Za-z0-9]/.test(pass);
+      if (!esValida) {
         error.textContent = "La contraseña no cumple con los requisitos.";
         return;
       }
-
       try {
-        const user = auth.currentUser;
-        await updatePassword(user, newPass);
+        await updatePassword(currentUser, pass);
         success.textContent = "Contraseña actualizada correctamente.";
       } catch (e) {
         error.textContent = e.message;
@@ -210,12 +200,8 @@
     };
 
     window.cerrarSesion = async function () {
-      try {
-        await signOut(auth);
-        window.location.href = "login.html";
-      } catch (e) {
-        alert("Error al cerrar sesión: " + e.message);
-      }
+      await signOut(auth);
+      window.location.href = "login.html";
     };
   </script>
 </body>
