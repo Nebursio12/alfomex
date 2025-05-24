@@ -105,7 +105,6 @@
       text-decoration: none;
     }
 
-    /* Media Queries para responsividad */
     @media (max-width: 768px) {
       body {
         padding: 10px;
@@ -159,7 +158,6 @@
     <input type="email" id="email" placeholder="Correo electrónico" required />
 
     <input type="password" id="password" placeholder="Contraseña" required />
-    <button class="toggle-btn" type="button" onclick="togglePassword('password')">Mostrar/Ocultar</button>
     <div class="criteria" id="criterios">
       <span id="criterio-long" class="invalid">❌ Mínimo 6 caracteres</span>
       <span id="criterio-mayus" class="invalid">❌ Al menos una mayúscula</span>
@@ -167,7 +165,15 @@
     </div>
 
     <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required />
-    <button class="toggle-btn" type="button" onclick="togglePassword('confirmPassword')">Mostrar/Ocultar</button>
+
+    <!-- Botón único para mostrar/ocultar ambas contraseñas -->
+    <button
+      class="toggle-btn"
+      type="button"
+      onmousedown="mostrarPasswords()"
+      onmouseup="ocultarPasswords()"
+      onmouseleave="ocultarPasswords()"
+    >🔓 Mantén presionado para ver contraseñas</button>
 
     <button onclick="registrar()">Registrarse</button>
     <div class="error" id="errorMsg"></div>
@@ -189,40 +195,27 @@
       const mayus = document.getElementById("criterio-mayus");
       const simbolo = document.getElementById("criterio-simbolo");
 
-      if (pass.length >= 6) {
-        long.classList.add("valid");
-        long.classList.remove("invalid");
-        long.textContent = "✅ Mínimo 6 caracteres";
-      } else {
-        long.classList.add("invalid");
-        long.classList.remove("valid");
-        long.textContent = "❌ Mínimo 6 caracteres";
-      }
+      long.classList.toggle("valid", pass.length >= 6);
+      long.classList.toggle("invalid", pass.length < 6);
+      long.textContent = (pass.length >= 6 ? "✅" : "❌") + " Mínimo 6 caracteres";
 
-      if (/[A-Z]/.test(pass)) {
-        mayus.classList.add("valid");
-        mayus.classList.remove("invalid");
-        mayus.textContent = "✅ Al menos una mayúscula";
-      } else {
-        mayus.classList.add("invalid");
-        mayus.classList.remove("valid");
-        mayus.textContent = "❌ Al menos una mayúscula";
-      }
+      mayus.classList.toggle("valid", /[A-Z]/.test(pass));
+      mayus.classList.toggle("invalid", !/[A-Z]/.test(pass));
+      mayus.textContent = (/[A-Z]/.test(pass) ? "✅" : "❌") + " Al menos una mayúscula";
 
-      if (/[^A-Za-z0-9]/.test(pass)) {
-        simbolo.classList.add("valid");
-        simbolo.classList.remove("invalid");
-        simbolo.textContent = "✅ Al menos un símbolo (!@#$%)";
-      } else {
-        simbolo.classList.add("invalid");
-        simbolo.classList.remove("valid");
-        simbolo.textContent = "❌ Al menos un símbolo (!@#$%)";
-      }
+      simbolo.classList.toggle("valid", /[^A-Za-z0-9]/.test(pass));
+      simbolo.classList.toggle("invalid", !/[^A-Za-z0-9]/.test(pass));
+      simbolo.textContent = (/[^A-Za-z0-9]/.test(pass) ? "✅" : "❌") + " Al menos un símbolo (!@#$%)";
     }
 
-    function togglePassword(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === "password" ? "text" : "password";
+    function mostrarPasswords() {
+      document.getElementById("password").type = "text";
+      document.getElementById("confirmPassword").type = "text";
+    }
+
+    function ocultarPasswords() {
+      document.getElementById("password").type = "password";
+      document.getElementById("confirmPassword").type = "password";
     }
 
     async function registrar() {
