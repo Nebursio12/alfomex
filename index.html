@@ -23,7 +23,11 @@
       font-size: 1.5rem;
       font-weight: bold;
     }
-    nav button {
+    nav {
+      display: flex;
+      align-items: center;
+    }
+    nav button, nav span {
       background: white;
       color: #3b5998;
       border: none;
@@ -88,7 +92,7 @@
 <body>
   <header>
     <div class="logo">ALFOMEX</div>
-    <nav>
+    <nav id="navOptions">
       <button onclick="abrirModal()">Iniciar sesión</button>
       <button onclick="location.href='register.html'">Registrarse</button>
     </nav>
@@ -114,7 +118,9 @@
       getAuth,
       signInWithEmailAndPassword,
       setPersistence,
-      browserLocalPersistence
+      browserLocalPersistence,
+      signOut,
+      onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -129,6 +135,8 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+
+    const navOptions = document.getElementById("navOptions");
 
     window.abrirModal = () => {
       document.getElementById("loginModal").classList.add("active");
@@ -148,16 +156,26 @@
         await setPersistence(auth, browserLocalPersistence);
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
-        if (user.email === "alfomexgo@gmail.com") {
-          window.location.href = "admin.html";
-        } else {
-          window.location.href = "index.html";
-        }
+        window.location.reload();
       } catch (error) {
         errorMsg.textContent = "Correo o contraseña incorrectos.";
       }
     };
+
+    window.cerrarSesion = async () => {
+      await signOut(auth);
+      window.location.reload();
+    };
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        const nombre = user.email.split("@")[0];
+        navOptions.innerHTML = `
+          <span onclick="location.href='perfil.html'">${nombre}</span>
+          <button onclick="cerrarSesion()">Cerrar sesión</button>
+        `;
+      }
+    });
   </script>
 </body>
 </html>
