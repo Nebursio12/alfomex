@@ -23,11 +23,7 @@
       font-size: 1.5rem;
       font-weight: bold;
     }
-    nav {
-      display: flex;
-      align-items: center;
-    }
-    nav button, nav span {
+    nav button {
       background: white;
       color: #3b5998;
       border: none;
@@ -36,96 +32,63 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    nav span {
-      background: #fff;
-      color: #3b5998;
-      font-weight: bold;
-    }
-    nav button:hover, nav span:hover {
+    nav button:hover {
       background: #ddd;
     }
+    .carrusel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+    .carrusel img {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      scroll-snap-align: center;
+      margin: auto;
+    }
     .catalogo {
-      padding: 40px;
-      text-align: center;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 300px;
-      height: 100%;
-      background-color: white;
-      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
       padding: 20px;
-      z-index: 1000;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
     }
-    .modal.active {
-      display: block;
-    }
-    .modal h3 {
-      margin-top: 0;
-    }
-    .modal input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .modal button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background-color: #3b5998;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .close-btn {
-      background: crimson;
-      margin-top: 10px;
-    }
-    .error {
-      color: red;
-      font-size: 0.9rem;
+    .alfombra {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       text-align: center;
+    }
+    .alfombra img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">ALFOMEX</div>
-    <nav id="navOptions">
-      <span>Cargando...</span>
+    <nav>
+      <button onclick="location.href='alfomex.html'">Pedido personalizado</button>
+      <button onclick="alert('Próximamente')">Categorías</button>
     </nav>
   </header>
 
-  <section class="catalogo">
-    <h2>Catálogo de Alfombras</h2>
-    <p>Contenido visual del catálogo aquí...</p>
+  <section class="carrusel">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+1" alt="Alfombra 1">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+2" alt="Alfombra 2">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+3" alt="Alfombra 3">
   </section>
 
-  <div class="modal" id="loginModal">
-    <h3>Iniciar Sesión</h3>
-    <input type="email" id="email" placeholder="Correo electrónico">
-    <input type="password" id="password" placeholder="Contraseña">
-    <button onclick="iniciarSesion()">Entrar</button>
-    <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
-    <div class="error" id="errorMsg"></div>
-  </div>
+  <section class="catalogo" id="catalogo">
+    <!-- Aquí se cargarán las alfombras desde Firestore -->
+  </section>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      setPersistence,
-      browserLocalPersistence,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -138,52 +101,25 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    const navOptions = document.getElementById("navOptions");
-
-    window.abrirModal = () => {
-      document.getElementById("loginModal").classList.add("active");
-    };
-
-    window.cerrarModal = () => {
-      document.getElementById("loginModal").classList.remove("active");
-    };
-
-    window.iniciarSesion = async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const errorMsg = document.getElementById("errorMsg");
-      errorMsg.textContent = "";
-
-      try {
-        await setPersistence(auth, browserLocalPersistence);
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        window.location.reload();
-      } catch (error) {
-        errorMsg.textContent = "Correo o contraseña incorrectos.";
-      }
-    };
-
-    window.cerrarSesion = async () => {
-      await signOut(auth);
-      window.location.reload();
-    };
-
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        const nombre = user.email.split("@")[0];
-        navOptions.innerHTML = `
-          <span onclick="location.href='perfil.html'">${nombre}</span>
-          <button onclick="cerrarSesion()">Cerrar sesión</button>
+    async function cargarAlfombras() {
+      const contenedor = document.getElementById("catalogo");
+      const querySnapshot = await getDocs(collection(db, "alfombras"));
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement("div");
+        div.className = "alfombra";
+        div.innerHTML = `
+          <img src="${data.imagen}" alt="${data.nombre}" />
+          <h4>${data.nombre}</h4>
+          <p>${data.precio}</p>
         `;
-      } else {
-        navOptions.innerHTML = `
-          <button onclick="abrirModal()">Iniciar sesión</button>
-          <button onclick="location.href='register.html'">Registrarse</button>
-        `;
-      }
-    });
+        contenedor.appendChild(div);
+      });
+    }
+
+    cargarAlfombras();
   </script>
 </body>
 </html>
