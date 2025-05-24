@@ -261,6 +261,22 @@
         padding: 8px;
       }
     }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: rgba(0, 0, 0, 0.5); /* oscuridad */
+      z-index: 9998; /* debajo del modal */
+    }
+
+    .modal-overlay.active {
+      display: block;
+    }
+
   </style>
 </head>
 <body>
@@ -285,7 +301,7 @@
   </section>
 
   <section class="catalogo" id="catalogo"></section>
-
+  <div class="modal-overlay" id="modalOverlay"></div>
   <div class="modal" id="loginModal">
     <h3>Iniciar Sesión</h3>
     <input type="email" id="email" placeholder="Correo electrónico" />
@@ -347,10 +363,12 @@
 
     window.abrirModal = () => {
       document.getElementById("loginModal").classList.add("active");
+      document.getElementById("modalOverlay").classList.add("active");
     };
 
     window.cerrarModal = () => {
       document.getElementById("loginModal").classList.remove("active");
+      document.getElementById("modalOverlay").classList.remove("active");
       document.getElementById("errorMsg").textContent = "";
       document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
       document.getElementById("email").value = "";
