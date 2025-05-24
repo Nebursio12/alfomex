@@ -11,6 +11,14 @@ import {
   updatePassword
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
   authDomain: "alfomex-f4efa.firebaseapp.com",
@@ -23,12 +31,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app); // ✅ Inicializar Firestore
 
 export {
   auth,
-  db,
+  db, // ✅ Exportar Firestore
   doc,
   setDoc,
+  getDoc,
+  updateDoc,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
