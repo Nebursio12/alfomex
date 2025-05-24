@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Catálogo - Alfomex</title>
   <style>
     body {
@@ -27,7 +27,8 @@
       display: flex;
       align-items: center;
     }
-    nav button, nav span {
+    nav button,
+    nav span {
       background: white;
       color: #3b5998;
       border: none;
@@ -36,7 +37,8 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    nav button:hover, nav span:hover {
+    nav button:hover,
+    nav span:hover {
       background: #ddd;
     }
     .carrusel {
@@ -111,9 +113,23 @@
       background-color: crimson;
     }
     .error {
-      color: red;
       font-size: 0.9rem;
       margin-top: 10px;
+    }
+    .error.red {
+      color: red;
+    }
+    .error.green {
+      color: green;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .error-anim {
+      animation: fadeInOut 4s forwards;
     }
   </style>
 </head>
@@ -126,26 +142,31 @@
   </header>
 
   <section class="carrusel">
-    <img src="https://via.placeholder.com/600x300?text=Alfombra+1" alt="Alfombra 1">
-    <img src="https://via.placeholder.com/600x300?text=Alfombra+2" alt="Alfombra 2">
-    <img src="https://via.placeholder.com/600x300?text=Alfombra+3" alt="Alfombra 3">
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+1" alt="Alfombra 1" />
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+2" alt="Alfombra 2" />
+    <img src="https://via.placeholder.com/600x300?text=Alfombra+3" alt="Alfombra 3" />
   </section>
 
   <section class="catalogo" id="catalogo"></section>
 
   <div class="modal" id="loginModal">
     <h3>Iniciar Sesión</h3>
-    <input type="email" id="email" placeholder="Correo electrónico">
-    <input type="password" id="password" placeholder="Contraseña">
+    <input type="email" id="email" placeholder="Correo electrónico" />
+    <input type="password" id="password" placeholder="Contraseña" />
     <div style="display: flex; justify-content: space-between;">
       <button onclick="iniciarSesion()">Entrar</button>
       <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
     </div>
     <div style="margin-top: 10px; text-align: center;">
-      <button onclick="mostrarRecuperacion()" style="background: transparent; color: #3b5998; border: none; cursor: pointer;">¿Olvidaste tu contraseña?</button>
+      <button
+        onclick="mostrarRecuperacion()"
+        style="background: transparent; color: #3b5998; border: none; cursor: pointer;"
+      >
+        ¿Olvidaste tu contraseña?
+      </button>
     </div>
     <div id="recuperacion" style="display: none; margin-top: 15px;">
-      <input type="email" id="emailRecuperar" placeholder="Correo para recuperar">
+      <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
       <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 8px;">Enviar enlace</button>
     </div>
     <div class="error" id="errorMsg"></div>
@@ -160,7 +181,8 @@
       browserLocalPersistence,
       signOut,
       onAuthStateChanged,
-      sendPasswordResetEmail
+      sendPasswordResetEmail,
+      fetchSignInMethodsForEmail,
     } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -171,7 +193,7 @@
       storageBucket: "alfomex-f4efa.firebasestorage.app",
       messagingSenderId: "1090528818564",
       appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
-      measurementId: "G-SW633HRXV1"
+      measurementId: "G-SW633HRXV1",
     };
 
     const app = initializeApp(firebaseConfig);
@@ -186,6 +208,13 @@
 
     window.cerrarModal = () => {
       document.getElementById("loginModal").classList.remove("active");
+      // limpiar mensajes y campos
+      document.getElementById("errorMsg").textContent = "";
+      document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("recuperacion").style.display = "none";
+      document.getElementById("emailRecuperar").value = "";
     };
 
     window.iniciarSesion = async () => {
@@ -193,18 +222,15 @@
       const password = document.getElementById("password").value;
       const errorMsg = document.getElementById("errorMsg");
       errorMsg.textContent = "";
+      errorMsg.classList.remove("error-anim", "red", "green");
       try {
         await setPersistence(auth, browserLocalPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         window.location.reload();
       } catch (error) {
+        errorMsg.classList.add("error-anim", "red");
         errorMsg.textContent = "Correo o contraseña incorrectos.";
       }
-    };
-
-    window.cerrarSesion = async () => {
-      await signOut(auth);
-      window.location.href = "index.html";
     };
 
     window.mostrarRecuperacion = () => {
@@ -215,17 +241,29 @@
       const correo = document.getElementById("emailRecuperar").value;
       const errorMsg = document.getElementById("errorMsg");
       errorMsg.textContent = "";
+      errorMsg.classList.remove("error-anim", "red", "green");
       try {
+        const methods = await fetchSignInMethodsForEmail(auth, correo);
+        if (methods.length === 0) {
+          errorMsg.classList.add("error-anim", "red");
+          errorMsg.textContent = "Este correo no está registrado.";
+          return;
+        }
         await sendPasswordResetEmail(auth, correo);
-        errorMsg.style.color = "green";
+        errorMsg.classList.add("error-anim", "green");
         errorMsg.textContent = "Se envió el enlace al correo.";
       } catch (error) {
-        errorMsg.style.color = "red";
+        errorMsg.classList.add("error-anim", "red");
         errorMsg.textContent = "Error: " + error.message;
       }
     };
 
-    onAuthStateChanged(auth, user => {
+    window.cerrarSesion = async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    };
+
+    onAuthStateChanged(auth, (user) => {
       const nav = document.getElementById("navOptions");
       let contenido = `
         <button onclick="verificarPedidoPersonalizado()">Pedido personalizado</button>
@@ -257,7 +295,7 @@
     async function cargarAlfombras() {
       const contenedor = document.getElementById("catalogo");
       const querySnapshot = await getDocs(collection(db, "alfombras"));
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const data = doc.data();
         const div = document.createElement("div");
         div.className = "alfombra";
