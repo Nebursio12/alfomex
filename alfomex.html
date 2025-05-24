@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diseña tu Alfombra</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alfomex - Diseña tu Alfombra</title>
   <style>
     body {
+      background: white;
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #fff;
     }
     header {
       background: #3b5998;
       color: white;
       padding: 15px 30px;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: space-between;
+    }
+    header .logo {
       font-size: 1.5rem;
       font-weight: bold;
     }
@@ -32,45 +30,39 @@
       align-items: center;
     }
     canvas {
-      border: 3px solid black;
+      border: 2px solid #000;
       margin-top: 20px;
-      background-color: #fff;
+      background: white;
     }
     .btn {
       margin-top: 15px;
       padding: 10px 20px;
-      font-weight: bold;
-      background-color: #3b5998;
+      font-size: 1rem;
+      background: #3b5998;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
     }
     input[type="file"] {
       display: none;
     }
-    label.upload-btn {
-      background: #3b5998;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
-  <header>Alfomex</header>
+  <header>
+    <div class="logo">Alfomex</div>
+  </header>
   <div class="container">
-    <label class="upload-btn" for="imgInput">Subir Imagen</label>
-    <input type="file" id="imgInput" accept="image/*">
+    <label class="btn" for="imgInput">Subir Imagen</label>
+    <input type="file" id="imgInput" accept="image/png, image/jpeg">
     <canvas id="lienzo" width="500" height="500"></canvas>
-    <button class="btn" onclick="enviarDiseno()">Enviar diseño</button>
+    <button class="btn" id="sendBtn">Enviar Diseño</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+    import { getFirestore, doc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -83,49 +75,22 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
-    const canvas = document.getElementById("lienzo");
-    const ctx = canvas.getContext("2d");
-    const pxPorCm = canvas.width / 100;
-
+    const canvas = document.getElementById('lienzo');
+    const ctx = canvas.getContext('2d');
+    const imgInput = document.getElementById('imgInput');
     let img = new Image();
-    let dragging = false;
-    let offsetX = 0, offsetY = 0;
-    let imgX = 0, imgY = 0;
-    let scale = 1;
+    let imgX = 0, imgY = 0, scale = 1;
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i <= 100; i++) {
-        const px = i * pxPorCm;
-        ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
-        ctx.fillRect(px, 0, 1, canvas.height);
-        ctx.fillRect(0, px, canvas.width, 1);
-      }
-      ctx.strokeStyle = '#999';
-      for (let i = 0; i <= 100; i += 10) {
-        const px = i * pxPorCm;
-        ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
-        ctx.fillStyle = '#000';
-        ctx.font = '10px Arial';
-        ctx.fillText(`${i}cm`, px + 2, 12);
-        ctx.fillText(`${i}cm`, 2, px + 10);
-      }
-      ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
-    }
-
-    document.getElementById("imgInput").addEventListener("change", e => {
+    imgInput.addEventListener('change', e => {
       const file = e.target.files[0];
-      if (!file) return;
       const reader = new FileReader();
       reader.onload = evt => {
         img = new Image();
         img.onload = () => {
-          scale = 1;
           imgX = (canvas.width - img.width) / 2;
           imgY = (canvas.height - img.height) / 2;
+          scale = 1;
           draw();
         };
         img.src = evt.target.result;
@@ -133,57 +98,95 @@
       reader.readAsDataURL(file);
     });
 
-    canvas.addEventListener("mousedown", e => {
-      dragging = true;
-      offsetX = e.offsetX - imgX;
-      offsetY = e.offsetY - imgY;
-    });
-    canvas.addEventListener("mousemove", e => {
-      if (dragging) {
-        imgX = e.offsetX - offsetX;
-        imgY = e.offsetY - offsetY;
-        draw();
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const pxPorCm = canvas.width / 100;
+      for (let i = 0; i <= 100; i++) {
+        const px = i * pxPorCm;
+        ctx.fillStyle = '#eee';
+        ctx.fillRect(px, 0, 1, canvas.height);
+        ctx.fillRect(0, px, canvas.width, 1);
+        if (i % 10 === 0) {
+          ctx.fillStyle = '#000';
+          ctx.font = '10px Arial';
+          ctx.fillText(`${i}cm`, px + 2, 12);
+          ctx.fillText(`${i}cm`, 2, px + 10);
+        }
       }
-    });
-    canvas.addEventListener("mouseup", () => { dragging = false; });
-    canvas.addEventListener("wheel", e => {
-      e.preventDefault();
-      scale += e.deltaY > 0 ? -0.05 : 0.05;
-      if (scale < 0.1) scale = 0.1;
-      draw();
-    });
+      ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+    }
 
-    async function enviarDiseno() {
-      const exportCanvas = document.createElement('canvas');
-      exportCanvas.width = canvas.width;
-      exportCanvas.height = canvas.height;
-      const exportCtx = exportCanvas.getContext('2d');
-      exportCtx.fillStyle = '#fff';
-      exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-      exportCtx.drawImage(canvas, 0, 0);
+    document.getElementById("sendBtn").addEventListener("click", async () => {
+      const PRECIO_BOLA = 35;
+      const METROS_BOLA = 200;
+      const PRECIO_TELA = 50;
+      const PRECIO_FIELTRO = 30;
+      const CM_POR_METRO = 10;
+      const DISTANCIA = 0.5;
 
-      const imgData = exportCanvas.toDataURL('image/png');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
-      pdf.text("Pedido de Alfombra - Alfomex", 10, 10);
-      pdf.addImage(imgData, 'PNG', 10, 20, 180, 180);
-      pdf.text("Costos aproximados:", 10, 210);
-      pdf.text("- Estambre: $XX", 10, 220);
-      pdf.text("- Tela base: $XX", 10, 230);
-      pdf.text("- Fieltro: $XX", 10, 240);
-      pdf.text("- Total: $XXX", 10, 250);
+      const pxTotal = canvas.width * canvas.height;
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCtx.drawImage(canvas, 0, 0);
+      const data = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+      let pixelCount = 0;
+      for (let i = 3; i < data.data.length; i += 4) {
+        if (data.data[i] > 10) pixelCount++;
+      }
 
-      const blob = pdf.output("blob");
-      const nombrePDF = `pedido_${Date.now()}.pdf`;
-      const pdfRef = ref(storage, `pedidos/${nombrePDF}`);
-      await uploadBytes(pdfRef, blob);
-      const url = await getDownloadURL(pdfRef);
+      const porcentaje = pixelCount / pxTotal;
+      const areaCm2 = 10000 * porcentaje;
+      const areaM2 = areaCm2 / 10000;
+      const altoTejido = Math.sqrt(areaCm2);
+      const lineas = altoTejido / DISTANCIA;
+      const estambre = lineas * (1 / CM_POR_METRO) * altoTejido;
+      const bolas = estambre / METROS_BOLA;
+      const costoEstambre = bolas * PRECIO_BOLA;
+      const costoTela = areaM2 * PRECIO_TELA;
+      const costoFieltro = areaM2 * PRECIO_FIELTRO;
+      const total = costoEstambre + costoTela + costoFieltro;
+
+      // Crear PDF
+      const pdfCanvas = document.createElement("canvas");
+      pdfCanvas.width = canvas.width;
+      pdfCanvas.height = canvas.height + 100;
+      const pdfCtx = pdfCanvas.getContext("2d");
+      pdfCtx.fillStyle = "#fff";
+      pdfCtx.fillRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+      pdfCtx.drawImage(canvas, 0, 0);
+      pdfCtx.fillStyle = "#000";
+      pdfCtx.font = "14px Arial";
+      const texto = [
+        `Área: ${areaCm2.toFixed(2)} cm²`,
+        `Estambre: ${estambre.toFixed(2)} m`,
+        `Bolas: ${bolas.toFixed(2)}`,
+        `Costo Estambre: $${costoEstambre.toFixed(2)}`,
+        `Costo Tela Base: $${costoTela.toFixed(2)}`,
+        `Costo Fieltro: $${costoFieltro.toFixed(2)}`,
+        `Total: $${total.toFixed(2)} MXN`
+      ];
+      texto.forEach((linea, i) => {
+        pdfCtx.fillText(linea, 10, canvas.height + 20 + i * 16);
+      });
+
+      const base64 = pdfCanvas.toDataURL("image/png");
+
       await addDoc(collection(db, "pedidos"), {
         fecha: new Date().toISOString(),
-        archivo: url
+        imagen: base64,
+        areaCm2: areaCm2,
+        estambre: estambre,
+        bolas: bolas,
+        costoEstambre: costoEstambre,
+        costoTela: costoTela,
+        costoFieltro: costoFieltro,
+        total: total
       });
-      alert("Pedido enviado correctamente.");
-    }
+
+      alert("Diseño enviado correctamente.");
+    });
   </script>
 </body>
 </html>
