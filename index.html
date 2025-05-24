@@ -201,7 +201,7 @@
     onAuthStateChanged(auth, user => {
       const nav = document.getElementById("navOptions");
       let contenido = `
-        <button onclick="location.href='alfomex.html'">Pedido personalizado</button>
+        <button onclick="verificarPedidoPersonalizado()">Pedido personalizado</button>
         <button onclick="alert('Próximamente')">Categorías</button>
       `;
       if (user) {
@@ -218,6 +218,14 @@
       }
       nav.innerHTML = contenido;
     });
+
+    window.verificarPedidoPersonalizado = () => {
+      if (auth.currentUser) {
+        location.href = "alfomex.html";
+      } else {
+        abrirModal();
+      }
+    };
 
     async function cargarAlfombras() {
       const contenedor = document.getElementById("catalogo");
