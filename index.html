@@ -410,8 +410,7 @@
     onAuthStateChanged(auth, (user) => {
       const nav = document.getElementById("navOptions");
       let contenido = `
-        
-        <button onclick="alert('Próximamente')">Categorías</button>
+       
       `;
       if (user) {
         const nombre = user.email.split("@")[0];
