@@ -19,6 +19,7 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+// ✅ Inicialización
 const firebaseConfig = {
   apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
   authDomain: "alfomex-f4efa.firebaseapp.com",
@@ -31,11 +32,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app); // ✅ Inicializar Firestore
+const db = getFirestore(app); // ✅ Firestore
 
+// ✅ Exporta TODO lo que necesitas
 export {
   auth,
-  db, // ✅ Exportar Firestore
+  db,         // <<---- ESTA LÍNEA ES LA QUE TE FALTA
   doc,
   setDoc,
   getDoc,
