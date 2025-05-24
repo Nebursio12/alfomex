@@ -248,7 +248,9 @@
         elemento.focus();
       }, 300);
     }
-
+    function validarFormatoCorreo(correo) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+    }
     async function registrar() {
       const campos = [
         { id: "nombre1", obligatorio: true },
@@ -285,7 +287,15 @@
         primerCampoInvalido.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
-
+      
+      const email = document.getElementById("email");
+      if (!validarFormatoCorreo(email.value.trim())) {
+        email.classList.add("invalid");
+        aplicarSacudida(email);
+        email.scrollIntoView({ behavior: "smooth", block: "center" });
+        errorMsg.textContent = "El correo electrónico no es válido.";
+        return;
+      }
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
 
