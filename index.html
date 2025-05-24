@@ -36,7 +36,12 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    nav button:hover {
+    nav span {
+      background: #fff;
+      color: #3b5998;
+      font-weight: bold;
+    }
+    nav button:hover, nav span:hover {
       background: #ddd;
     }
     .catalogo {
@@ -93,8 +98,7 @@
   <header>
     <div class="logo">ALFOMEX</div>
     <nav id="navOptions">
-      <button onclick="abrirModal()">Iniciar sesión</button>
-      <button onclick="location.href='register.html'">Registrarse</button>
+      <span>Cargando...</span>
     </nav>
   </header>
 
@@ -155,7 +159,6 @@
       try {
         await setPersistence(auth, browserLocalPersistence);
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
         window.location.reload();
       } catch (error) {
         errorMsg.textContent = "Correo o contraseña incorrectos.";
@@ -173,6 +176,11 @@
         navOptions.innerHTML = `
           <span onclick="location.href='perfil.html'">${nombre}</span>
           <button onclick="cerrarSesion()">Cerrar sesión</button>
+        `;
+      } else {
+        navOptions.innerHTML = `
+          <button onclick="abrirModal()">Iniciar sesión</button>
+          <button onclick="location.href='register.html'">Registrarse</button>
         `;
       }
     });
