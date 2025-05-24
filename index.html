@@ -3,98 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alfomex - Inicio</title>
+  <title>Catálogo - Alfomex</title>
   <style>
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
     }
     header {
-      background-color: #1a1a1a;
-      padding: 10px 20px;
+      background: #3b5998;
+      color: white;
+      padding: 15px 30px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      color: white;
+      align-items: center;
     }
-    header img {
-      height: 50px;
-    }
-    nav {
-      display: flex;
-      gap: 15px;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      background-color: #3b5998;
-      padding: 8px 15px;
-      border-radius: 6px;
+    .logo {
+      font-size: 1.5rem;
       font-weight: bold;
     }
-    nav a:hover {
-      background-color: #2d4373;
+    nav button {
+      background: white;
+      color: #3b5998;
+      border: none;
+      padding: 10px 15px;
+      margin-left: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    nav button:hover {
+      background: #ddd;
     }
     .catalogo {
-      padding: 40px 20px;
-    }
-    .catalogo h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #333;
-    }
-    .productos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .producto {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 40px;
       text-align: center;
     }
-    .producto img {
-      max-width: 100%;
-      border-radius: 10px;
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background-color: white;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      z-index: 1000;
     }
-    .producto h3 {
-      margin: 10px 0 5px;
+    .modal.active {
+      display: block;
     }
-    .producto p {
-      color: #666;
+    .modal h3 {
+      margin-top: 0;
+    }
+    .modal input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .modal button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #3b5998;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .close-btn {
+      background: crimson;
+      margin-top: 10px;
+    }
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Alfomex Logo">
+    <div class="logo">ALFOMEX</div>
     <nav>
-      <a href="perfil.html">Mi Perfil</a>
-      <a href="alfomex.html">Pedido Personalizado</a>
+      <button onclick="abrirModal()">Iniciar sesión</button>
+      <button onclick="location.href='register.html'">Registrarse</button>
     </nav>
   </header>
 
-  <div class="catalogo">
+  <section class="catalogo">
     <h2>Catálogo de Alfombras</h2>
-    <div class="productos">
-      <!-- Ejemplos de productos -->
-      <div class="producto">
-        <img src="https://via.placeholder.com/300x200?text=Alfombra+1" alt="Alfombra 1">
-        <h3>Alfombra Moderna</h3>
-        <p>Estilo elegante para tu sala.</p>
-      </div>
-      <div class="producto">
-        <img src="https://via.placeholder.com/300x200?text=Alfombra+2" alt="Alfombra 2">
-        <h3>Alfombra Clásica</h3>
-        <p>Ideal para espacios tradicionales.</p>
-      </div>
-      <!-- Puedes agregar más productos aquí -->
-    </div>
+    <p>Contenido visual del catálogo aquí...</p>
+  </section>
+
+  <div class="modal" id="loginModal">
+    <h3>Iniciar Sesión</h3>
+    <input type="email" id="email" placeholder="Correo electrónico">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="iniciarSesion()">Entrar</button>
+    <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+    <div class="error" id="errorMsg"></div>
   </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      setPersistence,
+      browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+      authDomain: "alfomex-f4efa.firebaseapp.com",
+      projectId: "alfomex-f4efa",
+      storageBucket: "alfomex-f4efa.firebasestorage.app",
+      messagingSenderId: "1090528818564",
+      appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
+      measurementId: "G-SW633HRXV1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.abrirModal = () => {
+      document.getElementById("loginModal").classList.add("active");
+    };
+
+    window.cerrarModal = () => {
+      document.getElementById("loginModal").classList.remove("active");
+    };
+
+    window.iniciarSesion = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.textContent = "";
+
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        if (user.email === "alfomexgo@gmail.com") {
+          window.location.href = "admin.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      } catch (error) {
+        errorMsg.textContent = "Correo o contraseña incorrectos.";
+      }
+    };
+  </script>
 </body>
 </html>
