@@ -13,22 +13,26 @@
       align-items: center;
       height: 100vh;
       margin: 0;
+      padding: 0;
     }
+
     .register-box {
       background: white;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      max-width: 500px;
       width: 100%;
+      max-width: 500px;
       overflow-y: auto;
       max-height: 95vh;
     }
+
     h2 {
       text-align: center;
       margin-bottom: 20px;
       color: #333;
     }
+
     input, select {
       width: 100%;
       padding: 10px;
@@ -37,23 +41,29 @@
       border-radius: 6px;
       box-sizing: border-box;
     }
+
     .invalid {
       border-color: #d00000 !important;
     }
+
     .criteria {
       font-size: 0.85rem;
       margin-top: -5px;
       margin-bottom: 10px;
     }
+
     .criteria span {
       display: block;
     }
+
     .criteria .valid {
       color: green;
     }
+
     .criteria .invalid {
       color: #d00000;
     }
+
     .toggle-btn {
       font-size: 0.9rem;
       background: none;
@@ -63,6 +73,7 @@
       margin-bottom: 10px;
       float: right;
     }
+
     button {
       width: 100%;
       padding: 12px;
@@ -73,21 +84,58 @@
       cursor: pointer;
       font-size: 1rem;
     }
+
     button:hover {
       background-color: #2d4373;
     }
+
     .error {
       color: #d00000;
       text-align: center;
       margin-top: 10px;
     }
+
     .link {
       text-align: center;
       margin-top: 15px;
     }
+
     .link a {
       color: #3b5998;
       text-decoration: none;
+    }
+
+    /* Media Queries para responsividad */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .register-box {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, select, button {
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      input, select, button {
+        padding: 10px;
+      }
+
+      .criteria {
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -181,20 +229,12 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
-      const telefono = document.getElementById("telefono").value.trim();
       const errorMsg = document.getElementById("errorMsg");
 
       errorMsg.textContent = "";
-      document.getElementById("confirmPassword").classList.remove("invalid");
-
-      if (!/^[0-9]{10}$/.test(telefono)) {
-        errorMsg.textContent = "El número telefónico debe tener exactamente 10 dígitos numéricos.";
-        return;
-      }
 
       if (password !== confirmPassword) {
         errorMsg.textContent = "Las contraseñas no coinciden.";
-        document.getElementById("confirmPassword").classList.add("invalid");
         return;
       }
 
