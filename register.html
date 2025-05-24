@@ -97,12 +97,6 @@
       margin-top: 10px;
     }
 
-    .success {
-      color: green;
-      text-align: center;
-      margin-top: 10px;
-    }
-
     .link {
       text-align: center;
       margin-top: 15px;
@@ -124,6 +118,38 @@
     .shake {
       animation: shake 0.3s;
     }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .register-box {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, select, button {
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      input, select, button {
+        padding: 10px;
+      }
+
+      .criteria {
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -136,11 +162,13 @@
     <input type="date" id="nacimiento" placeholder="Fecha de Nacimiento" required />
     <input type="tel" id="telefono" placeholder="Número Telefónico" required maxlength="10"
       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
+
     <select id="pais" required>
       <option value="">Selecciona un país</option>
       <option value="MEXICO">México</option>
       <option value="ESTADOS_UNIDOS">Estados Unidos</option>
     </select>
+
     <input type="email" id="email" placeholder="Correo electrónico" required />
     <input type="password" id="password" placeholder="Contraseña" required />
     <div class="criteria" id="criterios">
@@ -148,8 +176,10 @@
       <span id="criterio-mayus" class="invalid">❌ Al menos una mayúscula</span>
       <span id="criterio-simbolo" class="invalid">❌ Al menos un símbolo (!@#$%)</span>
     </div>
+
     <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required />
 
+    <!-- Botón único para mostrar/ocultar contraseñas -->
     <button
       id="toggleBtn"
       class="toggle-btn"
@@ -163,26 +193,37 @@
     >🔒 Mantén presionado para ver</button>
 
     <button onclick="registrar()">Registrarse</button>
-    <div class="success" id="successMsg"></div>
     <div class="error" id="errorMsg"></div>
-    <div class="link">¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a></div>
+    <div class="link">
+      ¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a>
+    </div>
   </div>
 
-  <script type="module">
-    import {
-      auth,
-      db,
-      createUserWithEmailAndPassword,
-      setDoc,
-      doc
-    } from "./auth.js";
-
-    document.getElementById("password").addEventListener("input", () => {
-      const pass = document.getElementById("password").value;
-      document.getElementById("criterio-long").className = pass.length >= 6 ? "valid" : "invalid";
-      document.getElementById("criterio-mayus").className = /[A-Z]/.test(pass) ? "valid" : "invalid";
-      document.getElementById("criterio-simbolo").className = /[^A-Za-z0-9]/.test(pass) ? "valid" : "invalid";
+  <script src="./auth.js" type="module"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const passwordInput = document.getElementById("password");
+      passwordInput.addEventListener("input", validarCriterios);
     });
+
+    function validarCriterios() {
+      const pass = document.getElementById("password").value;
+      const long = document.getElementById("criterio-long");
+      const mayus = document.getElementById("criterio-mayus");
+      const simbolo = document.getElementById("criterio-simbolo");
+
+      long.classList.toggle("valid", pass.length >= 6);
+      long.classList.toggle("invalid", pass.length < 6);
+      long.textContent = (pass.length >= 6 ? "✅" : "❌") + " Mínimo 6 caracteres";
+
+      mayus.classList.toggle("valid", /[A-Z]/.test(pass));
+      mayus.classList.toggle("invalid", !/[A-Z]/.test(pass));
+      mayus.textContent = (/[A-Z]/.test(pass) ? "✅" : "❌") + " Al menos una mayúscula";
+
+      simbolo.classList.toggle("valid", /[^A-Za-z0-9]/.test(pass));
+      simbolo.classList.toggle("invalid", !/[^A-Za-z0-9]/.test(pass));
+      simbolo.textContent = (/[^A-Za-z0-9]/.test(pass) ? "✅" : "❌") + " Al menos un símbolo (!@#$%)";
+    }
 
     function mostrarPasswords() {
       document.getElementById("password").type = "text";
@@ -207,11 +248,9 @@
         elemento.focus();
       }, 300);
     }
-
     function validarFormatoCorreo(correo) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
     }
-
     async function registrar() {
       const campos = [
         { id: "nombre1", obligatorio: true },
@@ -227,9 +266,7 @@
       let hayErrores = false;
       let primerCampoInvalido = null;
       const errorMsg = document.getElementById("errorMsg");
-      const successMsg = document.getElementById("successMsg");
       errorMsg.textContent = "";
-      successMsg.textContent = "";
 
       campos.forEach(campo => {
         document.getElementById(campo.id).classList.remove("invalid");
@@ -250,7 +287,7 @@
         primerCampoInvalido.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
-
+      
       const email = document.getElementById("email");
       if (!validarFormatoCorreo(email.value.trim())) {
         email.classList.add("invalid");
@@ -259,7 +296,6 @@
         errorMsg.textContent = "El correo electrónico no es válido.";
         return;
       }
-
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
 
@@ -285,26 +321,27 @@
       }
 
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email.value.trim(), password);
+        const { auth, createUserWithEmailAndPassword } = await import("./auth.js");
+        const userCredential = await createUserWithEmailAndPassword(auth, document.getElementById("email").value.trim(), password);
         const user = userCredential.user;
-
+        // Guardar en Firestore
         await setDoc(doc(db, "usuarios", user.uid), {
-          nombre1: document.getElementById("nombre1").value.trim(),
-          nombre2: document.getElementById("nombre2").value.trim(),
-          apellido1: document.getElementById("apellido1").value.trim(),
-          apellido2: document.getElementById("apellido2").value.trim(),
-          nacimiento: document.getElementById("nacimiento").value.trim(),
-          telefono: document.getElementById("telefono").value.trim(),
-          email: email.value.trim(),
-          pais: document.getElementById("pais").value.trim(),
-          estado: "",
-          ciudad: ""
+           nombre1: document.getElementById("nombre1").value.trim(),
+           nombre2: document.getElementById("nombre2").value.trim(),
+           apellido1: document.getElementById("apellido1").value.trim(),
+           apellido2: document.getElementById("apellido2").value.trim(),
+           nacimiento: document.getElementById("nacimiento").value.trim(),
+           telefono: document.getElementById("telefono").value.trim(),
+           email: document.getElementById("email").value.trim(),
+           pais: document.getElementById("pais").value.trim(),
+           estado: "",
+           ciudad: ""
         });
 
-        successMsg.textContent = "✔ Registro exitoso. Redirigiendo...";
-        setTimeout(() => {
-          window.location.href = user.email === "alfomexgo@gmail.com" ? "admin.html" : "index.html";
-        }, 1800);
+
+
+
+        window.location.href = user.email === "alfomexgo@gmail.com" ? "admin.html" : "index.html";
       } catch (error) {
         errorMsg.textContent = error.message;
       }
