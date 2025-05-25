@@ -368,44 +368,47 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // 🔒 Redirige a index si no está logueado
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
+    // Espera a que el DOM esté cargado antes de acceder a elementos
+    window.addEventListener("DOMContentLoaded", () => {
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          // Redirige inmediatamente si no hay sesión
+          window.location.href = "index.html";
+          return;
+        }
+
+        // Si hay sesión, muestra los botones
+        const nav = document.getElementById("navOptions");
+        nav.innerHTML = `
+          <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+            <i class="fas fa-user-circle"></i>
+          </button>
+          <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        `;
+      });
+
+      // Botón cerrar sesión
+      window.cerrarSesion = async () => {
+        await signOut(auth);
         window.location.href = "index.html";
-        return;
-      }
-      // Mostrar botones si sí está logueado
-      const nav = document.getElementById("navOptions");
-      nav.innerHTML = `
-        <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-          <i class="fas fa-user-circle"></i>
-        </button>
-        <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      `;
+      };
+
+      // Botón menú
+      window.openNav = () => {
+        document.getElementById("mySidenav").classList.add("open");
+        document.getElementById("modalOverlay").classList.add("active");
+      };
+
+      window.closeNav = () => {
+        document.getElementById("mySidenav").classList.remove("open");
+        document.getElementById("modalOverlay").classList.remove("active");
+      };
+
+      document.getElementById("modalOverlay").addEventListener("click", closeNav);
     });
-
-    // 🔴 Cerrar sesión
-    window.cerrarSesion = async () => {
-      await signOut(auth);
-      window.location.href = "index.html";
-    };
-
-    // ☰ Abrir y cerrar menú lateral
-    window.openNav = () => {
-      document.getElementById("mySidenav").classList.add("open");
-      document.getElementById("modalOverlay").classList.add("active");
-    };
-
-    window.closeNav = () => {
-      document.getElementById("mySidenav").classList.remove("open");
-      document.getElementById("modalOverlay").classList.remove("active");
-    };
-
-    document.getElementById("modalOverlay").addEventListener("click", closeNav);
   </script>
-
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
 
