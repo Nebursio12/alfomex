@@ -458,8 +458,10 @@
       if (user) {
         const nombre = user.email.split("@")[0];
         contenido += `
-          <span onclick="location.href='perfil.html'">${nombre}</span>
-          <button onclick="cerrarSesion()">Cerrar sesión</button>
+          <span class="fas fa-user-circle" onclick="location.href='perfil.html'" title="Perfil" style="font-size: 1.4rem; cursor: pointer;"></span>
+          <button onclick="cerrarSesion()" style="background-color: crimson; color: white; display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+          </button>
         `;
       } else {
         contenido += `
