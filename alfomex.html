@@ -498,7 +498,12 @@
       const reader = new FileReader();
       reader.onload = function(evt) {
         img = new Image();
-        img.onload = function() {
+        img.onload = function () {
+          if (img.width < 1000 || img.height < 1000) {
+            alert("La imagen debe tener al menos 1000x1000 píxeles.");
+            return;
+          }
+
           const factorX = canvas.width / img.width;
           const factorY = canvas.height / img.height;
           scale = Math.min(factorX, factorY, 1);
