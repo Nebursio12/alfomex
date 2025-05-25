@@ -163,6 +163,30 @@
   <header>
     <h1>Alfomex</h1>
   </header>
+  <!-- Firebase App y Auth -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+    authDomain: "alfomex-f4efa.firebaseapp.com",
+    projectId: "alfomex-f4efa",
+    storageBucket: "alfomex-f4efa.appspot.com",
+    messagingSenderId: "1090528818564",
+    appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      alert("Debes iniciar sesión para acceder a esta sección.");
+      window.location.href = "index.html"; // o la página de login que tengas
+    }
+  });
+</script>
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
 
