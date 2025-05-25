@@ -458,10 +458,13 @@
       if (user) {
         const nombre = user.email.split("@")[0];
         contenido += `
-          <span class="fas fa-user-circle" onclick="location.href='perfil.html'" title="Perfil" style="font-size: 1.4rem; cursor: pointer;"></span>
-          <button onclick="cerrarSesion()" style="background-color: crimson; color: white; display: flex; align-items: center; gap: 5px;">
-            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+          <button onclick="location.href='perfil.html'" style="background: white; color: #3b5998; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">
+            <i class="fas fa-user-circle"></i>
           </button>
+          <button onclick="cerrarSesion()" style="background-color: crimson; color: white; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+
         `;
       } else {
         contenido += `
