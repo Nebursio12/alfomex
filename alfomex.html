@@ -205,6 +205,74 @@
     .social-links a:hover {
       transform: scale(1.2);
     }
+
+    @media (max-width: 900px) {
+      .contenedor-principal {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 0 5px;
+      }
+      .lateral {
+        max-width: 100%;
+        min-width: unset;
+        width: 100%;
+      }
+      canvas {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100vw;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        padding: 10px 5px;
+        font-size: 0.95rem;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+      .header-left, .header-right {
+        gap: 5px;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin-top: 60px;
+      }
+      .alerta {
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 0.95rem;
+      }
+      .upload-btn, .controls button, #añadirCarrito {
+        padding: 10px 10px;
+        font-size: 0.95rem;
+      }
+      .contenedor-principal {
+        gap: 10px;
+        margin: 10px 0;
+        padding: 0 2px;
+      }
+      .lateral {
+        padding: 0;
+      }
+      #resultado, #colorDetalle {
+        padding: 10px;
+        font-size: 0.95rem;
+      }
+      .total-final {
+        font-size: 1.05rem;
+      }
+      .social-links {
+        margin: 20px auto;
+      }
+      .social-links a {
+        font-size: 1.2rem;
+        margin: 0 8px;
+      }
+    }
   </style>
 </head>
 <body>
