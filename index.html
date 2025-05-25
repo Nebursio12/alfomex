@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catálogo - Alfomex</title>
   <style>
+    .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-perfil {
+    background: white;
+    color: #3b5998;
+  }
+
+  .btn-logout {
+    background: crimson;
+    color: white;
+  }
+
+  .btn-perfil i, .btn-logout i {
+    pointer-events: none;
+  }
+
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
@@ -323,8 +349,6 @@
         ¿Olvidaste tu contraseña?
       </button>
     </div>
- 
-
     <div id="recuperacion" style="display: none; margin-top: 15px;">
       <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
       <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 8px;">Enviar enlace</button>
@@ -456,28 +480,25 @@
     };
 
     onAuthStateChanged(auth, (user) => {
-      const nav = document.getElementById("navOptions");
-      let contenido = ``;
-      if (user) {
-        const nombre = user.email.split("@")[0];
-        contenido += `
-          <button onclick="location.href='perfil.html'" title="Perfil"
-            style="background: white; color: #3b5998; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 1.3rem;">
-            <i class="fa fa-user-circle"></i>
-          </button>
-          <button onclick="cerrarSesion()" title="Cerrar sesión"
-            style="background-color: crimson; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 1.3rem;">
-            <i class="fa fa-sign-out"></i>
-          </button>
-        `;
-      } else {
-        contenido += `
-          <button onclick="abrirModal()">Iniciar sesión</button>
-          <button onclick="location.href='register.html'">Registrarse</button>
-        `;
-      }
-      nav.innerHTML = contenido;
-    });
+  const nav = document.getElementById("navOptions");
+  let contenido = ``;
+  if (user) {
+    contenido = `
+      <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+        <i class="fas fa-user-circle"></i>
+      </button>
+      <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    `;
+  } else {
+    contenido = `
+      <button onclick="abrirModal()">Iniciar sesión</button>
+      <button onclick="location.href='register.html'">Registrarse</button>
+    `;
+  }
+  nav.innerHTML = contenido;
+});
 
     window.verificarPedidoPersonalizado = () => {
       if (auth.currentUser) {
