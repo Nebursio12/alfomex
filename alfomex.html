@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Personaliza tu Alfombra - Alfomex</title>
@@ -161,7 +162,11 @@
 </head>
 <body>
   <header>
-    <h1>Alfomex</h1>
+    <button id="menuBtn" onclick="openNav()" style="font-size: 1.5rem; color: white; background: none; border: none; cursor: pointer;">☰</button>
+    <div class="logo" style="color: white; font-weight: bold; font-size: 1.5rem;">ALFOMEX</div>
+    <nav id="navOptions" style="display: flex; align-items: center;">
+      <span style="color: white;">Cargando...</span>
+    </nav>
   </header>
   <!-- Firebase App y Auth -->
 <script type="module">
@@ -180,12 +185,31 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  onAuthStateChanged(auth, user => {
-    if (!user) {
-      alert("Debes iniciar sesión para acceder a esta sección.");
-      window.location.href = "index.html"; // o la página de login que tengas
+  onAuthStateChanged(auth, (user) => {
+    const nav = document.getElementById("navOptions");
+    let contenido = ``;
+    if (user) {
+       contenido += `
+         <button onclick="location.href='perfil.html'" title="Perfil"
+           style="background: white; color: #3b5998; border: none; padding: 10px 15px; margin-left: 10px;
+           border-radius: 6px; cursor: pointer; font-size: 1.4rem;">
+           <i class="fa fa-user-circle"></i>
+          </button>
+          <button onclick="cerrarSesion()" title="Cerrar sesión"
+            style="background-color: crimson; color: white; border: none; padding: 10px 15px; margin-left: 10px;
+            border-radius: 6px; cursor: pointer; font-size: 1.4rem;">
+            <i class="fa fa-sign-out"></i>
+          </button>
+       `;
+    } else {
+      contenido += `
+        <button onclick="abrirModal()">Iniciar sesión</button>
+        <button onclick="location.href='register.html'">Registrarse</button>
+      `;
     }
+    nav.innerHTML = contenido;
   });
+
 </script>
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
