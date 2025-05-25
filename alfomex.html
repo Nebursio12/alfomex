@@ -350,7 +350,11 @@
   <!-- Firebase App y Auth -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -361,37 +365,34 @@
       appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
     };
 
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // 🔒 Redirige a index si no está logueado
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+      // Mostrar botones si sí está logueado
+      const nav = document.getElementById("navOptions");
+      nav.innerHTML = `
+        <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+          <i class="fas fa-user-circle"></i>
+        </button>
+        <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      `;
+    });
+
+    // 🔴 Cerrar sesión
     window.cerrarSesion = async () => {
-      const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js");
-      const auth = getAuth();
       await signOut(auth);
       window.location.href = "index.html";
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      const nav = document.getElementById("navOptions");
-      let contenido = "";
-      if (user) {
-        contenido = `
-          <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-            <i class="fas fa-user-circle"></i>
-          </button>
-          <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-            <i class="fas fa-sign-out-alt"></i>
-          </button>
-        `;
-      } else {
-        contenido = `
-          <button onclick="abrirModal()">Iniciar sesión</button>
-          <button onclick="location.href='register.html'">Registrarse</button>
-        `;
-      }
-      nav.innerHTML = contenido;
-    });
-
+    // ☰ Abrir y cerrar menú lateral
     window.openNav = () => {
       document.getElementById("mySidenav").classList.add("open");
       document.getElementById("modalOverlay").classList.add("active");
@@ -402,9 +403,9 @@
       document.getElementById("modalOverlay").classList.remove("active");
     };
 
-    // Cierra si se hace clic afuera
     document.getElementById("modalOverlay").addEventListener("click", closeNav);
   </script>
+
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
 
