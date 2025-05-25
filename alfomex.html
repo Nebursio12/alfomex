@@ -267,9 +267,7 @@
                             `<strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>` +
                             `<strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>` +
                             `<strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>` +
-                            `<strong>Personalización:</strong> $${COSTOS.personalizacion.toFixed(2)} MXN<br>` +
-                            `<strong>Envío:</strong> $${COSTOS.envio.toFixed(2)} MXN<br>` +
-                            `<strong>TOTAL:</strong> $${costoFinal.toFixed(2)} MXN`;
+                            `<strong>Personalización:</strong> $${COSTOS.personalizacion.toFixed(2)} MXN`;
 
       calcularPorColor(imageData, totalPixels);
     }
@@ -309,6 +307,11 @@
 
       colorDetalle.innerHTML = detalle;
     }
+
+    const totalSinEnvio = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
+    detalle += `<br><strong style="font-size:1.2rem;">TOTAL:</strong> $${totalSinEnvio.toFixed(2)} MXN`;
+    colorDetalle.innerHTML = detalle;
+
 
     imgInput.addEventListener('change', e => {
       const file = e.target.files[0];
