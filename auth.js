@@ -8,7 +8,9 @@ import {
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
-  updatePassword
+  updatePassword,
+  GoogleAuthProvider,
+  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
 import {
@@ -35,6 +37,26 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// ✅ FUNCIONES PERSONALIZADAS
+
+async function guardarUsuarioEnFirestore(user) {
+  const ref = doc(db, "usuarios", user.uid);
+  await setDoc(ref, {
+    nombre: user.displayName || "",
+    correo: user.email,
+    foto: user.photoURL || "",
+    proveedor: user.providerData[0]?.providerId || "google",
+    uid: user.uid,
+  }, { merge: true });
+}
+
+async function loginConGoogle() {
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  await guardarUsuarioEnFirestore(result.user);
+  return result.user;
+}
+
 // ✅ EXPORTAMOS TODO LO NECESARIO
 export {
   auth,
@@ -49,5 +71,6 @@ export {
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
-  updatePassword
+  updatePassword,
+  loginConGoogle
 };
