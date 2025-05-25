@@ -461,15 +461,14 @@
       if (user) {
         const nombre = user.email.split("@")[0];
         contenido += `
-          <nav id="navOptions">
-            <button onclick="location.href='perfil.html'" title="Perfil" style="background: white; color: #3b5998; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.4rem;">
-              <i class="fa fa-user-circle"></i>
-            </button>
-            <button onclick="cerrarSesion()" title="Cerrar sesión" style="background-color: crimson; color: white; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.4rem;">
-              <i class="fa fa-sign-out"></i>
-            </button>
-          </nav>
-
+          <button onclick="location.href='perfil.html'" title="Perfil"
+            style="background: white; color: #3b5998; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 1.3rem;">
+            <i class="fa fa-user-circle"></i>
+          </button>
+          <button onclick="cerrarSesion()" title="Cerrar sesión"
+            style="background-color: crimson; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 1.3rem;">
+            <i class="fa fa-sign-out"></i>
+          </button>
         `;
       } else {
         contenido += `
