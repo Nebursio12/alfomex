@@ -36,6 +36,12 @@
       box-shadow: 0 2px 10px var(--shadow);
     }
 
+    header h1 {
+      color: white;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
     h2 {
       margin-top: 30px;
       font-size: 1.5rem;
@@ -129,6 +135,13 @@
       margin-right: 10px;
     }
 
+    .total-final {
+      font-size: 1.3rem;
+      color: #0055cc;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
     .social-links {
       margin: 40px auto;
       text-align: center;
@@ -147,7 +160,9 @@
   </style>
 </head>
 <body>
-  <header> <h1 style="margin: 0; color: white; font-size: 1.8rem;">Alfomex</h1> </header>
+  <header>
+    <h1>Alfomex</h1>
+  </header>
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
 
@@ -171,6 +186,7 @@
     <div class="lateral">
       <div id="resultado"></div>
       <div id="colorDetalle"></div>
+      <div id="totalFinal" class="total-final"></div>
       <button id="añadirCarrito">AÑADIR AL CARRITO</button>
     </div>
   </div>
@@ -187,6 +203,7 @@
     const imgInput = document.getElementById('imgInput');
     const resultado = document.getElementById('resultado');
     const colorDetalle = document.getElementById('colorDetalle');
+    const totalFinal = document.getElementById('totalFinal');
 
     const pxPorCm = canvas.width / 100;
     let img = new Image();
@@ -201,7 +218,6 @@
       telaBase: 50 * 4,
       fieltro: 30 * 4,
       personalizacion: 500,
-      envio: 200,
       tejidoCm: 10,
       distanciaPuntada: 0.3
     };
@@ -261,7 +277,7 @@
       const costoEstambre = bolas * COSTOS.bolaEstambre;
       const costoTela = areaM2 * COSTOS.telaBase;
       const costoFieltro = areaM2 * COSTOS.fieltro;
-      const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion + COSTOS.envio;
+      const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
 
       resultado.innerHTML = `<strong>Área cubierta:</strong> ${areaCm2.toFixed(2)} cm²<br>` +
                             `<strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>` +
@@ -269,10 +285,10 @@
                             `<strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>` +
                             `<strong>Personalización:</strong> $${COSTOS.personalizacion.toFixed(2)} MXN`;
 
-      calcularPorColor(imageData, totalPixels);
+      calcularPorColor(imageData, totalPixels, costoFinal);
     }
 
-    function calcularPorColor(imageData, totalPixels) {
+    function calcularPorColor(imageData, totalPixels, total) {
       const mapa = new Map();
       for (let i = 0; i < imageData.data.length; i += 4) {
         if (imageData.data[i + 3] < 10) continue;
@@ -306,28 +322,27 @@
       });
 
       colorDetalle.innerHTML = detalle;
+      totalFinal.innerHTML = `TOTAL: $${total.toFixed(2)} MXN`;
     }
-
-    const totalSinEnvio = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
-    detalle += `<br><strong style="font-size:1.2rem;">TOTAL:</strong> $${totalSinEnvio.toFixed(2)} MXN`;
-    colorDetalle.innerHTML = detalle;
-
 
     imgInput.addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
+
       const reader = new FileReader();
       reader.onload = function(evt) {
         img = new Image();
         img.onload = function() {
-          scale = 1;
-          imgX = (canvas.width - img.width) / 2;
-          imgY = (canvas.height - img.height) / 2;
+          const factorX = canvas.width / img.width;
+          const factorY = canvas.height / img.height;
+          scale = Math.min(factorX, factorY, 1);
+          imgX = (canvas.width - img.width * scale) / 2;
+          imgY = (canvas.height - img.height * scale) / 2;
           draw();
           calcularEstambre();
-        }
+        };
         img.src = evt.target.result;
-      }
+      };
       reader.readAsDataURL(file);
     });
 
