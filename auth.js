@@ -72,5 +72,4 @@ export {
   setPersistence,
   browserLocalPersistence,
   updatePassword,
-  loginConGoogle
 };
