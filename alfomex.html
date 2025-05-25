@@ -7,6 +7,50 @@
   <title>Personaliza tu Alfombra - Alfomex</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    .icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.cart-panel {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  transition: right 0.3s ease;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.cart-panel.open {
+  right: 0;
+}
+
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: none;
+}
+
+.cart-overlay.active {
+  display: block;
+}
+
 
     .sidenav {
   position: fixed;
@@ -333,6 +377,10 @@
 </head>
 <body>
   <header>
+    <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil">
+  <i class="fas fa-shopping-cart"></i>
+</button>
+
     <div class="header-left">
       <button id="menuBtn" onclick="openNav()">☰</button>
     </div>
@@ -408,7 +456,39 @@
 
       document.getElementById("modalOverlay").addEventListener("click", closeNav);
     });
+
+    // Mostrar u ocultar carrito
+    window.toggleCart = (show) => {
+      document.getElementById("cartPanel").classList.toggle("open", show);
+      document.getElementById("cartOverlay").classList.toggle("active", show);
+    };
+
+    // Click en ícono de carrito
+    document.getElementById("cartBtn").addEventListener("click", () => toggleCart(true));
+
+    // Agregar producto al carrito
+    window.agregarAlCarrito = (producto) => {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      carrito.push(producto);
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+      actualizarVistaCarrito();
+    };
+
+    // Mostrar los productos en el panel
+    function actualizarVistaCarrito() {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      const lista = document.getElementById("cartItems");
+      lista.innerHTML = carrito.map(p => `<li>${p.nombre} - $${p.precio}</li>`).join('');
+    }
+
+    // Vaciar carrito
+    window.vaciarCarrito = () => {
+      localStorage.removeItem("carrito");
+      actualizarVistaCarrito();
+    }
+
   </script>
+  
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
 
