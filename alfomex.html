@@ -67,6 +67,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -79,6 +80,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     const canvas = document.getElementById('lienzo');
     const ctx = canvas.getContext('2d');
@@ -137,6 +139,12 @@
     document.getElementById("sendBtn").addEventListener("click", async () => {
       if (!hasImage) {
         alert("Por favor, sube una imagen antes de enviar el diseño.");
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Debes estar autenticado para enviar el diseño.");
         return;
       }
 
@@ -204,7 +212,13 @@
         costoEstambre,
         costoTela,
         costoFieltro,
-        total
+        total,
+        usuario: {
+          uid: user.uid,
+          nombre: user.displayName || "Sin nombre",
+          email: user.email,
+          telefono: user.phoneNumber || "No registrado"
+        }
       });
 
       alert("Diseño enviado correctamente.");
