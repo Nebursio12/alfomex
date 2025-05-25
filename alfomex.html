@@ -227,14 +227,20 @@
 
     @media (max-width: 600px) {
       header {
-        flex-direction: column;
-        padding: 10px 5px;
-        font-size: 0.95rem;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        padding: 10px 15px;
       }
       .logo {
         font-size: 1.1rem;
+        text-align: center;
+        flex: 1;
       }
-      .header-left, .header-right {
+      .header-left {
+        flex: 0 0 auto;
+      }
+      .header-right {
+        flex: 0 0 auto;
         gap: 5px;
       }
       h2 {
