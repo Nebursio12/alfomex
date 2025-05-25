@@ -3,239 +3,379 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alfomex - Diseña tu Alfombra</title>
+  <title>Personaliza tu Alfombra - Alfomex</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    :root {
+      --primary: #ffcc00;
+      --secondary: #003366;
+      --accent: #333;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
     body {
-      background: white;
       font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
       margin: 0;
       padding: 0;
-    }
-    header {
-      background: #3b5998;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .container {
-      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      color: var(--accent);
     }
-    canvas {
-      border: 2px solid #000;
-      margin-top: 20px;
-      background: white;
-    }
-    .btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 1rem;
+
+    header {
+      width: 100%;
       background: #3b5998;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    h2 {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      color: var(--secondary);
+    }
+
+    .alerta {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .upload-btn, .controls button, #añadirCarrito {
+      margin: 10px;
+      padding: 12px 25px;
+      background: var(--secondary);
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
     }
-    input[type="file"] {
-      display: none;
+
+    .upload-btn:hover, .controls button:hover, #añadirCarrito:hover {
+      background: var(--primary);
+      color: black;
+    }
+
+    .contenedor-principal {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 30px auto;
+      max-width: 1200px;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    canvas {
+      border: 2px solid var(--accent);
+      background: white;
+      box-shadow: 0 4px 12px var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .controls {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .lateral {
+      max-width: 600px;
+      flex: 1;
+      min-width: 300px;
+    }
+
+    #resultado, #colorDetalle {
+      width: 100%;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    #resultado strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: var(--secondary);
+    }
+
+    #colorDetalle div {
+      display: flex;
+      align-items: center;
+      margin: 5px 0;
+    }
+
+    #colorDetalle div div {
+      width: 25px;
+      height: 25px;
+      border: 1px solid #000;
+      margin-right: 10px;
+    }
+
+    .social-links {
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .social-links a {
+      margin: 0 15px;
+      font-size: 1.5rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+    }
+
+    .social-links a:hover {
+      transform: scale(1.2);
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">Alfomex</div>
-  </header>
-  <div class="container">
-    <label class="btn" for="imgInput">Subir Imagen</label>
-    <input type="file" id="imgInput" accept="image/png, image/jpeg">
-    <canvas id="lienzo" width="500" height="500"></canvas>
-    <div>
-      <button class="btn" onclick="zoomIn()">Zoom +</button>
-      <button class="btn" onclick="zoomOut()">Zoom -</button>
-    </div>
-    <button class="btn" id="sendBtn">Enviar Diseño</button>
+  <header> <h1 style="margin: 0; color: white; font-size: 1.8rem;">Alfomex</h1> </header>
+
+  <h2>PERSONALIZA TU ALFOMBRA</h2>
+
+  <div class="alerta">
+    Para obtener resultados más precisos, sube una imagen de alta calidad con colores sólidos y sin áreas desvanecidas.
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  <label class="upload-btn" for="imgInput">AÑADIR IMAGEN</label>
+  <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
-      authDomain: "alfomex-f4efa.firebaseapp.com",
-      projectId: "alfomex-f4efa",
-      storageBucket: "alfomex-f4efa.appspot.com",
-      messagingSenderId: "1090528818564",
-      appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
-    };
+  <div class="contenedor-principal">
+    <div>
+      <canvas id="lienzo" width="500" height="500"></canvas>
+      <div class="controls">
+        <button onclick="centrarImagen()">Centrar Imagen</button>
+        <button onclick="zoomIn()">Zoom +</button>
+        <button onclick="zoomOut()">Zoom -</button>
+      </div>
+    </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+    <div class="lateral">
+      <div id="resultado"></div>
+      <div id="colorDetalle"></div>
+      <button id="añadirCarrito">AÑADIR AL CARRITO</button>
+    </div>
+  </div>
 
+  <div class="social-links">
+    <p>Sígueme en redes sociales:</p>
+    <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
+    <a href="https://www.instagram.com/_alfomex/" target="_blank"><i class="fab fa-instagram"></i></a>
+  </div>
+
+  <script>
     const canvas = document.getElementById('lienzo');
     const ctx = canvas.getContext('2d');
     const imgInput = document.getElementById('imgInput');
-    const sendBtn = document.getElementById('sendBtn');
+    const resultado = document.getElementById('resultado');
+    const colorDetalle = document.getElementById('colorDetalle');
 
+    const pxPorCm = canvas.width / 100;
     let img = new Image();
+    let dragging = false;
+    let offsetX = 0, offsetY = 0;
+    let imgX = 0, imgY = 0;
     let scale = 1;
-    let hasImage = false;
 
-    function drawGrid() {
-      const pxPorCm = canvas.width / 100;
+    const COSTOS = {
+      bolaEstambre: 35 * 4,
+      metrosBola: 200,
+      telaBase: 50 * 4,
+      fieltro: 30 * 4,
+      personalizacion: 500,
+      envio: 200,
+      tejidoCm: 10,
+      distanciaPuntada: 0.3
+    };
 
+    function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#eee';
       for (let i = 0; i <= 100; i++) {
         const px = i * pxPorCm;
+        ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
         ctx.fillRect(px, 0, 1, canvas.height);
         ctx.fillRect(0, px, canvas.width, 1);
       }
-
-      ctx.fillStyle = '#000';
-      ctx.font = '10px Arial';
+      ctx.strokeStyle = '#999';
       for (let i = 0; i <= 100; i += 10) {
         const px = i * pxPorCm;
-        ctx.fillText(`${i}cm`, px + 2, 10);
+        ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
+        ctx.fillStyle = '#000';
+        ctx.font = '10px Arial';
+        ctx.fillText(`${i}cm`, px + 2, 12);
         ctx.fillText(`${i}cm`, 2, px + 10);
       }
+      ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
     }
 
-    function draw() {
-      drawGrid();
-      if (hasImage) {
-        const centerX = (canvas.width - img.width * scale) / 2;
-        const centerY = (canvas.height - img.height * scale) / 2;
-        ctx.drawImage(img, centerX, centerY, img.width * scale, img.height * scale);
+    function agruparColor(r, g, b, mapa, tolerancia = 50) {
+      for (let [key, _] of mapa.entries()) {
+        const [r2, g2, b2] = key.split(',').map(Number);
+        const distancia = Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
+        if (distancia <= tolerancia) return key;
       }
+      return `${r},${g},${b}`;
+    }
+
+    function calcularEstambre() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+      const imageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+
+      let pixelCount = 0;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i + 3] > 10) pixelCount++;
+      }
+
+      const totalPixels = canvas.width * canvas.height;
+      const porcentaje = pixelCount / totalPixels;
+      const areaCm2 = 10000 * porcentaje;
+      const areaM2 = areaCm2 / 10000;
+      const altoTejido = Math.sqrt(areaCm2);
+      const lineas = altoTejido / COSTOS.distanciaPuntada;
+      const estambreTotal = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+      const bolas = estambreTotal / COSTOS.metrosBola;
+
+      const costoEstambre = bolas * COSTOS.bolaEstambre;
+      const costoTela = areaM2 * COSTOS.telaBase;
+      const costoFieltro = areaM2 * COSTOS.fieltro;
+      const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion + COSTOS.envio;
+
+      resultado.innerHTML = `<strong>Área cubierta:</strong> ${areaCm2.toFixed(2)} cm²<br>` +
+                            `<strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>` +
+                            `<strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>` +
+                            `<strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>` +
+                            `<strong>Personalización:</strong> $${COSTOS.personalizacion.toFixed(2)} MXN<br>` +
+                            `<strong>Envío:</strong> $${COSTOS.envio.toFixed(2)} MXN<br>` +
+                            `<strong>TOTAL:</strong> $${costoFinal.toFixed(2)} MXN`;
+
+      calcularPorColor(imageData, totalPixels);
+    }
+
+    function calcularPorColor(imageData, totalPixels) {
+      const mapa = new Map();
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i + 3] < 10) continue;
+        const r = imageData.data[i];
+        const g = imageData.data[i + 1];
+        const b = imageData.data[i + 2];
+        const key = agruparColor(r, g, b, mapa, 50);
+        mapa.set(key, (mapa.get(key) || 0) + 1);
+      }
+
+      const coloresUsados = [...mapa.entries()].filter(([_, count]) => count / totalPixels > 0.01);
+      let detalle = '<strong>Estambre por color:</strong><br>';
+
+      if (coloresUsados.length > 5) {
+        detalle += `<span style="color:red;font-weight:bold">Demasiados colores detectados (${coloresUsados.length}). Contacta para personalización avanzada.</span>`;
+        document.getElementById('añadirCarrito').disabled = true;
+      } else {
+        document.getElementById('añadirCarrito').disabled = false;
+      }
+
+      coloresUsados.forEach(([key, count]) => {
+        const porcentaje = count / totalPixels;
+        const areaCm2 = 10000 * porcentaje;
+        const altoTejido = Math.sqrt(areaCm2);
+        const lineas = altoTejido / COSTOS.distanciaPuntada;
+        const estambre = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+        const bolas = estambre / COSTOS.metrosBola;
+        const costo = bolas * COSTOS.bolaEstambre;
+        const [r, g, b] = key.split(',');
+        detalle += `<div><div style="background:rgb(${r},${g},${b})"></div>${estambre.toFixed(2)} m - $${costo.toFixed(2)} MXN</div>`;
+      });
+
+      colorDetalle.innerHTML = detalle;
     }
 
     imgInput.addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = evt => {
+      reader.onload = function(evt) {
         img = new Image();
-        img.onload = () => {
-          hasImage = true;
+        img.onload = function() {
           scale = 1;
+          imgX = (canvas.width - img.width) / 2;
+          imgY = (canvas.height - img.height) / 2;
           draw();
-        };
+          calcularEstambre();
+        }
         img.src = evt.target.result;
-      };
+      }
       reader.readAsDataURL(file);
     });
 
-    document.getElementById("sendBtn").addEventListener("click", async () => {
-      if (!hasImage) {
-        alert("Por favor, sube una imagen antes de enviar el diseño.");
-        return;
-      }
-
-      const user = auth.currentUser;
-      if (!user) {
-        alert("Debes estar autenticado para enviar el diseño.");
-        return;
-      }
-
-      const PRECIO_BOLA = 35;
-      const METROS_BOLA = 200;
-      const PRECIO_TELA = 50;
-      const PRECIO_FIELTRO = 30;
-      const CM_POR_METRO = 10;
-      const DISTANCIA = 0.5;
-
-      const pxTotal = canvas.width * canvas.height;
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      const tempCtx = tempCanvas.getContext("2d");
-      tempCtx.drawImage(canvas, 0, 0);
-      const data = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
-      let pixelCount = 0;
-      for (let i = 3; i < data.data.length; i += 4) {
-        if (data.data[i] > 10) pixelCount++;
-      }
-
-      const porcentaje = pixelCount / pxTotal;
-      const areaCm2 = 10000 * porcentaje;
-      const areaM2 = areaCm2 / 10000;
-      const altoTejido = Math.sqrt(areaCm2);
-      const lineas = altoTejido / DISTANCIA;
-      const estambre = lineas * (1 / CM_POR_METRO) * altoTejido;
-      const bolas = estambre / METROS_BOLA;
-      const costoEstambre = bolas * PRECIO_BOLA;
-      const costoTela = areaM2 * PRECIO_TELA;
-      const costoFieltro = areaM2 * PRECIO_FIELTRO;
-      const total = costoEstambre + costoTela + costoFieltro;
-
-      const pdfCanvas = document.createElement("canvas");
-      pdfCanvas.width = canvas.width;
-      pdfCanvas.height = canvas.height + 100;
-      const pdfCtx = pdfCanvas.getContext("2d");
-      pdfCtx.fillStyle = "#fff";
-      pdfCtx.fillRect(0, 0, pdfCanvas.width, pdfCanvas.height);
-      pdfCtx.drawImage(canvas, 0, 0);
-      pdfCtx.fillStyle = "#000";
-      pdfCtx.font = "14px Arial";
-      const texto = [
-        `Área: ${areaCm2.toFixed(2)} cm²`,
-        `Estambre: ${estambre.toFixed(2)} m`,
-        `Bolas: ${bolas.toFixed(2)}`,
-        `Costo Estambre: $${costoEstambre.toFixed(2)}`,
-        `Costo Tela Base: $${costoTela.toFixed(2)}`,
-        `Costo Fieltro: $${costoFieltro.toFixed(2)}`,
-        `Total: $${total.toFixed(2)} MXN`
-      ];
-      texto.forEach((linea, i) => {
-        pdfCtx.fillText(linea, 10, canvas.height + 20 + i * 16);
-      });
-
-      const base64 = pdfCanvas.toDataURL("image/png");
-
-      await addDoc(collection(db, "pedidos"), {
-        fecha: new Date().toISOString(),
-        imagen: base64,
-        areaCm2,
-        estambre,
-        bolas,
-        costoEstambre,
-        costoTela,
-        costoFieltro,
-        total,
-        usuario: {
-          uid: user.uid,
-          nombre: user.displayName || "Sin nombre",
-          email: user.email,
-          telefono: user.phoneNumber || "No registrado"
-        }
-      });
-
-      alert("Diseño enviado correctamente.");
+    canvas.addEventListener('mousedown', e => {
+      dragging = true;
+      offsetX = e.offsetX - imgX;
+      offsetY = e.offsetY - imgY;
     });
 
-    window.zoomIn = () => {
-      if (!hasImage) return;
+    canvas.addEventListener('mousemove', e => {
+      if (dragging) {
+        imgX = e.offsetX - offsetX;
+        imgY = e.offsetY - offsetY;
+        draw();
+        calcularEstambre();
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => dragging = false);
+    canvas.addEventListener('mouseleave', () => dragging = false);
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      scale += e.deltaY > 0 ? -0.05 : 0.05;
+      if (scale < 0.1) scale = 0.1;
+      draw();
+      calcularEstambre();
+    });
+
+    function centrarImagen() {
+      if (!img.src) return;
+      imgX = (canvas.width - img.width * scale) / 2;
+      imgY = (canvas.height - img.height * scale) / 2;
+      draw();
+      calcularEstambre();
+    }
+
+    function zoomIn() {
       scale *= 1.1;
       draw();
-    };
-    window.zoomOut = () => {
-      if (!hasImage) return;
-      scale /= 1.1;
-      draw();
-    };
+      calcularEstambre();
+    }
 
-    draw();
+    function zoomOut() {
+      scale *= 0.9;
+      draw();
+      calcularEstambre();
+    }
+
+    document.getElementById('añadirCarrito').addEventListener('click', () => {
+      alert('Producto añadido al carrito');
+    });
   </script>
 </body>
 </html>
