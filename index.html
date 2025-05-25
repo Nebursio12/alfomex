@@ -320,6 +320,12 @@
         ¿Olvidaste tu contraseña?
       </button>
     </div>
+    <div style="margin-top: 15px; text-align: center;">
+      <button onclick="loginGoogle()" style="background: #db4437; color: white; width: 100%; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">
+        Iniciar sesión con Gmail
+      </button>
+    </div>
+
     <div id="recuperacion" style="display: none; margin-top: 15px;">
       <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
       <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 8px;">Enviar enlace</button>
@@ -494,6 +500,32 @@
     }
 
     cargarAlfombras();
+
+    import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    async function guardarUsuarioEnFirestore(user) {
+      const ref = doc(db, "usuarios", user.uid);
+      await setDoc(ref, {
+        nombre: user.displayName || "",
+        correo: user.email,
+        foto: user.photoURL || "",
+        proveedor: user.providerData[0]?.providerId || "google",
+        uid: user.uid,
+      }, { merge: true });
+    }
+
+window.loginGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    await guardarUsuarioEnFirestore(result.user);
+    window.location.reload();
+  } catch (e) {
+    alert("Error con Google: " + e.message);
+  }
+};
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         cerrarModal();
