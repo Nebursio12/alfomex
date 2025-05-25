@@ -7,6 +7,31 @@
   <title>Personaliza tu Alfombra - Alfomex</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-perfil {
+    background: white;
+    color: #3b5998;
+  }
+
+  .btn-logout {
+    background: crimson;
+    color: white;
+  }
+
+  .btn-perfil i, .btn-logout i {
+    pointer-events: none;
+  }
+  
     :root {
       --primary: #ffcc00;
       --secondary: #003366;
@@ -213,18 +238,16 @@
       const nav = document.getElementById("navOptions");
       let contenido = "";
       if (user) {
-        contenido += `
-          <button onclick="location.href='perfil.html'" title="Perfil"
-            style="background: white; color: #3b5998; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 1.3rem;">
-            <i class="fa fa-user-circle"></i>
+        contenido = `
+          <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+            <i class="fas fa-user-circle"></i>
           </button>
-          <button onclick="cerrarSesion()" title="Cerrar sesión"
-            style="background-color: crimson; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 1.3rem;">
-            <i class="fa fa-sign-out"></i>
+          <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+            <i class="fas fa-sign-out-alt"></i>
           </button>
         `;
       } else {
-        contenido += `
+        contenido = `
           <button onclick="abrirModal()">Iniciar sesión</button>
           <button onclick="location.href='register.html'">Registrarse</button>
         `;
