@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-yFhW5H0Pq3KZz2VIf0E1V6DxN5WMyocEq/7ayYUpFuNgmE+3X7DwrD2LfP9H+YwLljCk34IbH6OZvnfqSks4Jw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catálogo - Alfomex</title>
@@ -458,10 +460,10 @@
       if (user) {
         const nombre = user.email.split("@")[0];
         contenido += `
-          <button onclick="location.href='perfil.html'" style="background: white; color: #3b5998; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">
+          <button onclick="location.href='perfil.html'" title="Perfil" style="background: white; color: #3b5998; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">
             <i class="fas fa-user-circle"></i>
           </button>
-          <button onclick="cerrarSesion()" style="background-color: crimson; color: white; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">
+          <button onclick="cerrarSesion()" title="Cerrar sesión" style="background-color: crimson; color: white; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;">
             <i class="fas fa-sign-out-alt"></i>
           </button>
 
