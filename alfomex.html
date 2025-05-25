@@ -304,6 +304,12 @@
       messagingSenderId: "1090528818564",
       appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
     };
+    window.cerrarSesion = async () => {
+      const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js");
+      const auth = getAuth();
+      await signOut(auth);
+      window.location.href = "index.html";
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
