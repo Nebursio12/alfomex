@@ -444,6 +444,18 @@
         display: block;
       }
 
+      .canvas-outer {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+      }
+
+      .canvas-inner {
+        width: max-content;
+        display: flex;
+        justify-content: center;
+      }
+
       .plantillas-modal h3 {
         margin-top: 0;
         text-align: center;
@@ -702,9 +714,9 @@
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <div>
-        <div class="canvas-scroll-wrapper">
-          <div class="canvas-wrapper">
-            <canvas id="lienzo"></canvas>
+        <div class="canvas-outer">
+          <div class="canvas-inner">
+            <canvas id="lienzo" width="500" height="500"></canvas>
           </div>
         </div>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
