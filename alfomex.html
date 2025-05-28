@@ -412,7 +412,7 @@
   </div>
   <div class="modal-overlay" id="modalOverlay"></div>
 
-  <!-- Firebase App y Auth -->
+  <!-- Firebase App, Auth y Firestore -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
     import {
@@ -420,6 +420,11 @@
       onAuthStateChanged,
       signOut
     } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -432,17 +437,15 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     // Espera a que el DOM esté cargado antes de acceder a elementos
     window.addEventListener("DOMContentLoaded", () => {
       onAuthStateChanged(auth, (user) => {
         if (!user) {
-          // Redirige inmediatamente si no hay sesión
           window.location.href = "index.html";
           return;
         }
-
-        // Si hay sesión, muestra los botones
         const nav = document.getElementById("navOptions");
         nav.innerHTML = `
           <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
@@ -453,57 +456,84 @@
           </button>
         `;
       });
-
-      // Botón cerrar sesión
       window.cerrarSesion = async () => {
         await signOut(auth);
         window.location.href = "index.html";
       };
-
-      // Botón menú
       window.openNav = () => {
         document.getElementById("mySidenav").classList.add("open");
         document.getElementById("modalOverlay").classList.add("active");
       };
-
       window.closeNav = () => {
         document.getElementById("mySidenav").classList.remove("open");
         document.getElementById("modalOverlay").classList.remove("active");
       };
-
       document.getElementById("modalOverlay").addEventListener("click", closeNav);
     });
 
-    // Mostrar u ocultar carrito
+    // Carrito
     window.toggleCart = (show) => {
-      document.getElementById("cartPanel").classList.toggle("open", show);
-      document.getElementById("cartOverlay").classList.toggle("active", show);
+      document.getElementById("cartPanel")?.classList.toggle("open", show);
+      document.getElementById("cartOverlay")?.classList.toggle("active", show);
     };
-
-    // Click en ícono de carrito
     document.getElementById("cartBtn").addEventListener("click", () => toggleCart(true));
-
-    // Agregar producto al carrito
     window.agregarAlCarrito = (producto) => {
       const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
       carrito.push(producto);
       localStorage.setItem("carrito", JSON.stringify(carrito));
       actualizarVistaCarrito();
     };
-
-    // Mostrar los productos en el panel
     function actualizarVistaCarrito() {
       const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
       const lista = document.getElementById("cartItems");
-      lista.innerHTML = carrito.map(p => `<li>${p.nombre} - $${p.precio}</li>`).join('');
+      if (lista) lista.innerHTML = carrito.map(p => `<li>${p.nombre} - $${p.precio}</li>`).join('');
     }
-
-    // Vaciar carrito
     window.vaciarCarrito = () => {
       localStorage.removeItem("carrito");
       actualizarVistaCarrito();
-    }
+    };
 
+    // Firestore: cargar plantillas dinámicamente
+    async function cargarPlantillasDesdeFirestore() {
+      const modal = document.getElementById("modalPlantillas");
+      const coleccion = collection(db, "plantillas");
+      const querySnapshot = await getDocs(coleccion);
+      let html = '<h3>Selecciona una plantilla</h3>';
+      querySnapshot.forEach(doc => {
+        const categoria = doc.id;
+        const imagenes = doc.data().imagenes;
+        html += `<div class="categoria">
+          <h4>${categoria.toUpperCase()}</h4>`;
+        imagenes.forEach(url => {
+          html += `<img src="${url}" onclick="cargarImagenAlLienzo('${url}')">`;
+        });
+        html += `</div>`;
+      });
+      modal.innerHTML = html;
+    }
+    window.abrirPlantillas = function() {
+      cargarPlantillasDesdeFirestore();
+      document.getElementById('modalPlantillas').classList.add('show');
+      document.getElementById('fondoPlantillas').classList.add('active');
+    };
+    window.cerrarPlantillas = function() {
+      document.getElementById('modalPlantillas').classList.remove('show');
+      document.getElementById('fondoPlantillas').classList.remove('active');
+    };
+    window.cargarImagenAlLienzo = function(src) {
+      img = new Image();
+      img.onload = function () {
+        const factorX = canvas.width / img.width;
+        const factorY = canvas.height / img.height;
+        scale = Math.min(factorX, factorY, 1);
+        imgX = (canvas.width - img.width * scale) / 2;
+        imgY = (canvas.height - img.height * scale) / 2;
+        draw();
+        calcularEstambre();
+        cerrarPlantillas();
+      };
+      img.src = src;
+    };
   </script>
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
@@ -538,6 +568,7 @@
     <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
     <a href="https://www.instagram.com/_alfomex/" target="_blank"><i class="fab fa-instagram"></i></a>
   </div>
+
   <script>
     const canvas = document.getElementById('lienzo');
     const ctx = canvas.getContext('2d');
@@ -740,65 +771,9 @@
     document.getElementById('añadirCarrito').addEventListener('click', () => {
       alert('Producto añadido al carrito');
     });
-    
-
-    function cargarImagenAlLienzo(src) {
-      img = new Image();
-      img.onload = function () {
-        const factorX = canvas.width / img.width;
-        const factorY = canvas.height / img.height;
-        scale = Math.min(factorX, factorY, 1);
-        imgX = (canvas.width - img.width * scale) / 2;
-        imgY = (canvas.height - img.height * scale) / 2;
-        draw();
-        calcularEstambre(); // si ya usas esta función, se ejecutará también para plantillas
-      };
-      img.src = src;
-    }
-function abrirPlantillas() {
-  document.getElementById('modalPlantillas').classList.add('show');
-  document.getElementById('fondoPlantillas').classList.add('active');
-}
-
-function cerrarPlantillas() {
-  document.getElementById('modalPlantillas').classList.remove('show');
-  document.getElementById('fondoPlantillas').classList.remove('active');
-}
-
-function cargarImagenAlLienzo(src) {
-  img = new Image();
-  img.onload = function () {
-    const factorX = canvas.width / img.width;
-    const factorY = canvas.height / img.height;
-    scale = Math.min(factorX, factorY, 1);
-    imgX = (canvas.width - img.width * scale) / 2;
-    imgY = (canvas.height - img.height * scale) / 2;
-    draw();
-    calcularEstambre();
-    cerrarPlantillas(); // cerrar modal al seleccionar
-  };
-  img.src = src;
-}
-
   </script>
+
   <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
-  <div class="plantillas-modal" id="modalPlantillas">
-    <h3>Selecciona una plantilla</h3>
-    <div class="categoria">
-      <h4>Equipos de Futbol</h4>
-      <img src="plantillas/futbol/america.png" onclick="cargarImagenAlLienzo(this.src)">
-      <img src="plantillas/futbol/chivas.png" onclick="cargarImagenAlLienzo(this.src)">
-    </div>
-    <div class="categoria">
-      <h4>Hello Kitty</h4>
-      <img src="plantillas/kawaii/hellokitty1.png" onclick="cargarImagenAlLienzo(this.src)">
-      <img src="plantillas/kawaii/hellokitty2.png" onclick="cargarImagenAlLienzo(this.src)">
-    </div>
-    <div class="categoria">
-      <h4>Mario Bros</h4>
-      <img src="plantillas/mario/mario1.png" onclick="cargarImagenAlLienzo(this.src)">
-      <img src="plantillas/mario/mario2.png" onclick="cargarImagenAlLienzo(this.src)">
-    </div>
-  </div>
+  <div class="plantillas-modal" id="modalPlantillas"></div>
 </body>
 </html>
