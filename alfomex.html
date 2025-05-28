@@ -160,23 +160,23 @@
 
       .contenedor-principal {
         width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       canvas {
         width: 500px !important;
         height: 500px !important;
-        max-width: unset;
-        max-height: unset;
         display: block;
       }
 
       .canvas-wrapper {
-        width: 100%;
         overflow-x: auto;
-        overflow-y: hidden;
+        overflow-y: auto;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
       }
 
       .lateral {
@@ -441,15 +441,15 @@
 
       .canvas-outer {
         width: 100vw;
-  overflow-x: auto;
-  display: flex;
-  justify-content: center;
+        overflow-x: auto;
+        display: flex;
+        justify-content: center;
       }
 
       .canvas-inner {
         min-width: 500px; /* Igual al canvas */
-  display: flex;
-  justify-content: center;
+        display: flex;
+        justify-content: center;
       }
 
       .plantillas-modal h3 {
@@ -709,36 +709,32 @@
     </div>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
-      <div>
-        <div class="canvas-outer">
-          <div class="canvas-inner">
-            <canvas id="lienzo" width="500" height="500"></canvas>
-          </div>
-        </div>
-        <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
-        <div class="controls">
-          <button 
-            onmousedown="iniciarZoom(0.01)" 
-            onmouseup="detenerZoom()" 
-            onmouseleave="detenerZoom()" 
-            ontouchstart="iniciarZoom(0.01)" 
-            ontouchend="detenerZoom()" 
-            title="Zoom +">
-            <i class="fas fa-search-plus"></i>
-          </button>
-          <button onclick="centrarImagen()" title="Centrar">
-            <i class="fas fa-compress-arrows-alt"></i>
-          </button>
-          <button 
-            onmousedown="iniciarZoom(-0.01)" 
-            onmouseup="detenerZoom()" 
-            onmouseleave="detenerZoom()" 
-            ontouchstart="iniciarZoom(-0.01)" 
-            ontouchend="detenerZoom()" 
-            title="Zoom -">
-            <i class="fas fa-search-minus"></i>
-          </button>
-        </div>
+      <div class="canvas-wrapper">
+        <canvas id="lienzo" width="500" height="500"></canvas>
+      </div>
+      <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
+      <div class="controls">
+        <button 
+          onmousedown="iniciarZoom(0.01)" 
+          onmouseup="detenerZoom()" 
+          onmouseleave="detenerZoom()" 
+          ontouchstart="iniciarZoom(0.01)" 
+          ontouchend="detenerZoom()" 
+          title="Zoom +">
+          <i class="fas fa-search-plus"></i>
+        </button>
+        <button onclick="centrarImagen()" title="Centrar">
+          <i class="fas fa-compress-arrows-alt"></i>
+        </button>
+        <button 
+          onmousedown="iniciarZoom(-0.01)" 
+          onmouseup="detenerZoom()" 
+          onmouseleave="detenerZoom()" 
+          ontouchstart="iniciarZoom(-0.01)" 
+          ontouchend="detenerZoom()" 
+          title="Zoom -">
+          <i class="fas fa-search-minus"></i>
+        </button>
       </div>
       <div class="lateral">
         <div id="resultado"></div>
@@ -1005,8 +1001,8 @@
     <div class="plantillas-modal" id="modalPlantillas"></div>
     <script>
       window.addEventListener("load", () => {
-        const wrapper = document.querySelector(".canvas-outer");
-        if (wrapper) {
+        const wrapper = document.querySelector(".canvas-wrapper");
+        if (window.innerWidth < 768 && wrapper) {
           wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
         }
       });
