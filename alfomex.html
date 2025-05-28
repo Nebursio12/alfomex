@@ -766,6 +766,7 @@
     window.cargarImagenAlLienzo = function(src) {
       let tempImg = new Image();
       tempImg.crossOrigin = "anonymous";
+
       tempImg.onload = () => {
         img = tempImg;
         const factorX = canvas.width / img.width;
@@ -774,11 +775,13 @@
         imgX = (canvas.width - img.width * scale) / 2;
         imgY = (canvas.height - img.height * scale) / 2;
         draw();
-        setTimeout(() => calcularEstambre(), 100);
-        cerrarPlantillas();
+        requestAnimationFrame(() => {
+          calcularEstambre();
+          cerrarPlantillas();
+        });
       };
+
       tempImg.onerror = () => {
-        // Intentar cargar sin crossOrigin si falla
         let fallbackImg = new Image();
         fallbackImg.onload = () => {
           img = fallbackImg;
@@ -788,11 +791,14 @@
           imgX = (canvas.width - img.width * scale) / 2;
           imgY = (canvas.height - img.height * scale) / 2;
           draw();
-          setTimeout(() => calcularEstambre(), 100);
-          cerrarPlantillas();
+          requestAnimationFrame(() => {
+            calcularEstambre();
+            cerrarPlantillas();
+          });
         };
         fallbackImg.src = src;
       };
+
       tempImg.src = src;
     };
   </script>
