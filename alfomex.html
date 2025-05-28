@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Personaliza tu Alfombra - Alfomex</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
       :root {
@@ -113,21 +113,35 @@
         color: black;
       }
 
-      .upload-btn, .controls button, #añadirCarrito {
-        display: block;
-        width: 100%;
-        max-width: 400px;
-        margin: 20px auto;
-        padding: 15px;
-        font-size: 1rem;
-        background-color: #003366;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        text-align: center;
-        transition: background 0.3s ease;
-      }
+      .controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.controls button {
+  background-color: #003366;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.controls button:hover {
+  background: var(--primary);
+  color: black;
+}
+
 
       .upload-btn:hover, .controls button:hover, #añadirCarrito:hover {
         background: var(--primary);
@@ -157,10 +171,7 @@
         flex-shrink: 0;
       }
 
-      .controls {
-        text-align: center;
-        margin-top: 10px;
-      }
+    
 
       .lateral {
         width: 100%;
@@ -531,9 +542,6 @@
   </head>
   <body>
     <header>
-      <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil">
-        <i class="fas fa-shopping-cart"></i>
-      </button>
       <div class="header-left">
         <button id="menuBtn" onclick="openNav()">☰</button>
       </div>
@@ -541,6 +549,9 @@
       <nav class="header-right" id="navOptions">
         <span style="color: white;">Cargando...</span>
       </nav>
+      <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil">
+        <i class="fas fa-shopping-cart"></i>
+      </button>
     </header>
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
@@ -667,7 +678,7 @@
       <div>
         <canvas id="lienzo"></canvas>
         <div class="controls">
-          <button onclick="centrarImagen()" title="Centrar Imagen">
+          <button onclick="centrarImagen()" title="Centrar">
             <i class="fas fa-compress-arrows-alt"></i>
           </button>
           <button onclick="zoomIn()" title="Zoom +">
