@@ -171,14 +171,22 @@
       }
 
       canvas {
+        width: 500px;
+        height: 500px;
+        min-width: 500px;
+        min-height: 500px;
+        border: 2px solid #333;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: block;
+      }
+
+      .canvas-wrapper {
         width: 100%;
-  max-width: 500px;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  border: 2px solid #333;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: block;
+        overflow-x: auto;
+        display: flex;
+        justify-content: center;
+        margin: 0 auto;
       }
 
       .lateral {
@@ -692,7 +700,9 @@
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <div>
-        <canvas id="lienzo"></canvas>
+        <div class="canvas-wrapper">
+          <canvas id="lienzo" width="500" height="500"></canvas>
+        </div>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
         <div class="controls">
           <button 
@@ -731,65 +741,65 @@
     </div>
     <script>
       const canvas = document.getElementById('lienzo');
-  canvas.width = 500;
-  canvas.height = 500;
-  const ctx = canvas.getContext('2d');
-  const imgInput = document.getElementById('imgInput');
-  const resultado = document.getElementById('resultado');
-  const colorDetalle = document.getElementById('colorDetalle');
-  const totalFinal = document.getElementById('totalFinal');
-  const pxPorCm = canvas.width / 100;
-  let img = new Image();
-  let dragging = false;
-  let offsetX = 0, offsetY = 0;
-  let imgX = 0, imgY = 0;
-  let scale = 1;
+      canvas.width = 500;
+      canvas.height = 500;
+      const ctx = canvas.getContext('2d');
+      const imgInput = document.getElementById('imgInput');
+      const resultado = document.getElementById('resultado');
+      const colorDetalle = document.getElementById('colorDetalle');
+      const totalFinal = document.getElementById('totalFinal');
+      const pxPorCm = canvas.width / 100;
+      let img = new Image();
+      let dragging = false;
+      let offsetX = 0, offsetY = 0;
+      let imgX = 0, imgY = 0;
+      let scale = 1;
 
-  const COSTOS = {
-    bolaEstambre: 35 * 4,
-    metrosBola: 200,
-    telaBase: 50 * 4,
-    fieltro: 30 * 4,
-    personalizacion: 399,
-    tejidoCm: 10,
-    distanciaPuntada: 0.3
-  };
+      const COSTOS = {
+        bolaEstambre: 35 * 4,
+        metrosBola: 200,
+        telaBase: 50 * 4,
+        fieltro: 30 * 4,
+        personalizacion: 399,
+        tejidoCm: 10,
+        distanciaPuntada: 0.3
+      };
 
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i <= 100; i++) {
-      const px = i * pxPorCm;
-      ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
-      ctx.fillRect(px, 0, 1, canvas.height);
-      ctx.fillRect(0, px, canvas.width, 1);
-    }
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i <= 100; i++) {
+          const px = i * pxPorCm;
+          ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
+          ctx.fillRect(px, 0, 1, canvas.height);
+          ctx.fillRect(0, px, canvas.width, 1);
+        }
 
-  ctx.strokeStyle = '#999';
-  for (let i = 0; i <= 100; i += 10) {
-    const px = i * pxPorCm;
-    ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
-    
-    ctx.fillStyle = '#000';
-    ctx.font = '10px Arial';
-    if (i !== 0) {
-      ctx.fillText(`${i}cm`, px + 2, 12);
-      ctx.fillText(`${i}cm`, 2, px + 10);
-    } else {
-      ctx.fillText(`0cm`, 2, 10);
-    }
-  }
+        ctx.strokeStyle = '#999';
+        for (let i = 0; i <= 100; i += 10) {
+          const px = i * pxPorCm;
+          ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
+          
+          ctx.fillStyle = '#000';
+          ctx.font = '10px Arial';
+          if (i !== 0) {
+            ctx.fillText(`${i}cm`, px + 2, 12);
+            ctx.fillText(`${i}cm`, 2, px + 10);
+          } else {
+            ctx.fillText(`0cm`, 2, 10);
+          }
+        }
 
-  ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
 
-  // Calcular tamaño real de la imagen y mostrarlo
-  const anchoCm = (img.width * scale) / pxPorCm;
-  const altoCm = (img.height * scale) / pxPorCm;
+        // Calcular tamaño real de la imagen y mostrarlo
+        const anchoCm = (img.width * scale) / pxPorCm;
+        const altoCm = (img.height * scale) / pxPorCm;
 
-  document.getElementById("areaCubierta").innerHTML =
-  `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
-  `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
-}
+        document.getElementById("areaCubierta").innerHTML =
+        `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
+        `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
+      }
 
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
         for (let [key, _] of mapa.entries()) {
@@ -830,14 +840,14 @@
         calcularPorColor(imageData, totalPixels, costoFinal);
       }
       function ajustarCanvas() {
-  const size = Math.min(window.innerWidth * 0.8, 500);
-  canvas.width = size;
-  canvas.height = size;
-  draw(); // vuelve a dibujar la imagen si ya hay una cargada
-  calcularEstambre(); // vuelve a calcular presupuesto si ya hay imagen
-}
-window.addEventListener("resize", ajustarCanvas);
-window.addEventListener("DOMContentLoaded", ajustarCanvas);
+        const size = Math.min(window.innerWidth * 0.8, 500);
+        canvas.width = size;
+        canvas.height = size;
+        draw(); // vuelve a dibujar la imagen si ya hay una cargada
+        calcularEstambre(); // vuelve a calcular presupuesto si ya hay imagen
+      }
+      window.addEventListener("resize", ajustarCanvas);
+      window.addEventListener("DOMContentLoaded", ajustarCanvas);
 
       function calcularPorColor(imageData, totalPixels, total) {
         const mapa = new Map();
@@ -924,21 +934,21 @@ window.addEventListener("DOMContentLoaded", ajustarCanvas);
       }
       let zoomInterval;
 
-function aplicarZoom(delta) {
-  scale += delta;
-  if (scale < 0.1) scale = 0.1;
-  draw();
-  calcularEstambre();
-}
+      function aplicarZoom(delta) {
+        scale += delta;
+        if (scale < 0.1) scale = 0.1;
+        draw();
+        calcularEstambre();
+      }
 
-function iniciarZoom(delta) {
-  aplicarZoom(delta);
-  zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
-}
+      function iniciarZoom(delta) {
+        aplicarZoom(delta);
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
+      }
 
-function detenerZoom() {
-  clearInterval(zoomInterval);
-}
+      function detenerZoom() {
+        clearInterval(zoomInterval);
+      }
 
       document.getElementById('añadirCarrito').addEventListener('click', () => {
         alert('Producto añadido al carrito');
