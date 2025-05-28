@@ -159,15 +159,10 @@
       }
 
       .contenedor-principal {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 20px;
-        margin: 30px auto;
-        max-width: 1200px;
-        padding: 0 20px;
-        box-sizing: border-box;
+        width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
       }
 
       canvas {
@@ -445,15 +440,16 @@
       }
 
       .canvas-outer {
-        width: 100%;
-        overflow-x: auto;
-        display: block;
+        width: 100vw;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
       }
 
       .canvas-inner {
-        width: max-content;
-        display: flex;
-        justify-content: center;
+        min-width: 500px; /* Igual al canvas */
+  display: flex;
+  justify-content: center;
       }
 
       .plantillas-modal h3 {
@@ -1009,9 +1005,9 @@
     <div class="plantillas-modal" id="modalPlantillas"></div>
     <script>
       window.addEventListener("load", () => {
-        const scrollContainer = document.querySelector(".canvas-scroll-wrapper");
-        if (scrollContainer) {
-          scrollContainer.scrollLeft = (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2;
+        const wrapper = document.querySelector(".canvas-outer");
+        if (wrapper) {
+          wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
         }
       });
     </script>
