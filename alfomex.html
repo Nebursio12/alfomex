@@ -762,24 +762,39 @@
     document.getElementById('añadirCarrito').addEventListener('click', () => {
       alert('Producto añadido al carrito');
     });
-    function cargarImagenAlLienzo(src) {
-      img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = function () {
+
+    window.cargarImagenAlLienzo = function(src) {
+      let tempImg = new Image();
+      tempImg.crossOrigin = "anonymous";
+      tempImg.onload = () => {
+        img = tempImg;
         const factorX = canvas.width / img.width;
         const factorY = canvas.height / img.height;
         scale = Math.min(factorX, factorY, 1);
         imgX = (canvas.width - img.width * scale) / 2;
         imgY = (canvas.height - img.height * scale) / 2;
         draw();
-        setTimeout(() => {
-          calcularEstambre();
-        }, 100);
+        setTimeout(() => calcularEstambre(), 100);
         cerrarPlantillas();
       };
-      img.src = src;
-    }
-    window.cargarImagenAlLienzo = cargarImagenAlLienzo;
+      tempImg.onerror = () => {
+        // Intentar cargar sin crossOrigin si falla
+        let fallbackImg = new Image();
+        fallbackImg.onload = () => {
+          img = fallbackImg;
+          const factorX = canvas.width / img.width;
+          const factorY = canvas.height / img.height;
+          scale = Math.min(factorX, factorY, 1);
+          imgX = (canvas.width - img.width * scale) / 2;
+          imgY = (canvas.height - img.height * scale) / 2;
+          draw();
+          setTimeout(() => calcularEstambre(), 100);
+          cerrarPlantillas();
+        };
+        fallbackImg.src = src;
+      };
+      tempImg.src = src;
+    };
   </script>
 
   <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
