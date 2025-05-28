@@ -149,9 +149,10 @@
       }
 
       .lateral {
-        max-width: 600px;
-        flex: 1;
-        min-width: 300px;
+        max-width: 100px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
       }
 
       #resultado, #colorDetalle {
@@ -614,7 +615,6 @@
       </div>
       <div class="lateral">
         <div id="resultado"></div>
-        <div id="colorDetalle"></div>
         <div id="totalFinal" class="total-final"></div>
         <button id="añadirCarrito">AÑADIR AL CARRITO</button>
       </div>
@@ -735,7 +735,6 @@
           const [r, g, b] = key.split(',');
           detalle += `<div><div style="background:rgb(${r},${g},${b})"></div>${estambre.toFixed(2)} m - $${costo.toFixed(2)} MXN</div>`;
         });
-        colorDetalle.innerHTML = detalle;
         totalFinal.innerHTML = `TOTAL: $${total.toFixed(2)} MXN`;
       }
       imgInput.addEventListener('change', e => {
