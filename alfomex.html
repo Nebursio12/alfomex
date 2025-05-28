@@ -525,24 +525,6 @@
       document.getElementById('modalPlantillas').classList.remove('show');
       document.getElementById('fondoPlantillas').classList.remove('active');
     };
-    function cargarImagenAlLienzo(src) {
-      img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = function () {
-        const factorX = canvas.width / img.width;
-        const factorY = canvas.height / img.height;
-        scale = Math.min(factorX, factorY, 1);
-        imgX = (canvas.width - img.width * scale) / 2;
-        imgY = (canvas.height - img.height * scale) / 2;
-        draw();
-        setTimeout(() => {
-          calcularEstambre();
-        }, 100);
-        cerrarPlantillas();
-      };
-      img.src = src;
-    }
-    window.cargarImagenAlLienzo = cargarImagenAlLienzo;
   </script>
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
@@ -780,6 +762,24 @@
     document.getElementById('añadirCarrito').addEventListener('click', () => {
       alert('Producto añadido al carrito');
     });
+    function cargarImagenAlLienzo(src) {
+      img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = function () {
+        const factorX = canvas.width / img.width;
+        const factorY = canvas.height / img.height;
+        scale = Math.min(factorX, factorY, 1);
+        imgX = (canvas.width - img.width * scale) / 2;
+        imgY = (canvas.height - img.height * scale) / 2;
+        draw();
+        setTimeout(() => {
+          calcularEstambre();
+        }, 100);
+        cerrarPlantillas();
+      };
+      img.src = src;
+    }
+    window.cargarImagenAlLienzo = cargarImagenAlLienzo;
   </script>
 
   <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
