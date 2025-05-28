@@ -326,6 +326,71 @@
       border-color: #000;
     }
 
+    .plantillas-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      z-index: 10000;
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .plantillas-modal.show {
+      display: block;
+    }
+
+    .plantillas-modal h3 {
+      margin-top: 0;
+      text-align: center;
+      color: var(--secondary);
+    }
+
+    .plantillas-modal .categoria {
+      margin-bottom: 20px;
+    }
+
+    .plantillas-modal .categoria h4 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .plantillas-modal .categoria img {
+      width: 100px;
+      height: auto;
+      margin: 5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.2s;
+    }
+
+    .plantillas-modal .categoria img:hover {
+      border-color: var(--secondary);
+    }
+
+    .modal-overlay-plantillas {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+
+    .modal-overlay-plantillas.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -445,26 +510,12 @@
   <div class="alerta">
     Para obtener resultados más precisos, sube una imagen de alta calidad con colores sólidos y sin áreas desvanecidas.
   </div>
-  <label class="upload-btn" for="imgInput">AÑADIR IMAGEN</label>
-  <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
-  <button onclick="toggleMenu()">Plantillas</button>
-  <div id="plantillasMenu" class="dropdown-menu">
-    <div class="categoria">
-      <h4>Equipos de Futbol</h4>
-      <img src="plantillas/futbol/america.png" onclick="cargarImagenAlLienzo(this.src)">
-      <img src="plantillas/futbol/chivas.png" onclick="cargarImagenAlLienzo(this.src)">
-    </div>
-    <div class="categoria">
-      <h4>Hello Kitty</h4>
-      <img src="plantillas/kawaii/hellokitty1.png" onclick="cargarImagenAlLienzo(this.src)">
-      <img src="plantillas/kawaii/hellokitty2.png" onclick="cargarImagenAlLienzo(this.src)">
-    </div>
-    <div class="categoria">
-      <h4>Mario Bros</h4>
-      <img src="plantillas/mario/mario1.png" onclick="cargarImagenAlLienzo(this.src)">
-      <img src="plantillas/mario/mario2.png" onclick="cargarImagenAlLienzo(this.src)">
-    </div>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+    <button onclick="abrirPlantillas()">Plantillas</button>
+    <label class="upload-btn" for="imgInput">AÑADIR IMAGEN</label>
+    <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
   </div>
+
   <div class="contenedor-principal">
     <div>
       <canvas id="lienzo" width="500" height="500"></canvas>
@@ -481,6 +532,7 @@
       <button id="añadirCarrito">AÑADIR AL CARRITO</button>
     </div>
   </div>
+
   <div class="social-links">
     <p>Sígueme en redes sociales:</p>
     <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -688,10 +740,7 @@
     document.getElementById('añadirCarrito').addEventListener('click', () => {
       alert('Producto añadido al carrito');
     });
-    function toggleMenu() {
-      const menu = document.getElementById('plantillasMenu');
-      menu.classList.toggle('show');
-    }
+    
 
     function cargarImagenAlLienzo(src) {
       img = new Image();
@@ -706,7 +755,50 @@
       };
       img.src = src;
     }
+function abrirPlantillas() {
+  document.getElementById('modalPlantillas').classList.add('show');
+  document.getElementById('fondoPlantillas').classList.add('active');
+}
+
+function cerrarPlantillas() {
+  document.getElementById('modalPlantillas').classList.remove('show');
+  document.getElementById('fondoPlantillas').classList.remove('active');
+}
+
+function cargarImagenAlLienzo(src) {
+  img = new Image();
+  img.onload = function () {
+    const factorX = canvas.width / img.width;
+    const factorY = canvas.height / img.height;
+    scale = Math.min(factorX, factorY, 1);
+    imgX = (canvas.width - img.width * scale) / 2;
+    imgY = (canvas.height - img.height * scale) / 2;
+    draw();
+    calcularEstambre();
+    cerrarPlantillas(); // cerrar modal al seleccionar
+  };
+  img.src = src;
+}
 
   </script>
+  <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
+  <div class="plantillas-modal" id="modalPlantillas">
+    <h3>Selecciona una plantilla</h3>
+    <div class="categoria">
+      <h4>Equipos de Futbol</h4>
+      <img src="plantillas/futbol/america.png" onclick="cargarImagenAlLienzo(this.src)">
+      <img src="plantillas/futbol/chivas.png" onclick="cargarImagenAlLienzo(this.src)">
+    </div>
+    <div class="categoria">
+      <h4>Hello Kitty</h4>
+      <img src="plantillas/kawaii/hellokitty1.png" onclick="cargarImagenAlLienzo(this.src)">
+      <img src="plantillas/kawaii/hellokitty2.png" onclick="cargarImagenAlLienzo(this.src)">
+    </div>
+    <div class="categoria">
+      <h4>Mario Bros</h4>
+      <img src="plantillas/mario/mario1.png" onclick="cargarImagenAlLienzo(this.src)">
+      <img src="plantillas/mario/mario2.png" onclick="cargarImagenAlLienzo(this.src)">
+    </div>
+  </div>
 </body>
 </html>
