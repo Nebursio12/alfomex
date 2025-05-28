@@ -520,20 +520,30 @@
       document.getElementById('modalPlantillas').classList.remove('show');
       document.getElementById('fondoPlantillas').classList.remove('active');
     };
-    window.cargarImagenAlLienzo = function(src) {
+    function cargarImagenAlLienzo(src) {
       img = new Image();
+      img.crossOrigin = "anonymous"; // Muy importante para imágenes externas
+
       img.onload = function () {
         const factorX = canvas.width / img.width;
         const factorY = canvas.height / img.height;
         scale = Math.min(factorX, factorY, 1);
         imgX = (canvas.width - img.width * scale) / 2;
         imgY = (canvas.height - img.height * scale) / 2;
+
         draw();
-        calcularEstambre();
+
+        // Espera un ciclo para asegurarse que la imagen se dibujó antes de analizarla
+        setTimeout(() => {
+          calcularEstambre();
+        }, 100);
+        
         cerrarPlantillas();
       };
+
       img.src = src;
-    };
+    }
+
   </script>
 
   <h2>PERSONALIZA TU ALFOMBRA</h2>
