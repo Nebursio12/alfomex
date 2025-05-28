@@ -763,12 +763,22 @@
         ctx.strokeStyle = '#999';
         for (let i = 0; i <= 100; i += 10) {
           const px = i * pxPorCm;
-          ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(px, 0);
+          ctx.lineTo(px, canvas.height);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, px);
+          ctx.lineTo(canvas.width, px);
+          ctx.stroke();
           ctx.fillStyle = '#000';
           ctx.font = '10px Arial';
-          ctx.fillText(`${i}cm`, px + 2, 12);
-          ctx.fillText(`${i}cm`, 2, px + 10);
+          if (i !== 0) {
+            ctx.fillText(`${i}cm`, px + 2, 12);
+            ctx.fillText(`${i}cm`, 2, px + 10);
+          } else {
+            ctx.fillText(`0cm`, 2, 10);
+          }
         }
         ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
       }
