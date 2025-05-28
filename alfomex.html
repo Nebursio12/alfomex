@@ -685,9 +685,6 @@
       <div>
         <canvas id="lienzo"></canvas>
         <div class="controls">
-          <button onclick="centrarImagen()" title="Centrar">
-            <i class="fas fa-compress-arrows-alt"></i>
-          </button>
           <button 
             onmousedown="iniciarZoom(0.01)" 
             onmouseup="detenerZoom()" 
@@ -696,6 +693,9 @@
             ontouchend="detenerZoom()" 
             title="Zoom +">
             <i class="fas fa-search-plus"></i>
+          </button>
+          <button onclick="centrarImagen()" title="Centrar">
+            <i class="fas fa-compress-arrows-alt"></i>
           </button>
           <button 
             onmousedown="iniciarZoom(-0.01)" 
