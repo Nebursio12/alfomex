@@ -114,34 +114,36 @@
       }
 
       .controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 15px 0;
-  flex-wrap: wrap;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin: 15px 0;
+        flex-wrap: nowrap;
+        flex-direction: row;
+      }
 
-.controls button {
-  background-color: #003366;
-  color: white;
-  font-size: 1.2rem;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
+      .controls button {
+        background-color: #003366;
+        color: white;
+        font-size: 1.2rem;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        flex-shrink: 0;
+      }
 
-.controls button:hover {
-  background: var(--primary);
-  color: black;
-}
-
+      .controls button:hover {
+        background: var(--primary);
+        color: black;
+      }
 
       .upload-btn:hover, .controls button:hover, #añadirCarrito:hover {
         background: var(--primary);
@@ -170,8 +172,6 @@
         box-shadow: 0 4px 12px var(--shadow);
         flex-shrink: 0;
       }
-
-    
 
       .lateral {
         width: 100%;
@@ -498,6 +498,17 @@
       }
 
       @media (max-width: 600px) {
+        .controls {
+          flex-wrap: nowrap;
+          justify-content: center;
+        }
+
+        .controls button {
+          width: 40px;
+          height: 40px;
+          font-size: 1rem;
+        }
+
         h2 {
           font-size: 1.2rem;
         }
