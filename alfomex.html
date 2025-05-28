@@ -784,12 +784,10 @@
   // Calcular tamaño real de la imagen y mostrarlo
   const anchoCm = (img.width * scale) / pxPorCm;
   const altoCm = (img.height * scale) / pxPorCm;
-  const areaCm = anchoCm * altoCm;
 
   document.getElementById("areaCubierta").innerHTML =
-    `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
-    `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm<br>` +
-    `<strong>Área cubierta:</strong> ${areaCm.toFixed(2)} cm²`;
+  `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
+  `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
 }
 
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
