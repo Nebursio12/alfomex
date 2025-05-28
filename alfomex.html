@@ -359,6 +359,13 @@
         color: #ddd;
       }
 
+      .canvas-scroll-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        display: flex;
+        justify-content: start;
+      }
+
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -695,8 +702,10 @@
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <div>
-        <div class="canvas-wrapper">
-          <canvas id="lienzo"></canvas>
+        <div class="canvas-scroll-wrapper">
+          <div class="canvas-wrapper">
+            <canvas id="lienzo"></canvas>
+          </div>
         </div>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
         <div class="controls">
@@ -988,9 +997,9 @@
     <div class="plantillas-modal" id="modalPlantillas"></div>
     <script>
       window.addEventListener("load", () => {
-        const wrapper = document.querySelector(".canvas-wrapper");
-        if (wrapper) {
-           wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+        const scrollContainer = document.querySelector(".canvas-scroll-wrapper");
+        if (scrollContainer) {
+          scrollContainer.scrollLeft = (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2;
         }
       });
     </script>
