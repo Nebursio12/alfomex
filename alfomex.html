@@ -137,13 +137,22 @@
         justify-content: center;
         cursor: pointer;
         transition: background 0.3s ease;
+        user-select: none;
       }
 
       .controls button:hover {
-        background: var(--primary);
-        color: black;
+        background-color: #003366;
+        color: white
       }
 
+      .controls button:focus{
+        outline: none;
+      }
+     
+      .controls button:active {
+        background-color: var(--primary); /* Solo se pinta al presionar */
+        color: black;
+      }
       .upload-btn:hover, .controls button:hover, #añadirCarrito:hover {
         background: var(--primary);
         color: black;
