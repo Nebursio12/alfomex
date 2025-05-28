@@ -175,6 +175,8 @@
         height: 500px;
         min-width: 500px;
         min-height: 500px;
+        max-width: 500px;
+        max-height: 500px;
         border: 2px solid #333;
         background: white;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -184,6 +186,7 @@
       .canvas-wrapper {
         width: 100%;
         overflow-x: auto;
+        overflow-y: hidden;
         display: flex;
         justify-content: center;
         margin: 0 auto;
@@ -991,5 +994,11 @@
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
     <div class="plantillas-modal" id="modalPlantillas"></div>
+    <script>
+      window.addEventListener("load", () => {
+        const wrapper = document.querySelector(".canvas-wrapper");
+        wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+      });
+    </script>
   </body>
 </html>
