@@ -533,8 +533,6 @@
   </div>
   <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
     <button class="upload-btn" onclick="abrirPlantillas()">Plantillas</button>
-    <label class="upload-btn" for="imgInput">AÑADIR IMAGEN</label>
-    <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
   </div>
 
   <div class="contenedor-principal">
@@ -764,43 +762,28 @@
     });
 
     window.cargarImagenAlLienzo = function(src) {
-      let tempImg = new Image();
-      tempImg.crossOrigin = "anonymous";
+      const nueva = new Image();
+      nueva.crossOrigin = "anonymous";
 
-      tempImg.onload = () => {
-        img = tempImg;
+      nueva.onload = function () {
+        img = nueva;
         const factorX = canvas.width / img.width;
         const factorY = canvas.height / img.height;
         scale = Math.min(factorX, factorY, 1);
         imgX = (canvas.width - img.width * scale) / 2;
         imgY = (canvas.height - img.height * scale) / 2;
         draw();
-        requestAnimationFrame(() => {
-          calcularEstambre();
-          cerrarPlantillas();
-        });
+        setTimeout(() => calcularEstambre(), 100);
+        cerrarPlantillas();
       };
 
-      tempImg.onerror = () => {
-        let fallbackImg = new Image();
-        fallbackImg.onload = () => {
-          img = fallbackImg;
-          const factorX = canvas.width / img.width;
-          const factorY = canvas.height / img.height;
-          scale = Math.min(factorX, factorY, 1);
-          imgX = (canvas.width - img.width * scale) / 2;
-          imgY = (canvas.height - img.height * scale) / 2;
-          draw();
-          requestAnimationFrame(() => {
-            calcularEstambre();
-            cerrarPlantillas();
-          });
-        };
-        fallbackImg.src = src;
+      nueva.onerror = function () {
+        alert("No se pudo cargar la imagen desde: " + src);
       };
 
-      tempImg.src = src;
+      nueva.src = src;
     };
+
   </script>
 
   <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
