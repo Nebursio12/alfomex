@@ -125,25 +125,33 @@
 
       .controls button {
         background-color: #003366;
-        color: white;
-        font-size: 1.2rem;
-        padding: 12px;
-        border: none;
-        border-radius: 6px;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background 0.3s ease;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  user-select: none;
       }
 
       .controls button:hover {
-        background: var(--primary);
-        color: black;
+        background-color: #003366; /* SIN CAMBIO al pasar el mouse */
+  color: white;
       }
 
+      .controls button:focus {
+  outline: none;
+}
+
+.controls button:active {
+  background-color: var(--primary); /* Solo se pinta al presionar */
+  color: black
       .upload-btn:hover, .controls button:hover, #añadirCarrito:hover {
         background: var(--primary);
         color: black;
@@ -677,6 +685,9 @@
       };
     </script>
     <h2>PERSONALIZA TU ALFOMBRA</h2>
+    <div class="alerta">
+      Para obtener resultados más precisos, sube una imagen de alta calidad con colores sólidos y sin áreas desvanecidas.
+    </div>
     <div class="plantilla-btn-container">
       <button onclick="abrirPlantillas()">PLANTILLAS</button>
     </div>
@@ -685,6 +696,9 @@
       <div>
         <canvas id="lienzo"></canvas>
         <div class="controls">
+          <button onclick="centrarImagen()" title="Centrar">
+            <i class="fas fa-compress-arrows-alt"></i>
+          </button>
           <button 
             onmousedown="iniciarZoom(0.01)" 
             onmouseup="detenerZoom()" 
@@ -693,9 +707,6 @@
             ontouchend="detenerZoom()" 
             title="Zoom +">
             <i class="fas fa-search-plus"></i>
-          </button>
-          <button onclick="centrarImagen()" title="Centrar">
-            <i class="fas fa-compress-arrows-alt"></i>
           </button>
           <button 
             onmousedown="iniciarZoom(-0.01)" 
