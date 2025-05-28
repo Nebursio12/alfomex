@@ -7,6 +7,16 @@
     <title>Personaliza tu Alfombra - Alfomex</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+      canvas {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        border: 2px solid var(--accent);
+        background: white;
+        box-shadow: 0 4px 12px var(--shadow);
+      }
+
       .botones-superiores {
         display: flex;
         flex-wrap: wrap;
@@ -595,7 +605,7 @@
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <div>
-        <canvas id="lienzo" width="500" height="500"></canvas>
+        <canvas id="lienzo"></canvas>
         <div class="controls">
           <button onclick="centrarImagen()">Centrar Imagen</button>
           <button onclick="zoomIn()">Zoom +</button>
@@ -616,6 +626,8 @@
     </div>
     <script>
       const canvas = document.getElementById('lienzo');
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientWidth;
       const ctx = canvas.getContext('2d');
       const imgInput = document.getElementById('imgInput');
       const resultado = document.getElementById('resultado');
