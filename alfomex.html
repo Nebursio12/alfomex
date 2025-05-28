@@ -762,28 +762,26 @@
     });
 
     window.cargarImagenAlLienzo = function(src) {
-      const nueva = new Image();
-      nueva.crossOrigin = "anonymous";
+      img = new Image();
+      img.crossOrigin = "anonymous";
 
-      nueva.onload = function () {
-        img = nueva;
+      img.onload = function () {
         const factorX = canvas.width / img.width;
         const factorY = canvas.height / img.height;
         scale = Math.min(factorX, factorY, 1);
         imgX = (canvas.width - img.width * scale) / 2;
         imgY = (canvas.height - img.height * scale) / 2;
         draw();
-        setTimeout(() => calcularEstambre(), 100);
+        setTimeout(() => calcularEstambre(), 100); // Importante para que se genere el presupuesto
         cerrarPlantillas();
       };
 
-      nueva.onerror = function () {
-        alert("No se pudo cargar la imagen desde: " + src);
+      img.onerror = function () {
+        alert("No se pudo cargar la imagen.");
       };
 
-      nueva.src = src;
+      img.src = src;
     };
-
   </script>
 
   <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
