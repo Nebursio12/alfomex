@@ -171,15 +171,10 @@
       }
 
       canvas {
-        width: 500px;
-        height: 500px;
-        min-width: 500px;
-        min-height: 500px;
-        max-width: 500px;
-        max-height: 500px;
-        border: 2px solid #333;
-        background: white;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 500px !important;
+        height: 500px !important;
+        max-width: unset;
+        max-height: unset;
         display: block;
       }
 
@@ -187,9 +182,6 @@
         width: 100%;
         overflow-x: auto;
         overflow-y: hidden;
-        display: flex;
-        justify-content: center;
-        margin: 0 auto;
       }
 
       .lateral {
@@ -997,7 +989,9 @@
     <script>
       window.addEventListener("load", () => {
         const wrapper = document.querySelector(".canvas-wrapper");
-        wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+        if (wrapper) {
+           wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+        }
       });
     </script>
   </body>
