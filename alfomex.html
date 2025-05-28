@@ -172,13 +172,13 @@
 
       canvas {
         width: 100%;
-        max-width: 500px;
-        height: auto;
-        aspect-ratio: 1 / 1;
-        border: 2px solid var(--accent);
-        background: white;
-        box-shadow: 0 4px 12px var(--shadow);
-        flex-shrink: 0;
+  max-width: 500px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border: 2px solid #333;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: block;
       }
 
       .lateral {
@@ -731,37 +731,38 @@
     </div>
     <script>
       const canvas = document.getElementById('lienzo');
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientWidth;
-      const ctx = canvas.getContext('2d');
-      const imgInput = document.getElementById('imgInput');
-      const resultado = document.getElementById('resultado');
-      const colorDetalle = document.getElementById('colorDetalle');
-      const totalFinal = document.getElementById('totalFinal');
-      const pxPorCm = canvas.width / 100;
-      let img = new Image();
-      let dragging = false;
-      let offsetX = 0, offsetY = 0;
-      let imgX = 0, imgY = 0;
-      let scale = 1;
-      const COSTOS = {
-        bolaEstambre: 35 * 4,
-        metrosBola: 200,
-        telaBase: 50 * 4,
-        fieltro: 30 * 4,
-        personalizacion: 399,
-        tejidoCm: 10,
-        distanciaPuntada: 0.3
-      };
-      function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  for (let i = 0; i <= 100; i++) {
-    const px = i * pxPorCm;
-    ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
-    ctx.fillRect(px, 0, 1, canvas.height);
-    ctx.fillRect(0, px, canvas.width, 1);
-  }
+  canvas.width = 500;
+  canvas.height = 500;
+  const ctx = canvas.getContext('2d');
+  const imgInput = document.getElementById('imgInput');
+  const resultado = document.getElementById('resultado');
+  const colorDetalle = document.getElementById('colorDetalle');
+  const totalFinal = document.getElementById('totalFinal');
+  const pxPorCm = canvas.width / 100;
+  let img = new Image();
+  let dragging = false;
+  let offsetX = 0, offsetY = 0;
+  let imgX = 0, imgY = 0;
+  let scale = 1;
+
+  const COSTOS = {
+    bolaEstambre: 35 * 4,
+    metrosBola: 200,
+    telaBase: 50 * 4,
+    fieltro: 30 * 4,
+    personalizacion: 399,
+    tejidoCm: 10,
+    distanciaPuntada: 0.3
+  };
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i <= 100; i++) {
+      const px = i * pxPorCm;
+      ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
+      ctx.fillRect(px, 0, 1, canvas.height);
+      ctx.fillRect(0, px, canvas.width, 1);
+    }
 
   ctx.strokeStyle = '#999';
   for (let i = 0; i <= 100; i += 10) {
