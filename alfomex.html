@@ -124,8 +124,8 @@
       }
 
       .controls button {
-        background-color: #003366;
-        color: white;
+        background-color: #003366 !important;
+        color: white !important;
         font-size: 1.2rem;
         padding: 12px;
         border: none;
@@ -136,23 +136,23 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: background 0.3s ease;
+        transition: background 0.2s ease;
         user-select: none;
       }
 
-      .controls button:hover {
-        background-color: #003366;
-        color: white
+      .controls button:hover,
+      .controls button:focus,
+      .controls button:focus-visible {
+        background-color: #003366 !important;
+        color: white !important;
+        outline: no
       }
 
-      .controls button:focus{
-        outline: none;
-      }
-     
       .controls button:active {
-        background-color: var(--primary); /* Solo se pinta al presionar */
+        background-color: var(--primary);
         color: black;
       }
+
       .upload-btn:hover, .controls button:hover, #añadirCarrito:hover {
         background: var(--primary);
         color: black;
