@@ -170,13 +170,39 @@
         box-sizing: border-box;
       }
 
-      #resultado, #colorDetalle, #totalFinal {
+      #resultado,
+      #totalFinal {
         width: 100%;
-        background: var(--card-bg);
+        max-width: 500px;
+        margin: 20px auto;
         padding: 20px;
+        background: white;
         border-radius: 10px;
-        box-shadow: 0 4px 15px var(--shadow);
-        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        text-align: left;
+      }
+
+      #totalFinal {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #0055cc;
+        text-align: center;
+      }
+
+      #añadirCarrito {
+        width: 100%;
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 15px;
+        font-size: 1rem;
+        background-color: #003366;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+        display: block;
       }
 
       #resultado strong {
