@@ -680,18 +680,33 @@
     <div class="plantilla-btn-container">
       <button onclick="abrirPlantillas()">PLANTILLAS</button>
     </div>
+    <div class="alerta">
+      Para obtener resultados más precisos, sube una imagen de alta calidad con colores sólidos y sin áreas desvanecidas.
+    </div>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <div>
         <canvas id="lienzo"></canvas>
         <div class="controls">
-          <button onclick="zoomIn()" title="Zoom +">
-            <i class="fas fa-search-plus"></i>
-          </button>
           <button onclick="centrarImagen()" title="Centrar">
             <i class="fas fa-compress-arrows-alt"></i>
           </button>
-          <button onclick="zoomOut()" title="Zoom -">
+          <button 
+            onmousedown="iniciarZoom(0.01)" 
+            onmouseup="detenerZoom()" 
+            onmouseleave="detenerZoom()" 
+            ontouchstart="iniciarZoom(0.01)" 
+            ontouchend="detenerZoom()" 
+            title="Zoom +">
+            <i class="fas fa-search-plus"></i>
+          </button>
+          <button 
+            onmousedown="iniciarZoom(-0.01)" 
+            onmouseup="detenerZoom()" 
+            onmouseleave="detenerZoom()" 
+            ontouchstart="iniciarZoom(-0.01)" 
+            ontouchend="detenerZoom()" 
+            title="Zoom -">
             <i class="fas fa-search-minus"></i>
           </button>
         </div>
@@ -882,16 +897,24 @@ window.addEventListener("DOMContentLoaded", ajustarCanvas);
         draw();
         calcularEstambre();
       }
-      function zoomIn() {
-        scale *= 1.1;
-        draw();
-        calcularEstambre();
-      }
-      function zoomOut() {
-        scale *= 0.9;
-        draw();
-        calcularEstambre();
-      }
+      let zoomInterval;
+
+function aplicarZoom(delta) {
+  scale += delta;
+  if (scale < 0.1) scale = 0.1;
+  draw();
+  calcularEstambre();
+}
+
+function iniciarZoom(delta) {
+  aplicarZoom(delta);
+  zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
+}
+
+function detenerZoom() {
+  clearInterval(zoomInterval);
+}
+
       document.getElementById('añadirCarrito').addEventListener('click', () => {
         alert('Producto añadido al carrito');
       });
