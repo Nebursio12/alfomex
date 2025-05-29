@@ -1015,6 +1015,9 @@ function detenerZoom() {
             draw();
             requestAnimationFrame(() => {
               calcularEstambre();
+              document.querySelector('.lateral').style.display = 'flex';
+              document.getElementById("resultado").style.display = "block";
+              document.getElementById("añadirCarrito").style.display = "flex";
               cerrarPlantillas();
             });
           };
