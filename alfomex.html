@@ -712,33 +712,39 @@
     </div>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
-      <div class="canvas-inner">
-        <canvas id="lienzo" width="1000" height="1000" style="display: block;"></canvas>
+      <!-- SECCIÓN IZQUIERDA: lienzo + controles -->
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div class="canvas-inner">
+          <canvas id="lienzo" width="1000" height="1000" style="display: block;"></canvas>
+        </div>
+        <!-- Altura/Anchura debajo -->
+        <div id="areaCubierta" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
+        <!-- Controles debajo -->
+        <div class="controls" style="justify-content: center;">
+          <button 
+            onmousedown="iniciarZoom(0.01)" 
+            onmouseup="detenerZoom()" 
+            onmouseleave="detenerZoom()" 
+            ontouchstart="iniciarZoom(0.01)" 
+            ontouchend="detenerZoom()" 
+            title="Zoom +">
+            <i class="fas fa-search-plus"></i>
+          </button>
+          <button onclick="centrarImagen()" title="Centrar">
+            <i class="fas fa-compress-arrows-alt"></i>
+          </button>
+          <button 
+            onmousedown="iniciarZoom(-0.01)" 
+            onmouseup="detenerZoom()" 
+            onmouseleave="detenerZoom()" 
+            ontouchstart="iniciarZoom(-0.01)" 
+            ontouchend="detenerZoom()" 
+            title="Zoom -">
+            <i class="fas fa-search-minus"></i>
+          </button>
+        </div>
       </div>
-      <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
-      <div class="controls">
-        <button 
-          onmousedown="iniciarZoom(0.01)" 
-          onmouseup="detenerZoom()" 
-          onmouseleave="detenerZoom()" 
-          ontouchstart="iniciarZoom(0.01)" 
-          ontouchend="detenerZoom()" 
-          title="Zoom +">
-          <i class="fas fa-search-plus"></i>
-        </button>
-        <button onclick="centrarImagen()" title="Centrar">
-          <i class="fas fa-compress-arrows-alt"></i>
-        </button>
-        <button 
-          onmousedown="iniciarZoom(-0.01)" 
-          onmouseup="detenerZoom()" 
-          onmouseleave="detenerZoom()" 
-          ontouchstart="iniciarZoom(-0.01)" 
-          ontouchend="detenerZoom()" 
-          title="Zoom -">
-          <i class="fas fa-search-minus"></i>
-        </button>
-      </div>
+      <!-- SECCIÓN DERECHA: lateral -->
       <div class="lateral">
         <div id="resultado"></div>
         <div id="totalFinal" class="total-final"></div>
