@@ -542,7 +542,7 @@ h2, .alerta, .plantilla-btn-container {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: none;
   cursor: pointer;
   transition: background 0.3s ease;
 }
