@@ -415,21 +415,20 @@
 
       .plantillas-modal {
         background: white;
-  border: 2px solid #ccc;
   border-radius: 10px;
   padding: 20px;
   width: 90%;
   max-width: 600px;
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   opacity: 0;
-  transform: translateY(20px);
+  transform: scale(0.95);
 }
 
       .plantillas-modal.show {
         display: block;
-        animation: fadeSlideUp 0.4s ease forwards;
+        animation: fadeModalIn 0.3s ease-out forwards;
       }
 
       .plantillas-modal h3 {
@@ -451,11 +450,11 @@
       @keyframes fadeSlideIn {
         from {
           opacity: 0;
-          transform: translateX(30px);
+          transform: scale(0.95);
         }
         to {
            opacity: 1;
-           transform: translateX(0);
+           transform: scale(1);
         }
       }
 
@@ -476,18 +475,16 @@
       .modal-overlay-plantillas {
           display: none;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 9998;
-
+  
   display: flex;
   justify-content: center;
   align-items: center;
-
-  pointer-events: all;
+  overflow: auto;
 }
 
       .modal-overlay-plantillas:not(.active) {
@@ -1077,7 +1074,7 @@ function detenerZoom() {
       };
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()">
-      <div class="plantillas-modal" id="modalPlantillas"></div>
+       <div class="plantillas-modal" id="modalPlantillas"></div>
     </div>
   </body>
 </html>
