@@ -162,7 +162,8 @@
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <!-- Lateral izquierdo para descripción del estambre -->
-      <div class="lateral-izquierda" id="panelEstambre" style="display: none;">
+      <div class="lateral lateral-izquierda" id="panelEstambre" style="display: none;">
+
         <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Estambre</h3>
         <div id="descripcionContenido"></div>
       </div>
@@ -375,6 +376,9 @@
             const lateral = document.querySelector('.lateral');
             lateral.style.display = 'flex';
             lateral.style.animation = 'fadeSlideIn 0.4s ease forwards';
+            const panelIzquierdo = document.getElementById("panelEstambre");
+            panelIzquierdo.style.display = 'flex';
+            panelIzquierdo.style.animation = 'fadeSlideIn 0.4s ease forwards';
             document.getElementById("resultado").style.display = "block";
             document.getElementById("añadirCarrito").style.display = "flex";
 
@@ -449,6 +453,9 @@ function detenerZoom() {
             const lateral = document.querySelector('.lateral');
             lateral.style.display = 'flex';
             lateral.style.animation = 'fadeSlideIn 0.4s ease forwards';
+            const panelIzquierdo = document.getElementById("panelEstambre");
+            panelIzquierdo.style.display = 'flex';
+            panelIzquierdo.style.animation = 'fadeSlideIn 0.4s ease forwards';
             document.getElementById("resultado").style.display = "block";
             document.getElementById("añadirCarrito").style.display = "flex";
             cerrarPlantillas();
@@ -469,6 +476,9 @@ function detenerZoom() {
               const lateral = document.querySelector('.lateral');
               lateral.style.display = 'flex';
               lateral.style.animation = 'fadeSlideIn 0.4s ease forwards';
+              const panelIzquierdo = document.getElementById("panelEstambre");
+              panelIzquierdo.style.display = 'flex';
+              panelIzquierdo.style.animation = 'fadeSlideIn 0.4s ease forwards';
               document.getElementById("resultado").style.display = "block";
               document.getElementById("añadirCarrito").style.display = "flex";
               cerrarPlantillas();
