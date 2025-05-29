@@ -176,7 +176,6 @@ canvas {
   flex-direction: column;
   justify-content: space-between;
   background: #fafafa;
-  border-left: 3px solid #003366;
   padding: 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   border-radius: 10px;
