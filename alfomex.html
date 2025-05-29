@@ -530,6 +530,12 @@
         font-size: 1.4rem;
       }
 
+      #resultado,
+      #añadirCarrito {
+       display: none;
+     }
+
+
 
       @media (max-width: 600px) {
         .controls {
@@ -914,6 +920,9 @@
             imgY = (canvas.height - img.height * scale) / 2;
             draw();
             calcularEstambre();
+            document.getElementById("resultado").style.display = "block";
+            document.getElementById("añadirCarrito").style.display = "flex";
+
           };
           img.src = evt.target.result;
         };
@@ -982,6 +991,8 @@ function detenerZoom() {
           draw();
           requestAnimationFrame(() => {
             calcularEstambre();
+            document.getElementById("resultado").style.display = "block";
+            document.getElementById("añadirCarrito").style.display = "flex";
             cerrarPlantillas();
           });
         };
