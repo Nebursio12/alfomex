@@ -189,7 +189,13 @@
         </div>
       </div>
       <div class="lateral">
-        <div id="resultado"></div>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div id="resultado"></div>
+          <div id="descripcion" style="display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+            <strong style="font-size: 1.2rem; color: var(--secondary);">Descripción del estambre:</strong>
+            <div id="descripcionContenido" style="margin-top: 10px; font-size: 0.95rem;"></div>
+          </div>
+        </div>
         <button id="añadirCarrito" class="boton-total">
           <i class="fas fa-shopping-cart"></i>
           <span id="totalFinal">$0.00 MXN</span>
@@ -331,6 +337,17 @@
           detalle += `<div><div style="background:rgb(${r},${g},${b})"></div>${estambre.toFixed(2)} m - $${costo.toFixed(2)} MXN</div>`;
         });
         document.getElementById("totalFinal").innerText = `$${total.toFixed(2)} MXN`;
+        // ✅ Mostrar y llenar la descripción
+        const desc = document.getElementById("descripcion");
+        const descContenido = document.getElementById("descripcionContenido");
+        desc.style.display = "block";
+        descContenido.innerHTML = coloresUsados.map(([key, count]) => {
+          const [r, g, b] = key.split(',');
+          return `<div style="margin-bottom: 6px;">
+            <span style="display:inline-block;width:20px;height:20px;background:rgb(${r},${g},${b});border:1px solid #000;margin-right:8px;"></span>
+            Color RGB: (${r},${g},${b})
+          </div>`;
+        }).join('');
       }
       imgInput.addEventListener('change', e => {
         const file = e.target.files[0];
@@ -458,8 +475,8 @@ function detenerZoom() {
       };
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas">
-  <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
-  </div>
-</div>
+      <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
+      </div>
+    </div>
   </body>
 </html>
