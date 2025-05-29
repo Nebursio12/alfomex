@@ -553,6 +553,8 @@
         document.getElementById("formRegister").style.display = modoRegistro ? "block" : "none";
         document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
         document.getElementById("errorMsg").textContent = "";
+        document.querySelector('[onclick="toggleFormulario()"]').textContent =
+        modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
       };
 
       document.getElementById("submitBtn").addEventListener("click", async () => {
