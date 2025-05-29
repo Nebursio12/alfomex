@@ -84,14 +84,14 @@
         };
         document.getElementById("modalOverlay").addEventListener("click", closeNav);
         document.getElementById("fondoPlantillas").addEventListener("click", function (e) {
-    if (e.target.id === "fondoPlantillas") {
-      cerrarPlantillas();
-    }
-  });
-          canvas.width = 500;
-  canvas.height = 500;
-  draw();
-  calcularEstambre();
+          if (e.target.id === "fondoPlantillas") {
+            cerrarPlantillas();
+          }
+        });
+        canvas.width = 500;
+        canvas.height = 500;
+        draw();
+        calcularEstambre();
       });
       // Carrito
       window.toggleCart = (show) => {
@@ -137,19 +137,15 @@
         });
       }
       window.abrirPlantillas = async function () {
-  const fondo = document.getElementById('fondoPlantillas');
-  const modal = document.getElementById('modalPlantillas');
-
-  // Muestra el fondo (lo centra automáticamente por el display:flex)
-  fondo.classList.add('active');
-
-  // Puedes mostrar "cargando..." mientras carga
-  modal.innerHTML = `<h3 style="text-align:center; color:#003366">Cargando plantillas...</h3>`;
-
-  // Luego cargas las plantillas
-  await cargarPlantillasDesdeFirestore();
-};
-
+        const fondo = document.getElementById('fondoPlantillas');
+        const modal = document.getElementById('modalPlantillas');
+        // Muestra el fondo (lo centra automáticamente por el display:flex)
+        fondo.classList.add('active');
+        // Puedes mostrar "cargando..." mientras carga
+        modal.innerHTML = `<h3 style="text-align:center; color:#003366">Cargando plantillas...</h3>`;
+        // Luego cargas las plantillas
+        await cargarPlantillasDesdeFirestore();
+      };
       window.cerrarPlantillas = function() {
         document.getElementById('modalPlantillas').classList.remove('show');
         document.getElementById('fondoPlantillas').classList.remove('active');
@@ -162,13 +158,9 @@
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <!-- Lateral izquierdo para descripción del estambre -->
-      <div class="lateral-izquierda" id="panelEstambre" style="display: none;">
-
-
-        <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Estambre</h3>
+      <div class="lateral-izquierda" id="panelEstambre">
         <div id="descripcionContenido"></div>
       </div>
-
       <!-- Centro con el lienzo -->
       <div>
         <canvas id="lienzo"></canvas>
@@ -197,7 +189,6 @@
           </button>
         </div>
       </div>
-
       <!-- Lateral derecho para presupuesto -->
       <div class="lateral">
         <div id="resultado"></div>
@@ -207,7 +198,6 @@
         </button>
       </div>
     </div>
-
     <div class="social-links">
       <p>Sígueme en redes sociales:</p>
       <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -238,42 +228,35 @@
         distanciaPuntada: 0.3
       };
       function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  for (let i = 0; i <= 100; i++) {
-    const px = i * pxPorCm;
-    ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
-    ctx.fillRect(px, 0, 1, canvas.height);
-    ctx.fillRect(0, px, canvas.width, 1);
-  }
-
-  ctx.strokeStyle = '#999';
-  for (let i = 0; i <= 100; i += 10) {
-    const px = i * pxPorCm;
-    ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
-    
-    ctx.fillStyle = '#000';
-    ctx.font = '10px Arial';
-    if (i !== 0) {
-      ctx.fillText(`${i}cm`, px + 2, 12);
-      ctx.fillText(`${i}cm`, 2, px + 10);
-    } else {
-      ctx.fillText(`0cm`, 2, 10);
-    }
-  }
-
-  ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
-
-  // Calcular tamaño real de la imagen y mostrarlo
-  const anchoCm = (img.width * scale) / pxPorCm;
-  const altoCm = (img.height * scale) / pxPorCm;
-
-  document.getElementById("areaCubierta").innerHTML =
-  `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
-  `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
-}
-
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i <= 100; i++) {
+          const px = i * pxPorCm;
+          ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
+          ctx.fillRect(px, 0, 1, canvas.height);
+          ctx.fillRect(0, px, canvas.width, 1);
+        }
+        ctx.strokeStyle = '#999';
+        for (let i = 0; i <= 100; i += 10) {
+          const px = i * pxPorCm;
+          ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
+          ctx.fillStyle = '#000';
+          ctx.font = '10px Arial';
+          if (i !== 0) {
+            ctx.fillText(`${i}cm`, px + 2, 12);
+            ctx.fillText(`${i}cm`, 2, px + 10);
+          } else {
+            ctx.fillText(`0cm`, 2, 10);
+          }
+        }
+        ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        // Calcular tamaño real de la imagen y mostrarlo
+        const anchoCm = (img.width * scale) / pxPorCm;
+        const altoCm = (img.height * scale) / pxPorCm;
+        document.getElementById("areaCubierta").innerHTML =
+          `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
+          `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
+      }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
         for (let [key, _] of mapa.entries()) {
           const [r2, g2, b2] = key.split(',').map(Number);
@@ -312,7 +295,6 @@
                               `<strong>Personalización:</strong> $${COSTOS.personalizacion.toFixed(2)} MXN`;
         calcularPorColor(imageData, totalPixels, costoFinal);
       }
-      
       function calcularPorColor(imageData, totalPixels, total) {
         const mapa = new Map();
         for (let i = 0; i < imageData.data.length; i += 4) {
@@ -347,15 +329,27 @@
         // ✅ Mostrar el panel izquierdo y rellenar descripción
         const panelEstambre = document.getElementById("panelEstambre");
         const descContenido = document.getElementById("descripcionContenido");
-        panelEstambre.style.display = "block";
-        descContenido.innerHTML = coloresUsados.map(([key, count]) => {
-          const [r, g, b] = key.split(',');
-          return `<div style="margin-bottom: 8px;">
-            <div style="display: inline-block; width: 20px; height: 20px; background: rgb(${r},${g},${b}); border: 1px solid #000; margin-right: 10px;"></div>
-            Color RGB: (${r},${g},${b})
-          </div>`;
-        }).join('');
-       }
+        // Solo mostrar el panel si hay colores detectados
+        if (coloresUsados.length > 0) {
+          panelEstambre.style.display = "flex";
+          panelEstambre.style.visibility = "visible";
+          panelEstambre.style.opacity = "1";
+          panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          descContenido.innerHTML = `
+            <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Estambre</h3>
+            ${coloresUsados.map(([key, count]) => {
+              const [r, g, b] = key.split(',');
+              return `<div style="margin-bottom: 8px;">
+                <div style="display: inline-block; width: 20px; height: 20px; background: rgb(${r},${g},${b}); border: 1px solid #000; margin-right: 10px;"></div>
+                Color RGB: (${r},${g},${b})
+              </div>`;
+            }).join('')}
+          `;
+        } else {
+          panelEstambre.style.display = "none";
+          descContenido.innerHTML = "";
+        }
+      }
       imgInput.addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
@@ -377,13 +371,11 @@
             const panelDerecho = document.querySelector('.lateral');
             panelDerecho.style.display = 'flex';
             panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
-
             const panelIzquierdo = document.getElementById("panelEstambre");
             panelIzquierdo.style.display = 'flex';
             panelIzquierdo.style.animation = 'fadeSlideIn 0.4s ease forwards';
             document.getElementById("resultado").style.display = "block";
             document.getElementById("añadirCarrito").style.display = "flex";
-
           };
           img.src = evt.target.result;
         };
@@ -419,23 +411,19 @@
         calcularEstambre();
       }
       let zoomInterval;
-
-function aplicarZoom(delta) {
-  scale += delta;
-  if (scale < 0.1) scale = 0.1;
-  draw();
-  calcularEstambre();
-}
-
-function iniciarZoom(delta) {
-  aplicarZoom(delta);
-  zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
-}
-
-function detenerZoom() {
-  clearInterval(zoomInterval);
-}
-
+      function aplicarZoom(delta) {
+        scale += delta;
+        if (scale < 0.1) scale = 0.1;
+        draw();
+        calcularEstambre();
+      }
+      function iniciarZoom(delta) {
+        aplicarZoom(delta);
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
+      }
+      function detenerZoom() {
+        clearInterval(zoomInterval);
+      }
       document.getElementById('añadirCarrito').addEventListener('click', () => {
         alert('Producto añadido al carrito');
       });
@@ -455,7 +443,6 @@ function detenerZoom() {
             const panelDerecho = document.querySelector('.lateral');
             panelDerecho.style.display = 'flex';
             panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
-
             const panelIzquierdo = document.getElementById("panelEstambre");
             panelIzquierdo.style.display = 'flex';
             panelIzquierdo.style.animation = 'fadeSlideIn 0.4s ease forwards';
@@ -479,7 +466,6 @@ function detenerZoom() {
               const panelDerecho = document.querySelector('.lateral');
               panelDerecho.style.display = 'flex';
               panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
-
               const panelIzquierdo = document.getElementById("panelEstambre");
               panelIzquierdo.style.display = 'flex';
               panelIzquierdo.style.animation = 'fadeSlideIn 0.4s ease forwards';
