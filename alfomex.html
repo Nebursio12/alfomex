@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+
+      .lateral {
+       display: none;
+      }
+
       :root {
         --primary: #ffcc00;
         --secondary: #003366;
@@ -920,6 +925,7 @@
             imgY = (canvas.height - img.height * scale) / 2;
             draw();
             calcularEstambre();
+            document.querySelector('.lateral').style.display = 'flex';
             document.getElementById("resultado").style.display = "block";
             document.getElementById("añadirCarrito").style.display = "flex";
 
@@ -991,6 +997,7 @@ function detenerZoom() {
           draw();
           requestAnimationFrame(() => {
             calcularEstambre();
+            document.querySelector('.lateral').style.display = 'flex';
             document.getElementById("resultado").style.display = "block";
             document.getElementById("añadirCarrito").style.display = "flex";
             cerrarPlantillas();
