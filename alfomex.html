@@ -114,6 +114,7 @@
       .plantilla-btn-container button:hover {
         background: #ffcc00;
         color: black;
+        animation: bounceHover 0.4s ease;
       }
 
       .controls {
@@ -608,6 +609,14 @@
       .boton-total:hover #totalFinal {
          color: black;
      }
+
+     @keyframes bounceHover {
+       0%   { transform: translateY(0); }
+       30%  { transform: translateY(-3px); }
+       60%  { transform: translateY(2px); }
+       100% { transform: translateY(0); }
+      }
+
     </style>
   </head>
   <body>
