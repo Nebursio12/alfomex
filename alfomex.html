@@ -414,19 +414,18 @@
       }
 
       .plantillas-modal {
-        display: none;
-  background: white;
+        background: white;
   border: 2px solid #ccc;
   border-radius: 10px;
   padding: 20px;
-  z-index: 10000;
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   opacity: 0;
-      }
+  transform: translateY(20px);
+}
 
       .plantillas-modal.show {
         display: block;
@@ -476,20 +475,20 @@
 
       .modal-overlay-plantillas {
           display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background: rgba(0,0,0,0.5);
-          z-index: 9998;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 9998;
 
-          display: flex;
-          justify-content: center;
-          align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-          pointer-events: all; /* 👈 habilita clics dentro */
-      }
+  pointer-events: all;
+}
 
       .modal-overlay-plantillas:not(.active) {
          pointer-events: none; /* 👈 cuando está inactivo, no estorba */
