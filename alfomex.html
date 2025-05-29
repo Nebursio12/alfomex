@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
 
-      
-
       :root {
         --primary: #ffcc00;
         --secondary: #003366;
@@ -417,21 +415,17 @@
 
       .plantillas-modal {
         display: none;
-        position: fixed;
-        top: 50vh;
-        left: 50%;
-        transform: translateX(-50%); /* solo en X */
-        background: white;
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        padding: 20px;
-        z-index: 10000;
-        width: 90%;
-        max-width: 600px;
-        max-height: 80vh;
-        overflow-y: auto;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        opacity: 0;
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  z-index: 10000;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  opacity: 0;
       }
 
       .plantillas-modal.show {
@@ -482,13 +476,18 @@
 
       .modal-overlay-plantillas {
         display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0,0,0,0.5);
-        z-index: 9998;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 9998;
+
+  /* Flex para centrar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
       }
 
       .modal-overlay-plantillas.active {
@@ -629,15 +628,15 @@
       }
 
       @keyframes fadeSlideUp {
-        from {
-           opacity: 0;
-           transform: translateX(-50%) translateY(40px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(-50%) translateY(0);
-        }
-      }
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
     </style>
   </head>
