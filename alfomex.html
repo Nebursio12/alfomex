@@ -1075,7 +1075,9 @@ function detenerZoom() {
       };
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()">
-       <div class="plantillas-modal" id="modalPlantillas"></div>
+     <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
+       <!-- aquí se insertan las plantillas -->
+     </div>
     </div>
   </body>
 </html>
