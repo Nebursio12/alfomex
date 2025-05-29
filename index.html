@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Catálogo - Alfomex</title>
     <style>
+      .fade-slide {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.fade-slide.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
       .icon-btn {
         display: flex;
         align-items: center;
@@ -547,55 +558,77 @@
       let modoRegistro = false;
 
       window.toggleFormulario = () => {
-        modoRegistro = !modoRegistro;
-        document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
-        document.getElementById("formLogin").style.display = modoRegistro ? "none" : "block";
-        document.getElementById("formRegister").style.display = modoRegistro ? "block" : "none";
-        document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
-        document.getElementById("errorMsg").textContent = "";
-        document.querySelector('[onclick="toggleFormulario()"]').textContent =
-        modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
-      };
+  modoRegistro = !modoRegistro;
 
-      document.getElementById("submitBtn").addEventListener("click", async () => {
-        const errorMsg = document.getElementById("errorMsg");
-        errorMsg.textContent = "";
-        if (modoRegistro) {
-          const nombre = document.getElementById("nombreRegistro").value.trim();
-          const apellido = document.getElementById("apellidoRegistro").value.trim();
-          const correo = document.getElementById("registroEmail").value.trim();
-          const password = document.getElementById("registroPassword").value;
+  document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
+  document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
+  document.querySelector('[onclick="toggleFormulario()"]').textContent =
+    modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
+  document.getElementById("errorMsg").textContent = "";
 
-          if (!nombre || !apellido || !correo || !password) {
-            errorMsg.textContent = "Completa todos los campos.";
-            return;
-          }
+  const loginForm = document.getElementById("formLogin");
+  const registerForm = document.getElementById("formRegister");
 
-          try {
-            const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
-            const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
-            const user = userCredential.user;
-            await setDoc(doc(db, "usuarios", user.uid), {
-              nombre,
-              apellido,
-              correo
-            });
-            window.location.reload();
-          } catch (e) {
-            errorMsg.textContent = e.message;
-          }
-        } else {
-          const email = document.getElementById("loginEmail").value;
-          const password = document.getElementById("loginPassword").value;
-          try {
-            await setPersistence(auth, browserLocalPersistence);
-            await signInWithEmailAndPassword(auth, email, password);
-            window.location.reload();
-          } catch (e) {
-            errorMsg.textContent = "Correo o contraseña incorrectos.";
-          }
-        }
+  if (modoRegistro) {
+    loginForm.classList.remove("show");
+    registerForm.classList.remove("fade-slide"); // reset
+    registerForm.style.display = "block";
+    setTimeout(() => {
+      loginForm.style.display = "none";
+      registerForm.classList.add("fade-slide", "show");
+    }, 50);
+  } else {
+    registerForm.classList.remove("show");
+    loginForm.classList.remove("fade-slide");
+    loginForm.style.display = "block";
+    setTimeout(() => {
+      registerForm.style.display = "none";
+      loginForm.classList.add("fade-slide", "show");
+    }, 50);
+  }
+};
+
+
+document.getElementById("submitBtn").addEventListener("click", async () => {
+  const errorMsg = document.getElementById("errorMsg");
+  errorMsg.textContent = "";
+
+  if (modoRegistro) {
+    const nombre = document.getElementById("nombreRegistro").value.trim();
+    const apellido = document.getElementById("apellidoRegistro").value.trim();
+    const correo = document.getElementById("registroEmail").value.trim();
+    const password = document.getElementById("registroPassword").value;
+
+    if (!nombre || !apellido || !correo || !password) {
+      errorMsg.textContent = "Completa todos los campos.";
+      return;
+    }
+
+    try {
+      const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
+      const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+      const user = userCredential.user;
+      await setDoc(doc(db, "usuarios", user.uid), {
+        nombre,
+        apellido,
+        correo
       });
+      window.location.reload();
+    } catch (e) {
+      errorMsg.textContent = e.message;
+    }
+  } else {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.reload();
+    } catch (e) {
+      errorMsg.textContent = "Correo o contraseña incorrectos.";
+    }
+  }
+});
     </script>
   </body>
 </html>
