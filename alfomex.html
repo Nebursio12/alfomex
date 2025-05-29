@@ -415,18 +415,18 @@
 
       .plantillas-modal {
         background: white;
-  border-radius: 10px;
-  padding: 20px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  transform: scale(0.95);
-  opacity: 0;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
+        border-radius: 10px;
+        padding: 20px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        transform: scale(0.95);
+        opacity: 0;
+        transition: all 0.3s ease;
+        pointer-events: none;
+      }
 
       .plantillas-modal.show {
         opacity: 1;
@@ -776,11 +776,21 @@
           });
         });
       }
-      window.abrirPlantillas = function() {
-        cargarPlantillasDesdeFirestore();
-        document.getElementById('modalPlantillas').classList.add('show');
-        document.getElementById('fondoPlantillas').classList.add('active');
-      };
+      window.abrirPlantillas = async function() {
+  const fondo = document.getElementById('fondoPlantillas');
+  const modal = document.getElementById('modalPlantillas');
+
+  // Activa primero el fondo y el contenedor
+  fondo.classList.add('active');
+  modal.classList.remove('show'); // Ocúltalo temporalmente
+
+  // Espera 10ms para forzar el reflujo visual
+  await new Promise(r => setTimeout(r, 10));
+
+  // Carga plantillas y muestra el modal centrado
+  await cargarPlantillasDesdeFirestore();
+  modal.classList.add('show');
+};
       window.cerrarPlantillas = function() {
         document.getElementById('modalPlantillas').classList.remove('show');
         document.getElementById('fondoPlantillas').classList.remove('active');
@@ -1089,9 +1099,9 @@ function detenerZoom() {
       };
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()">
-     <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
-       <!-- aquí se insertan las plantillas -->
-     </div>
+      <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
+        <!-- aquí se insertan las plantillas -->
+      </div>
     </div>
   </body>
 </html>
