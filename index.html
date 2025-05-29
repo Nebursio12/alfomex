@@ -7,15 +7,15 @@
     <title>Catálogo - Alfomex</title>
     <style>
       .fade-slide {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
-}
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
 
-.fade-slide.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+      .fade-slide.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
 
       .icon-btn {
         display: flex;
@@ -259,6 +259,33 @@
       .error.green {
         color: green;
       }
+       
+      .form-wrapper {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        height: auto;
+      }
+
+      .form-slide {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: 100%;
+        transition: left 0.3s ease;
+        opacity: 0;
+      }
+
+      .form-slide.active {
+        left: 0;
+        opacity: 1;
+        position: relative;
+      }
+
+      .form-slide.out {
+        left: -100%;
+        opacity: 0;
+      }
 
       @keyframes fadeInOut {
         0% { opacity: 0; }
@@ -343,25 +370,24 @@
     <!-- Modal de inicio de sesión -->
     <div class="modal" id="loginModal">
       <h3 id="modalTitle">Entrar</h3>
-      <div id="formLogin">
-        <input type="email" id="loginEmail" placeholder="Correo electrónico" />
-        <input type="password" id="loginPassword" placeholder="Contraseña" />
-      </div>
-      <div id="formRegister" style="display: none;">
-        <input type="text" id="nombreRegistro" placeholder="Nombre" />
-        <input type="text" id="apellidoRegistro" placeholder="Apellido" />
-        <input type="email" id="registroEmail" placeholder="Correo electrónico" />
-        <input type="password" id="registroPassword" placeholder="Contraseña" />
+      <div class="form-wrapper">
+        <div id="formLogin" class="form-slide active">
+          <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+          <input type="password" id="loginPassword" placeholder="Contraseña" />
+        </div>
+        <div id="formRegister" class="form-slide">
+          <input type="text" id="nombreRegistro" placeholder="Nombre" />
+          <input type="text" id="apellidoRegistro" placeholder="Apellido" />
+          <input type="email" id="registroEmail" placeholder="Correo electrónico" />
+          <input type="password" id="registroPassword" placeholder="Contraseña" />
+        </div>
       </div>
       <div style="display: flex; justify-content: space-between; margin-top: 10px;">
         <button id="submitBtn">Entrar</button>
         <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
       </div>
-      <div style="margin-top: 10px; text-align: center;">
-        <button
-          onclick="mostrarRecuperacion()"
-          style="background: transparent; color: #3b5998; border: none; cursor: pointer;"
-        >
+      <div style="text-align: center; margin-top: 10px;">
+        <button onclick="mostrarRecuperacion()" style="background: none; border: none; color: #3b5998;">
           ¿Olvidaste tu contraseña?
         </button>
       </div>
@@ -370,11 +396,7 @@
           ¿No tienes cuenta? Regístrate
         </button>
       </div>
-      <div id="recuperacion" style="display: none; margin-top: 15px;">
-        <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
-        <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 8px;">Enviar enlace</button>
-      </div>
-      <div class="error" id="errorMsg"></div>
+      <div id="errorMsg" class="error"></div>
     </div>
 
     <section class="carrusel">
@@ -558,77 +580,72 @@
       let modoRegistro = false;
 
       window.toggleFormulario = () => {
-       modoRegistro = !modoRegistro;
+        modoRegistro = !modoRegistro;
 
-       document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
-       document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
-       document.querySelector('[onclick="toggleFormulario()"]').textContent =
-         modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
-       document.getElementById("errorMsg").textContent = "";
+        document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
+        document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
+        document.querySelector('[onclick="toggleFormulario()"]').textContent =
+          modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
+        document.getElementById("errorMsg").textContent = "";
 
-       const loginForm = document.getElementById("formLogin");
-       const registerForm = document.getElementById("formRegister");
+        const loginForm = document.getElementById("formLogin");
+        const registerForm = document.getElementById("formRegister");
 
-       if (modoRegistro) {
-         loginForm.classList.remove("show");
-         registerForm.classList.remove("fade-slide"); // reset
-         registerForm.style.display = "block";
-         setTimeout(() => {
-           loginForm.style.display = "none";
-           registerForm.classList.add("fade-slide", "show");
-          }, 50);
+        if (modoRegistro) {
+          loginForm.classList.remove("active");
+          loginForm.classList.add("out");
+          registerForm.classList.add("active");
+          registerForm.classList.remove("out");
         } else {
-          registerForm.classList.remove("show");
-          loginForm.classList.remove("fade-slide");
-          loginForm.style.display = "block";
-          setTimeout(() => {
-            registerForm.style.display = "none";
-            loginForm.classList.add("fade-slide", "show");
-          }, 50);
-       }
-    };
+          registerForm.classList.remove("active");
+          registerForm.classList.add("out");
+          loginForm.classList.add("active");
+          loginForm.classList.remove("out");
+        }
+      };
 
 
-  document.getElementById("submitBtn").addEventListener("click", async () => {
-  const errorMsg = document.getElementById("errorMsg");
-  errorMsg.textContent = "";
 
-  if (modoRegistro) {
-    const nombre = document.getElementById("nombreRegistro").value.trim();
-    const apellido = document.getElementById("apellidoRegistro").value.trim();
-    const correo = document.getElementById("registroEmail").value.trim();
-    const password = document.getElementById("registroPassword").value;
+      document.getElementById("submitBtn").addEventListener("click", async () => {
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = "";
 
-    if (!nombre || !apellido || !correo || !password) {
-      errorMsg.textContent = "Completa todos los campos.";
-      return;
-    }
+        if (modoRegistro) {
+          const nombre = document.getElementById("nombreRegistro").value.trim();
+          const apellido = document.getElementById("apellidoRegistro").value.trim();
+          const correo = document.getElementById("registroEmail").value.trim();
+          const password = document.getElementById("registroPassword").value;
 
-    try {
-      const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
-      const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
-      const user = userCredential.user;
-      await setDoc(doc(db, "usuarios", user.uid), {
-        nombre,
-        apellido,
-        correo
+          if (!nombre || !apellido || !correo || !password) {
+            errorMsg.textContent = "Completa todos los campos.";
+            return;
+          }
+
+          try {
+            const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
+            const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+            const user = userCredential.user;
+            await setDoc(doc(db, "usuarios", user.uid), {
+              nombre,
+              apellido,
+              correo
+            });
+            window.location.reload();
+          } catch (e) {
+            errorMsg.textContent = e.message;
+          }
+        } else {
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+          try {
+            await setPersistence(auth, browserLocalPersistence);
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.reload();
+          } catch (e) {
+            errorMsg.textContent = "Correo o contraseña incorrectos.";
+          }
+        }
       });
-      window.location.reload();
-    } catch (e) {
-      errorMsg.textContent = e.message;
-    }
-  } else {
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-      await signInWithEmailAndPassword(auth, email, password);
-      window.location.reload();
-    } catch (e) {
-      errorMsg.textContent = "Correo o contraseña incorrectos.";
-    }
-  }
-});
     </script>
   </body>
 </html>
