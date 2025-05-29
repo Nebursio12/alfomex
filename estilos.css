@@ -596,6 +596,10 @@ h2, .alerta, .plantilla-btn-container {
     order: -1;
     margin-right: 30px;
   }
+
+  .lateral {
+    margin-left: 30px;
+  }
 }
 
 /* Pantallas chicas: panel debajo */
@@ -607,6 +611,18 @@ h2, .alerta, .plantilla-btn-container {
   .lateral-izquierda {
     width: 90%;
     margin: 10px auto;
+    order: 2;
+  }
+
+  .lateral {
+    width: 90%;
+    margin: 10px auto;
+    order: 3;
+  }
+
+  canvas {
+    order: 1;
+    margin: 0 auto;
   }
 }
 
