@@ -427,8 +427,9 @@
 }
 
       .plantillas-modal.show {
-        display: block;
-        animation: fadeModalIn 0.3s ease-out forwards;
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: all;
       }
 
       .plantillas-modal h3 {
@@ -446,6 +447,17 @@
         margin-bottom: 10px;
         color: #333;
       }
+
+      @keyframes fadeModalIn {
+       from {
+         opacity: 0;
+         transform: scale(0.95);
+       }
+       to {
+          opacity: 1;
+          transform: scale(1);
+       }
+    }
 
       @keyframes fadeSlideIn {
         from {
