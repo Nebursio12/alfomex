@@ -505,6 +505,33 @@
         background: #ffcc00;
         color: black;
       }
+      .boton-total {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px 25px;
+        background-color: #003366;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .boton-total:hover {
+        background-color: #0055cc;
+      }
+
+      .boton-total i {
+        font-size: 1.4rem;
+      }
+
 
       @media (max-width: 600px) {
         .controls {
@@ -726,8 +753,10 @@
       </div>
       <div class="lateral">
         <div id="resultado"></div>
-        <div id="totalFinal" class="total-final"></div>
-        <button id="añadirCarrito">AÑADIR AL CARRITO</button>
+        <button id="añadirCarrito" class="boton-total">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="totalFinal">$0.00 MXN</span>
+        </button>
       </div>
     </div>
     <div class="social-links">
@@ -864,7 +893,7 @@
           const [r, g, b] = key.split(',');
           detalle += `<div><div style="background:rgb(${r},${g},${b})"></div>${estambre.toFixed(2)} m - $${costo.toFixed(2)} MXN</div>`;
         });
-        totalFinal.innerHTML = `TOTAL: $${total.toFixed(2)} MXN`;
+        document.getElementById("totalFinal").innerText = `$${total.toFixed(2)} MXN`;
       }
       imgInput.addEventListener('change', e => {
         const file = e.target.files[0];
