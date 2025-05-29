@@ -547,6 +547,53 @@ h2, .alerta, .plantilla-btn-container {
   transition: background 0.3s ease;
 }
 
+.lateral-izquierda {
+  width: 100%;
+  max-width: 300px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.lateral-izquierda {
+  width: 100%;
+  max-width: 300px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+/* Pantallas grandes: panel izquierdo al lado */
+@media (min-width: 768px) {
+  .contenedor-principal {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .lateral-izquierda {
+    order: -1;
+    margin-right: 30px;
+  }
+}
+
+/* Pantallas chicas: panel debajo */
+@media (max-width: 767px) {
+  .contenedor-principal {
+    flex-direction: column;
+  }
+
+  .lateral-izquierda {
+    width: 90%;
+    margin: 10px auto;
+  }
+}
+
 .boton-total:hover {
   background-color: #0055cc;
 }
