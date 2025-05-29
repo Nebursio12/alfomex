@@ -171,14 +171,9 @@
       }
 
       canvas {
-        width: 100%;
-  max-width: 500px;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  border: 2px solid #333;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: block;
+        width: 500px;
+        height: 500px;
+
       }
 
       .lateral {
@@ -631,6 +626,10 @@
           document.getElementById("modalOverlay").classList.remove("active");
         };
         document.getElementById("modalOverlay").addEventListener("click", closeNav);
+          canvas.width = 500;
+  canvas.height = 500;
+  draw();
+  calcularEstambre();
       });
       // Carrito
       window.toggleCart = (show) => {
