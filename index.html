@@ -1,540 +1,599 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo - Alfomex</title>
+    <style>
+      .icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+      }
 
+      .btn-perfil {
+        background: white;
+        color: #3b5998;
+      }
 
+      .btn-logout {
+        background: crimson;
+        color: white;
+      }
 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo - Alfomex</title>
-  <style>
-    .icon-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
+      .btn-perfil i, .btn-logout i {
+        pointer-events: none;
+      }
 
-  .btn-perfil {
-    background: white;
-    color: #3b5998;
-  }
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f0f0f0;
+      }
 
-  .btn-logout {
-    background: crimson;
-    color: white;
-  }
-
-  .btn-perfil i, .btn-logout i {
-    pointer-events: none;
-  }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f0f0f0;
-    }
-
-    header {
-      background: #3b5998;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      box-sizing: border-box;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-    #menuBtn {
-      font-size: 1.5rem;
-      color: white;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-    }
-
-    nav button,
-    nav span {
-      background: white;
-      color: #3b5998;
-      border: none;
-      padding: 10px 15px;
-      margin-left: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    nav button:hover,
-    nav span:hover {
-      background: #ddd;
-    }
-
-    .sidenav {
-      position: fixed;
-      top: 0;
-      left: -250px;
-      width: 250px;
-      height: 100%;
-      background-color: #3b5998;
-      padding-top: 60px;
-      padding-left: 15px;
-      transition: left 0.3s ease;
-      z-index: 9999;
-      box-sizing: border-box;
-    }
-
-    .sidenav.open {
-      left: 0;
-    }
-
-    .sidenav a {
-      padding: 8px 8px 8px 32px;
-      text-decoration: none;
-      font-size: 25px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
-
-    .sidenav a:hover {
-      color: #ddd;
-    }
-
-    .sidenav .close-btn {
-      color: white;
-      font-size: 36px;
-      position: absolute;
-      top: 0;
-      right: 25px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .carrusel {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      margin-top: 70px;
-    }
-
-    .carrusel img {
-      width: 100%;
-      max-width: 600px;
-      height: auto;
-      scroll-snap-align: center;
-      margin: auto;
-    }
-
-    .catalogo {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .alfombra {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    .alfombra img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
-
-    /* Fondo oscuro del modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      width: 100vw;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 9998;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    /* Modal */
-    .modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -45%);
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-      z-index: 9999;
-      min-width: 300px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    .modal.active {
-      opacity: 1;
-      pointer-events: all;
-      transform: translate(-50%, -50%);
-    }
-
-    .modal h3 {
-      margin-top: 0;
-      color: #3b5998;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .modal button {
-      width: 48%;
-      padding: 10px;
-      margin-top: 10px;
-      margin-right: 2%;
-      background-color: #3b5998;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .modal .close-btn {
-      background-color: crimson;
-    }
-
-    .error {
-      font-size: 0.9rem;
-      margin-top: 10px;
-    }
-
-    .error.red {
-      color: red;
-    }
-
-    .error.green {
-      color: green;
-    }
-
-    @keyframes fadeInOut {
-      0% { opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    .error-anim {
-      animation: fadeInOut 4s forwards;
-    }
-
-    @media (max-width: 768px) {
       header {
-        padding: 10px 20px;
+        background: #3b5998;
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
       }
 
       .logo {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
+        font-weight: bold;
       }
 
-      nav button, nav span {
-        padding: 8px 12px;
-        font-size: 0.9rem;
+      #menuBtn {
+        font-size: 1.5rem;
+        color: white;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+      }
+
+      nav button,
+      nav span {
+        background: white;
+        color: #3b5998;
+        border: none;
+        padding: 10px 15px;
+        margin-left: 10px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      nav button:hover,
+      nav span:hover {
+        background: #ddd;
+      }
+
+      .sidenav {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        height: 100%;
+        background-color: #3b5998;
+        padding-top: 60px;
+        padding-left: 15px;
+        transition: left 0.3s ease;
+        z-index: 9999;
+        box-sizing: border-box;
+      }
+
+      .sidenav.open {
+        left: 0;
+      }
+
+      .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: white;
+        display: block;
+        transition: 0.3s;
+      }
+
+      .sidenav a:hover {
+        color: #ddd;
+      }
+
+      .sidenav .close-btn {
+        color: white;
+        font-size: 36px;
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .carrusel {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        margin-top: 70px;
+      }
+
+      .carrusel img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        scroll-snap-align: center;
+        margin: auto;
       }
 
       .catalogo {
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .alfombra {
+        background: white;
         padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
       }
 
-      .alfombra {
-        padding: 10px;
+      .alfombra img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
       }
 
+      /* Fondo oscuro del modal */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      /* Modal */
       .modal {
-        width: 90%;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -45%);
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        min-width: 300px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
       }
-    }
 
-    @media (max-width: 480px) {
-      header {
+      .modal.active {
+        opacity: 1;
+        pointer-events: all;
+        transform: translate(-50%, -50%);
+      }
+
+      .modal h3 {
+        margin-top: 0;
+        color: #3b5998;
+      }
+
+      .modal input {
+        width: 100%;
         padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
       }
 
-      .logo {
-        font-size: 1rem;
-      }
-
-      nav button, nav span {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-      }
-
-      .catalogo {
+      .modal button {
+        width: 48%;
         padding: 10px;
+        margin-top: 10px;
+        margin-right: 2%;
+        background-color: #3b5998;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
       }
 
-      .alfombra {
-        padding: 8px;
+      .modal .close-btn {
+        background-color: crimson;
       }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <button id="menuBtn" onclick="openNav()">☰</button>
-    <div class="logo">ALFOMEX</div>
-    <nav id="navOptions">
-      <span>Cargando...</span>
-    </nav>
-  </header>
 
-  <div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
-    <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
-    <a href="javascript:void(0)">Categorías</a>
-  </div>
-
-  <!-- Fondo oscuro del modal -->
-  <div class="modal-overlay" id="modalOverlay"></div>
-
-  <!-- Modal de inicio de sesión -->
-  <div class="modal" id="loginModal">
-    <h3>Iniciar Sesión</h3>
-    <input type="email" id="email" placeholder="Correo electrónico" />
-    <input type="password" id="password" placeholder="Contraseña" />
-    <div style="display: flex; justify-content: space-between;">
-      <button onclick="iniciarSesion()">Entrar</button>
-      <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
-    </div>
-    <div style="margin-top: 10px; text-align: center;">
-      <button
-        onclick="mostrarRecuperacion()"
-        style="background: transparent; color: #3b5998; border: none; cursor: pointer;"
-      >
-        ¿Olvidaste tu contraseña?
-      </button>
-    </div>
-    <div id="recuperacion" style="display: none; margin-top: 15px;">
-      <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
-      <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 8px;">Enviar enlace</button>
-    </div>
-    <div class="error" id="errorMsg"></div>
-  </div>
-
-  <section class="carrusel">
-    <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.jpg" alt="Alfombra 1" />
-    <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Alfombra 2" />
-    <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Alfombra 3" />
-  </section>
-
-  <section class="catalogo" id="catalogo"></section>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      setPersistence,
-      browserLocalPersistence,
-      signOut,
-      onAuthStateChanged,
-      sendPasswordResetEmail,
-      fetchSignInMethodsForEmail,
-    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
-      authDomain: "alfomex-f4efa.firebaseapp.com",
-      projectId: "alfomex-f4efa",
-      storageBucket: "alfomex-f4efa.firebasestorage.app",
-      messagingSenderId: "1090528818564",
-      appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
-      measurementId: "G-SW633HRXV1",
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    window.openNav = () => {
-      // Cierra el modal si está abierto
-      cerrarModal();
-      document.getElementById("mySidenav").classList.add("open");
-      document.getElementById("modalOverlay").classList.add("active");
-    };
-
-    window.closeNav = () => {
-      document.getElementById("mySidenav").classList.remove("open");
-      document.getElementById("modalOverlay").classList.remove("active");
-    };
-
-    window.abrirModal = () => {
-      // Cierra el menú si está abierto
-      closeNav();
-      document.getElementById("loginModal").classList.add("active");
-      document.getElementById("modalOverlay").classList.add("active");
-    };
-
-    window.cerrarModal = () => {
-      const modal = document.getElementById("loginModal");
-      const overlay = document.getElementById("modalOverlay");
-
-      modal.classList.remove("active");
-      overlay.classList.remove("active");
-
-      setTimeout(() => {
-        document.getElementById("errorMsg").textContent = "";
-        document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
-        document.getElementById("email").value = "";
-        document.getElementById("password").value = "";
-        document.getElementById("recuperacion").style.display = "none";
-        document.getElementById("emailRecuperar").value = "";
-      }, 300);
-    };
-
-    document.getElementById("modalOverlay").addEventListener("click", () => {
-      cerrarModal();
-      closeNav();
-    });
-
-    window.iniciarSesion = async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const errorMsg = document.getElementById("errorMsg");
-      errorMsg.textContent = "";
-      errorMsg.classList.remove("error-anim", "red", "green");
-      try {
-        await setPersistence(auth, browserLocalPersistence);
-        await signInWithEmailAndPassword(auth, email, password);
-        window.location.reload();
-      } catch (error) {
-        errorMsg.classList.add("error-anim", "red");
-        errorMsg.textContent = "Correo o contraseña incorrectos.";
+      .error {
+        font-size: 0.9rem;
+        margin-top: 10px;
       }
-    };
 
-    window.mostrarRecuperacion = () => {
-      document.getElementById("recuperacion").style.display = "block";
-    };
+      .error.red {
+        color: red;
+      }
 
-    window.enviarRecuperacion = async () => {
-      const correo = document.getElementById("emailRecuperar").value;
-      const errorMsg = document.getElementById("errorMsg");
-      errorMsg.textContent = "";
-      errorMsg.classList.remove("error-anim", "red", "green");
-      try {
-        const methods = await fetchSignInMethodsForEmail(auth, correo);
-        if (methods.length === 0) {
-          errorMsg.classList.add("error-anim", "red");
-          errorMsg.textContent = "Este correo no está registrado.";
-          return;
+      .error.green {
+        color: green;
+      }
+
+      @keyframes fadeInOut {
+        0% { opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+
+      .error-anim {
+        animation: fadeInOut 4s forwards;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          padding: 10px 20px;
         }
-        await sendPasswordResetEmail(auth, correo);
-        errorMsg.classList.add("error-anim", "green");
-        errorMsg.textContent = "Se envió el enlace al correo.";
-      } catch (error) {
-        errorMsg.classList.add("error-anim", "red");
-        errorMsg.textContent = "Error: " + error.message;
+
+        .logo {
+          font-size: 1.2rem;
+        }
+
+        nav button, nav span {
+          padding: 8px 12px;
+          font-size: 0.9rem;
+        }
+
+        .catalogo {
+          padding: 15px;
+        }
+
+        .alfombra {
+          padding: 10px;
+        }
+
+        .modal {
+          width: 90%;
+        }
       }
-    };
 
-    window.cerrarSesion = async () => {
-      await signOut(auth);
-      window.location.href = "index.html";
-    };
+      @media (max-width: 480px) {
+        header {
+          padding: 10px;
+        }
 
-    onAuthStateChanged(auth, (user) => {
-  const nav = document.getElementById("navOptions");
-  let contenido = ``;
-  if (user) {
-    contenido = `
-      <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-        <i class="fas fa-user-circle"></i>
-      </button>
-      <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-        <i class="fas fa-sign-out-alt"></i>
-      </button>
-    `;
-  } else {
-    contenido = `
-      <button onclick="abrirModal()">Iniciar sesión</button>
-      <button onclick="location.href='register.html'">Registrarse</button>
-    `;
-  }
-  nav.innerHTML = contenido;
-});
+        .logo {
+          font-size: 1rem;
+        }
 
-    window.verificarPedidoPersonalizado = () => {
-      if (auth.currentUser) {
-        location.href = "alfomex.html";
-      } else {
-        abrirModal();
+        nav button, nav span {
+          padding: 6px 10px;
+          font-size: 0.8rem;
+        }
+
+        .catalogo {
+          padding: 10px;
+        }
+
+        .alfombra {
+          padding: 8px;
+        }
       }
-    };
-    
+    </style>
+  </head>
+  <body>
+    <header>
+      <button id="menuBtn" onclick="openNav()">☰</button>
+      <div class="logo">ALFOMEX</div>
+      <nav id="navOptions">
+        <span>Cargando...</span>
+      </nav>
+    </header>
 
-    async function cargarAlfombras() {
-      const contenedor = document.getElementById("catalogo");
-      const querySnapshot = await getDocs(collection(db, "alfombras"));
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const div = document.createElement("div");
-        div.className = "alfombra";
-        div.innerHTML = `
-          <img src="${data.imagen}" alt="${data.nombre}" />
-          <h4>${data.nombre}</h4>
-          <p>${data.precio}</p>
-        `;
-        contenedor.appendChild(div);
-      });
-    }
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
+      <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
+      <a href="javascript:void(0)">Categorías</a>
+    </div>
 
-    cargarAlfombras();
+    <!-- Fondo oscuro del modal -->
+    <div class="modal-overlay" id="modalOverlay"></div>
 
-    
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
+    <!-- Modal de inicio de sesión -->
+    <div class="modal" id="loginModal">
+      <h3 id="modalTitle">Entrar</h3>
+      <div id="formLogin">
+        <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+        <input type="password" id="loginPassword" placeholder="Contraseña" />
+      </div>
+      <div id="formRegister" style="display: none;">
+        <input type="text" id="nombreRegistro" placeholder="Nombre" />
+        <input type="text" id="apellidoRegistro" placeholder="Apellido" />
+        <input type="email" id="registroEmail" placeholder="Correo electrónico" />
+        <input type="password" id="registroPassword" placeholder="Contraseña" />
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button id="submitBtn">Entrar</button>
+        <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+      </div>
+      <div style="margin-top: 10px; text-align: center;">
+        <button
+          onclick="mostrarRecuperacion()"
+          style="background: transparent; color: #3b5998; border: none; cursor: pointer;"
+        >
+          ¿Olvidaste tu contraseña?
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 10px;">
+        <button onclick="toggleFormulario()" style="background: none; border: none; color: #3b5998;">
+          ¿No tienes cuenta? Regístrate
+        </button>
+      </div>
+      <div id="recuperacion" style="display: none; margin-top: 15px;">
+        <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
+        <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 8px;">Enviar enlace</button>
+      </div>
+      <div class="error" id="errorMsg"></div>
+    </div>
+
+    <section class="carrusel">
+      <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.jpg" alt="Alfombra 1" />
+      <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Alfombra 2" />
+      <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Alfombra 3" />
+    </section>
+
+    <section class="catalogo" id="catalogo"></section>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        setPersistence,
+        browserLocalPersistence,
+        signOut,
+        onAuthStateChanged,
+        sendPasswordResetEmail,
+        fetchSignInMethodsForEmail,
+      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+      import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+        authDomain: "alfomex-f4efa.firebaseapp.com",
+        projectId: "alfomex-f4efa",
+        storageBucket: "alfomex-f4efa.firebasestorage.app",
+        messagingSenderId: "1090528818564",
+        appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
+        measurementId: "G-SW633HRXV1",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      window.openNav = () => {
+        // Cierra el modal si está abierto
+        cerrarModal();
+        document.getElementById("mySidenav").classList.add("open");
+        document.getElementById("modalOverlay").classList.add("active");
+      };
+
+      window.closeNav = () => {
+        document.getElementById("mySidenav").classList.remove("open");
+        document.getElementById("modalOverlay").classList.remove("active");
+      };
+
+      window.abrirModal = () => {
+        // Cierra el menú si está abierto
+        closeNav();
+        document.getElementById("loginModal").classList.add("active");
+        document.getElementById("modalOverlay").classList.add("active");
+      };
+
+      window.cerrarModal = () => {
+        const modal = document.getElementById("loginModal");
+        const overlay = document.getElementById("modalOverlay");
+
+        modal.classList.remove("active");
+        overlay.classList.remove("active");
+
+        setTimeout(() => {
+          document.getElementById("errorMsg").textContent = "";
+          document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
+          document.getElementById("email").value = "";
+          document.getElementById("password").value = "";
+          document.getElementById("recuperacion").style.display = "none";
+          document.getElementById("emailRecuperar").value = "";
+        }, 300);
+      };
+
+      document.getElementById("modalOverlay").addEventListener("click", () => {
         cerrarModal();
         closeNav();
-      }
-    });
+      });
 
-  </script>
-</body>
+      window.iniciarSesion = async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = "";
+        errorMsg.classList.remove("error-anim", "red", "green");
+        try {
+          await setPersistence(auth, browserLocalPersistence);
+          await signInWithEmailAndPassword(auth, email, password);
+          window.location.reload();
+        } catch (error) {
+          errorMsg.classList.add("error-anim", "red");
+          errorMsg.textContent = "Correo o contraseña incorrectos.";
+        }
+      };
+
+      window.mostrarRecuperacion = () => {
+        document.getElementById("recuperacion").style.display = "block";
+      };
+
+      window.enviarRecuperacion = async () => {
+        const correo = document.getElementById("emailRecuperar").value;
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = "";
+        errorMsg.classList.remove("error-anim", "red", "green");
+        try {
+          const methods = await fetchSignInMethodsForEmail(auth, correo);
+          if (methods.length === 0) {
+            errorMsg.classList.add("error-anim", "red");
+            errorMsg.textContent = "Este correo no está registrado.";
+            return;
+          }
+          await sendPasswordResetEmail(auth, correo);
+          errorMsg.classList.add("error-anim", "green");
+          errorMsg.textContent = "Se envió el enlace al correo.";
+        } catch (error) {
+          errorMsg.classList.add("error-anim", "red");
+          errorMsg.textContent = "Error: " + error.message;
+        }
+      };
+
+      window.cerrarSesion = async () => {
+        await signOut(auth);
+        window.location.href = "index.html";
+      };
+
+      onAuthStateChanged(auth, (user) => {
+        const nav = document.getElementById("navOptions");
+        let contenido = ``;
+        if (user) {
+          contenido = `
+            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          `;
+        } else {
+          contenido = `
+            <button onclick="abrirModal()">Entrar</button>
+          `;
+        }
+        nav.innerHTML = contenido;
+      });
+
+      window.verificarPedidoPersonalizado = () => {
+        if (auth.currentUser) {
+          location.href = "alfomex.html";
+        } else {
+          abrirModal();
+        }
+      };
+      
+
+      async function cargarAlfombras() {
+        const contenedor = document.getElementById("catalogo");
+        const querySnapshot = await getDocs(collection(db, "alfombras"));
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const div = document.createElement("div");
+          div.className = "alfombra";
+          div.innerHTML = `
+            <img src="${data.imagen}" alt="${data.nombre}" />
+            <h4>${data.nombre}</h4>
+            <p>${data.precio}</p>
+          `;
+          contenedor.appendChild(div);
+        });
+      }
+
+      cargarAlfombras();
+
+      
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          cerrarModal();
+          closeNav();
+        }
+      });
+
+      let modoRegistro = false;
+
+      window.toggleFormulario = () => {
+        modoRegistro = !modoRegistro;
+        document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
+        document.getElementById("formLogin").style.display = modoRegistro ? "none" : "block";
+        document.getElementById("formRegister").style.display = modoRegistro ? "block" : "none";
+        document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
+        document.getElementById("errorMsg").textContent = "";
+      };
+
+      document.getElementById("submitBtn").addEventListener("click", async () => {
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = "";
+        if (modoRegistro) {
+          const nombre = document.getElementById("nombreRegistro").value.trim();
+          const apellido = document.getElementById("apellidoRegistro").value.trim();
+          const correo = document.getElementById("registroEmail").value.trim();
+          const password = document.getElementById("registroPassword").value;
+
+          if (!nombre || !apellido || !correo || !password) {
+            errorMsg.textContent = "Completa todos los campos.";
+            return;
+          }
+
+          try {
+            const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
+            const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+            const user = userCredential.user;
+            await setDoc(doc(db, "usuarios", user.uid), {
+              nombre,
+              apellido,
+              correo
+            });
+            window.location.reload();
+          } catch (e) {
+            errorMsg.textContent = e.message;
+          }
+        } else {
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+          try {
+            await setPersistence(auth, browserLocalPersistence);
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.reload();
+          } catch (e) {
+            errorMsg.textContent = "Correo o contraseña incorrectos.";
+          }
+        }
+      });
+    </script>
+  </body>
 </html>
