@@ -566,6 +566,7 @@ h2, .alerta, .plantilla-btn-container {
 .lateral-izquierda {
   width: 100%;
   max-width: 300px;
+  height: 500px;
   background: #ffffff;
   padding: 20px;
   border-radius: 10px;
@@ -574,16 +575,7 @@ h2, .alerta, .plantilla-btn-container {
   box-sizing: border-box;
 }
 
-.lateral-izquierda {
-  width: 100%;
-  max-width: 300px;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  box-sizing: border-box;
-}
+
 
 /* Pantallas grandes: panel izquierdo al lado */
 @media (min-width: 768px) {
