@@ -418,9 +418,9 @@
       .plantillas-modal {
         display: none;
         position: fixed;
-        top: 50%;
+        top: 50vh;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translateX(-50%); /* solo en X */
         background: white;
         border: 2px solid #ccc;
         border-radius: 10px;
@@ -431,6 +431,7 @@
         max-height: 80vh;
         overflow-y: auto;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        opacity: 0;
       }
 
       .plantillas-modal.show {
@@ -630,11 +631,11 @@
       @keyframes fadeSlideUp {
         from {
            opacity: 0;
-           transform: translateY(40px);
+           transform: translateX(-50%) translateY(40px);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(-50%) translateY(0);
         }
       }
 
