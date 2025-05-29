@@ -597,23 +597,29 @@ h2, .alerta, .plantilla-btn-container {
 @media (max-width: 767px) {
   .contenedor-principal {
     flex-direction: column;
-  }
-
-  .lateral-izquierda {
-    width: 90%;
-    margin: 10px auto;
-    order: 2;
-  }
-
-  .lateral {
-    width: 90%;
-    margin: 10px auto;
-    order: 3;
+    align-items: center;
   }
 
   canvas {
     order: 1;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
     margin: 0 auto;
+  }
+
+  .lateral-izquierda {
+    order: 2;
+    width: 100%;
+    max-width: 500px;
+    margin: 10px auto;
+  }
+
+  .lateral {
+    order: 3;
+    width: 100%;
+    max-width: 500px;
+    margin: 10px auto;
   }
 }
 
