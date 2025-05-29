@@ -790,15 +790,12 @@
   const fondo = document.getElementById('fondoPlantillas');
   const modal = document.getElementById('modalPlantillas');
 
-  // 🟡 Activa el fondo y modal VACÍO (pero centrado)
   fondo.classList.add('active');
+  modal.innerHTML = `<h3 style="text-align:center">Cargando plantillas...</h3>`;
   modal.classList.add('show');
-  modal.innerHTML = `<h3 style="text-align:center; color:#003366">Cargando plantillas...</h3>`;
 
-  // Espera a que se renderice visualmente
-  await new Promise(resolve => setTimeout(resolve, 10));
+  await new Promise(resolve => setTimeout(resolve, 10)); // Forzar reflujo visual
 
-  // 🔵 Carga contenido real
   await cargarPlantillasDesdeFirestore();
 };
       window.cerrarPlantillas = function() {
