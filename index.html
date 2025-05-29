@@ -558,38 +558,38 @@
       let modoRegistro = false;
 
       window.toggleFormulario = () => {
-  modoRegistro = !modoRegistro;
+       modoRegistro = !modoRegistro;
 
-  document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
-  document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
-  document.querySelector('[onclick="toggleFormulario()"]').textContent =
-    modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
-  document.getElementById("errorMsg").textContent = "";
+       document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
+       document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
+       document.querySelector('[onclick="toggleFormulario()"]').textContent =
+         modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
+       document.getElementById("errorMsg").textContent = "";
 
-  const loginForm = document.getElementById("formLogin");
-  const registerForm = document.getElementById("formRegister");
+       const loginForm = document.getElementById("formLogin");
+       const registerForm = document.getElementById("formRegister");
 
-  if (modoRegistro) {
-    loginForm.classList.remove("show");
-    registerForm.classList.remove("fade-slide"); // reset
-    registerForm.style.display = "block";
-    setTimeout(() => {
-      loginForm.style.display = "none";
-      registerForm.classList.add("fade-slide", "show");
-    }, 50);
-  } else {
-    registerForm.classList.remove("show");
-    loginForm.classList.remove("fade-slide");
-    loginForm.style.display = "block";
-    setTimeout(() => {
-      registerForm.style.display = "none";
-      loginForm.classList.add("fade-slide", "show");
-    }, 50);
-  }
-};
+       if (modoRegistro) {
+         loginForm.classList.remove("show");
+         registerForm.classList.remove("fade-slide"); // reset
+         registerForm.style.display = "block";
+         setTimeout(() => {
+           loginForm.style.display = "none";
+           registerForm.classList.add("fade-slide", "show");
+          }, 50);
+        } else {
+          registerForm.classList.remove("show");
+          loginForm.classList.remove("fade-slide");
+          loginForm.style.display = "block";
+          setTimeout(() => {
+            registerForm.style.display = "none";
+            loginForm.classList.add("fade-slide", "show");
+          }, 50);
+       }
+    };
 
 
-document.getElementById("submitBtn").addEventListener("click", async () => {
+  document.getElementById("submitBtn").addEventListener("click", async () => {
   const errorMsg = document.getElementById("errorMsg");
   errorMsg.textContent = "";
 
