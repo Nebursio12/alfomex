@@ -162,10 +162,10 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 20px;
+        flex-wrap: nowrap;
+        gap: 30px;
         margin: 30px auto;
-        max-width: 1200px;
+        max-width: 1300px;
         padding: 0 20px;
         box-sizing: border-box;
       }
@@ -186,10 +186,7 @@
 
       .lateral {
         width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 10px;
-        box-sizing: border-box;
+        max-width: 400px;
       }
 
       #resultado,
@@ -712,15 +709,15 @@
     </div>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
-      <!-- Lado izquierdo: lienzo + medidas + botones -->
+      <!-- Columna izquierda: Lienzo + datos + controles -->
       <div style="display: flex; flex-direction: column; align-items: center;">
         <div class="canvas-inner">
           <canvas id="lienzo" width="1000" height="1000" style="display: block;"></canvas>
         </div>
-        <!-- Anchura / Altura -->
-        <div id="areaCubierta" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
-        <!-- Botones de zoom -->
-        <div class="controls" style="margin-top: 10px; justify-content: center;">
+        <!-- Anchura y Altura debajo del lienzo -->
+        <div id="areaCubierta" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+        <!-- Botones de zoom debajo -->
+        <div class="controls" style="margin-top: 10px;">
           <button 
             onmousedown="iniciarZoom(0.01)" 
             onmouseup="detenerZoom()" 
@@ -744,7 +741,7 @@
           </button>
         </div>
       </div>
-      <!-- Lado derecho: panel de presupuesto -->
+      <!-- Columna derecha: resultados y botón -->
       <div class="lateral">
         <div id="resultado"></div>
         <div id="totalFinal" class="total-final"></div>
