@@ -415,22 +415,15 @@
 
       .plantillas-modal {
         background: white;
-        border-radius: 10px;
-        padding: 20px;
-        width: 90%;
-        max-width: 600px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        opacity: 0;
-        transform: scale(0.95);
-        transition: all 0.3s ease;
-        pointer-events: none;
-        /* 👉 SIEMPRE en posición centrada */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  opacity: 1;
+  transform: scale(1);
       }
 
       .plantillas-modal.show {
@@ -493,26 +486,24 @@
 
       .modal-overlay-plantillas {
           position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   z-index: 9998;
-  display: flex;
-  justify-content: center;
+  display: none;
   align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
+  justify-content: center;
 }
+
 
       .modal-overlay-plantillas:not(.active) {
          pointer-events: none; /* 👈 cuando está inactivo, no estorba */
       }
 
       .modal-overlay-plantillas.active {
-        opacity: 1;
-        pointer-events: all;
+        display: flex;
       }
 
       h2, .alerta, .plantilla-btn-container {
@@ -790,14 +781,16 @@
   const fondo = document.getElementById('fondoPlantillas');
   const modal = document.getElementById('modalPlantillas');
 
+  // Muestra el fondo (lo centra automáticamente por el display:flex)
   fondo.classList.add('active');
-  modal.innerHTML = `<h3 style="text-align:center">Cargando plantillas...</h3>`;
-  modal.classList.add('show');
 
-  await new Promise(resolve => setTimeout(resolve, 10)); // Forzar reflujo visual
+  // Puedes mostrar "cargando..." mientras carga
+  modal.innerHTML = `<h3 style="text-align:center; color:#003366">Cargando plantillas...</h3>`;
 
+  // Luego cargas las plantillas
   await cargarPlantillasDesdeFirestore();
 };
+
       window.cerrarPlantillas = function() {
         document.getElementById('modalPlantillas').classList.remove('show');
         document.getElementById('fondoPlantillas').classList.remove('active');
@@ -1105,10 +1098,10 @@ function detenerZoom() {
         tempImg.src = src;
       };
     </script>
-    <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()">
-      <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
-        <!-- aquí se insertan las plantillas -->
-      </div>
-    </div>
+    <div class="modal-overlay-plantillas" id="fondoPlantillas">
+  <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
+    <!-- contenido dinámico -->
+  </div>
+</div>
   </body>
 </html>
