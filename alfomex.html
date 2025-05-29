@@ -161,6 +161,13 @@
     </div>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
+      <!-- Lateral izquierdo para descripción del estambre -->
+      <div class="lateral-izquierda" id="panelEstambre" style="display: none;">
+        <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Estambre</h3>
+        <div id="descripcionContenido"></div>
+      </div>
+
+      <!-- Centro con el lienzo -->
       <div>
         <canvas id="lienzo"></canvas>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
@@ -188,20 +195,17 @@
           </button>
         </div>
       </div>
+
+      <!-- Lateral derecho para presupuesto -->
       <div class="lateral">
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-          <div id="resultado"></div>
-          <div id="descripcion" style="display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
-            <strong style="font-size: 1.2rem; color: var(--secondary);">Descripción del estambre:</strong>
-            <div id="descripcionContenido" style="margin-top: 10px; font-size: 0.95rem;"></div>
-          </div>
-        </div>
+        <div id="resultado"></div>
         <button id="añadirCarrito" class="boton-total">
           <i class="fas fa-shopping-cart"></i>
           <span id="totalFinal">$0.00 MXN</span>
         </button>
       </div>
     </div>
+
     <div class="social-links">
       <p>Sígueme en redes sociales:</p>
       <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -338,17 +342,18 @@
         });
         document.getElementById("totalFinal").innerText = `$${total.toFixed(2)} MXN`;
         // ✅ Mostrar y llenar la descripción
-        const desc = document.getElementById("descripcion");
+        // ✅ Mostrar el panel izquierdo y rellenar descripción
+        const panelEstambre = document.getElementById("panelEstambre");
         const descContenido = document.getElementById("descripcionContenido");
-        desc.style.display = "block";
+        panelEstambre.style.display = "block";
         descContenido.innerHTML = coloresUsados.map(([key, count]) => {
           const [r, g, b] = key.split(',');
-          return `<div style="margin-bottom: 6px;">
-            <span style="display:inline-block;width:20px;height:20px;background:rgb(${r},${g},${b});border:1px solid #000;margin-right:8px;"></span>
+          return `<div style="margin-bottom: 8px;">
+            <div style="display: inline-block; width: 20px; height: 20px; background: rgb(${r},${g},${b}); border: 1px solid #000; margin-right: 10px;"></div>
             Color RGB: (${r},${g},${b})
           </div>`;
         }).join('');
-      }
+       }
       imgInput.addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
