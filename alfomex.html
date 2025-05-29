@@ -712,15 +712,15 @@
     </div>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
-      <!-- SECCIÓN IZQUIERDA: lienzo + controles -->
+      <!-- Lado izquierdo: lienzo + medidas + botones -->
       <div style="display: flex; flex-direction: column; align-items: center;">
         <div class="canvas-inner">
           <canvas id="lienzo" width="1000" height="1000" style="display: block;"></canvas>
         </div>
-        <!-- Altura/Anchura debajo -->
+        <!-- Anchura / Altura -->
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
-        <!-- Controles debajo -->
-        <div class="controls" style="justify-content: center;">
+        <!-- Botones de zoom -->
+        <div class="controls" style="margin-top: 10px; justify-content: center;">
           <button 
             onmousedown="iniciarZoom(0.01)" 
             onmouseup="detenerZoom()" 
@@ -744,7 +744,7 @@
           </button>
         </div>
       </div>
-      <!-- SECCIÓN DERECHA: lateral -->
+      <!-- Lado derecho: panel de presupuesto -->
       <div class="lateral">
         <div id="resultado"></div>
         <div id="totalFinal" class="total-final"></div>
