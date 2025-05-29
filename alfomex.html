@@ -475,19 +475,24 @@
       }
 
       .modal-overlay-plantillas {
-        display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.5);
-  z-index: 9998;
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0,0,0,0.5);
+          z-index: 9998;
 
-  /* Flex para centrar */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          pointer-events: all; /* 👈 habilita clics dentro */
+      }
+
+      .modal-overlay-plantillas:not(.active) {
+         pointer-events: none; /* 👈 cuando está inactivo, no estorba */
       }
 
       .modal-overlay-plantillas.active {
@@ -1072,7 +1077,8 @@ function detenerZoom() {
         tempImg.src = src;
       };
     </script>
-    <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()"></div>
-    <div class="plantillas-modal" id="modalPlantillas"></div>
+    <div class="modal-overlay-plantillas" id="fondoPlantillas" onclick="cerrarPlantillas()">
+      <div class="plantillas-modal" id="modalPlantillas"></div>
+    </div>
   </body>
 </html>
