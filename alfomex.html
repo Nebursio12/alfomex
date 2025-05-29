@@ -827,16 +827,7 @@
                               `<strong>Personalización:</strong> $${COSTOS.personalizacion.toFixed(2)} MXN`;
         calcularPorColor(imageData, totalPixels, costoFinal);
       }
-      function ajustarCanvas() {
-  const size = Math.min(window.innerWidth * 0.8, 500);
-  canvas.width = size;
-  canvas.height = size;
-  draw(); // vuelve a dibujar la imagen si ya hay una cargada
-  calcularEstambre(); // vuelve a calcular presupuesto si ya hay imagen
-}
-window.addEventListener("resize", ajustarCanvas);
-window.addEventListener("DOMContentLoaded", ajustarCanvas);
-
+      
       function calcularPorColor(imageData, totalPixels, total) {
         const mapa = new Map();
         for (let i = 0; i < imageData.data.length; i += 4) {
