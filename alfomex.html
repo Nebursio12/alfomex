@@ -435,6 +435,7 @@
 
       .plantillas-modal.show {
         display: block;
+        animation: fadeSlideUp 0.4s ease forwards;
       }
 
       .plantillas-modal h3 {
@@ -515,6 +516,15 @@
         transition: background 0.3s ease;
       }
 
+      .modal-overlay-plantillas {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal-overlay-plantillas.active {
+         display: block;
+         opacity: 1;
+      }
       .plantilla-btn-container button:hover {
         background: #ffcc00;
         color: black;
@@ -610,11 +620,22 @@
          color: black;
      }
 
-     @keyframes bounceHover {
+      @keyframes bounceHover {
        0%   { transform: translateY(0); }
        30%  { transform: translateY(-3px); }
        60%  { transform: translateY(2px); }
        100% { transform: translateY(0); }
+      }
+
+      @keyframes fadeSlideUp {
+        from {
+           opacity: 0;
+           transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
     </style>
