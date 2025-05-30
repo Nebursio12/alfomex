@@ -237,8 +237,14 @@
         ctx.strokeStyle = '#999';
         for (let i = 0; i <= 100; i += 10) {
           const px = i * pxPorCm;
-          ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(0, px); ctx.lineTo(canvas.width, px); ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(px, 0);
+          ctx.lineTo(px, canvas.height);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, px);
+          ctx.lineTo(canvas.width, px);
+          ctx.stroke();
           ctx.fillStyle = '#000';
           ctx.font = '10px Arial';
           if (i !== 0) {
@@ -335,14 +341,20 @@
           panelEstambre.style.opacity = "1";
           panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
           descContenido.innerHTML = `
-            <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Estambre</h3>
-            ${coloresUsados.map(([key, count]) => {
-              const [r, g, b] = key.split(',');
-              return `<div style="margin-bottom: 8px;">
-                <div style="display: inline-block; width: 20px; height: 20px; background: rgb(${r},${g},${b}); border: 1px solid #000; margin-right: 10px;"></div>
-                Color RGB: (${r},${g},${b})
-              </div>`;
-            }).join('')}
+            <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Material</h3>
+            <p>
+              Esta alfombra está elaborada 100% con hilo de estambre acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
+            </p>
+            <p>
+              <strong>Cuidados:</strong><br>
+              - Lavar a mano con agua fría y jabón neutro.<br>
+              - No usar cloro ni exprimir.<br>
+              - Secar colgada a la sombra.<br>
+              - Evitar el uso de lavadora o secadora para prolongar su vida útil.
+            </p>
+            <div style="margin-top: 20px;">
+              <img src="imagenes/cuarto.png" alt="Cuarto de muestra" style="width: 100%; border-radius: 10px;">
+            </div>
           `;
         } else {
           panelEstambre.style.display = "none";
