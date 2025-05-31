@@ -180,8 +180,13 @@ h2 {
 }
 
 canvas {
-  width: 500px;
-  height: 500px;
+  display: block;
+  height: 100% !important; /* Ajusta a la altura total del contenedor */
+  object-fit: contain;
+}
+
+.contenedor-principal > * {
+  min-height: 500px;
 }
 
 .lateral {
@@ -583,7 +588,7 @@ h2, .alerta, .plantilla-btn-container {
 @media (min-width: 768px) {
   .contenedor-principal {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .lateral-izquierda {
@@ -594,6 +599,11 @@ h2, .alerta, .plantilla-btn-container {
   .lateral {
     margin-left: 30px;
   }
+}
+
+.lateral-izquierda,
+.lateral {
+  height: 100%;
 }
 
 /* Pantallas chicas: panel debajo */
