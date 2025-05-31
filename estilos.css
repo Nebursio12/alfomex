@@ -581,33 +581,6 @@ h2, .alerta, .plantilla-btn-container {
 
 /* Pantallas grandes: panel izquierdo al lado */
 @media (min-width: 768px) {
-  .lateral-izquierda {
-    display: flex !important;
-    flex-direction: column;
-    max-width: 400px;
-    margin-right: 30px;
-  }
-
-  #panelEstambre {
-    display: flex !important;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .contenedor-principal {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .lateral {
-    display: flex !important;
-    flex-direction: column;
-    max-width: 400px;
-    margin-left: 30px;
-  }
-}
-@media (min-width: 768px) {
   .contenedor-principal {
     flex-direction: row;
     align-items: flex-start;
