@@ -524,5 +524,39 @@
       <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
       </div>
     </div>
+    <!-- Modal de zoom grande -->
+    <div id="modalZoom" class="modal-zoom">
+      <span class="cerrar-zoom" onclick="cerrarZoom()">×</span>
+      <img id="imgZoom" class="imagen-zoom">
+    </div>
+    <script>
+      const vistaMiniatura = document.getElementById("vistaAlfombra");
+      const modalZoom = document.getElementById("modalZoom");
+      const imgZoom = document.getElementById("imgZoom");
+
+      if (vistaMiniatura) {
+       vistaMiniatura.addEventListener("click", () => {
+          if (vistaMiniatura.src && vistaMiniatura.style.display !== "none") {
+            imgZoom.src = vistaMiniatura.src;
+           modalZoom.style.display = "flex";
+          }
+        });
+      }
+
+      function cerrarZoom() {
+       modalZoom.style.display = "none";
+      }
+
+      // Extra: cerrar modal al presionar ESC
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") cerrarZoom();
+      });
+
+      // Extra: cerrar si haces clic fuera de la imagen
+      modalZoom.addEventListener("click", (e) => {
+        if (e.target.id === "modalZoom") cerrarZoom();
+      });
+    </script>
+
   </body>
 </html>
