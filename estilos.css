@@ -711,31 +711,30 @@ h2, .alerta, .plantilla-btn-container {
 .zoom-container {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
   width: 100%;
-  height: auto;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
 }
 
 .zoom-container img:first-child {
-  display: block;
   width: 100%;
-  height: auto;
+  display: block;
 }
 
 .zoom-img {
   position: absolute;
-  top: 60%;
+  top: 50%;
   left: 50%;
+  width: 50%;
   transform: translate(-50%, -50%);
   transition: transform 0.3s ease;
-  transform-origin: center;
-  width: 50%;
+  z-index: 10;
   pointer-events: none;
-  z-index: 2;
 }
 
 .zoom-container:hover .zoom-img {
-  transform: translate(-50%, -50%) scale(2);
+  transform: translate(-50%, -50%) scale(2.2);
   z-index: 99;
 }
+
 
