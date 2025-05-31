@@ -445,6 +445,11 @@
             return;
         }
 
+        if (nuevaAnchuraCm < 25 || nuevaAlturaCm < 25) {
+           alert("⚠️ Tamaño mínimo alcanzado (25 cm).");
+           return;
+        }
+
         scale = nuevoScale;
         draw();
         calcularEstambre();
