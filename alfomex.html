@@ -258,9 +258,7 @@
             ctx.fillText(`0cm`, 2, 10);
           }
         }
-        if (mostrarFondoCuarto && fondoCuarto.complete) {
-          ctx.drawImage(fondoCuarto, imgX, imgY, fondoCuarto.width * scale, fondoCuarto.height * scale);
-        }
+      
         ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
         // Calcular tamaño real de la imagen y mostrarlo
         const anchoCm = (img.width * scale) / pxPorCm;
