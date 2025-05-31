@@ -580,23 +580,7 @@ h2, .alerta, .plantilla-btn-container {
 
 
 /* Pantallas grandes: panel izquierdo al lado */
-@media (min-width: 768px) {
-  .contenedor-principal {
-    flex-direction: row;
-    align-items: flex-start;
-  }
 
-  .lateral-izquierda {
-    order: -1;
-    margin-right: 30px;
-  }
-
-  .lateral {
-    margin-top: 0;
-    align-self: flex-start;
-    transform: translateY(-100px); /* Opcional: ajusta el valor si lo quieres más arriba o más abajo */
-  }
-}
 
 /* Pantallas chicas: panel debajo */
 @media (max-width: 767px) {
@@ -664,7 +648,29 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
+@media (min-width: 768px) {
+  .contenedor-principal {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
 
+  .lateral {
+    max-width: 400px;
+    margin-left: 40px;
+  }
+
+  #resultado,
+  #totalFinal,
+  #añadirCarrito {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  canvas {
+    width: 500px;
+    height: 500px;
+  }
+}
 
 .boton-total:hover #totalFinal {
   color: black;
