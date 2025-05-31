@@ -715,17 +715,17 @@ h2, .alerta, .plantilla-btn-container {
 }
 
 .zoom-container:hover .zoom-img {
-  transform: translate(-50%, -50%) scale(2); /* Zoom al pasar el mouse */
+  transform: translate(-50%, -50%) scale(2);
   z-index: 10;
 }
 
 .zoom-img {
   position: absolute;
-  top: 60%; /* Ajustado para que quede más abajo */
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   transition: transform 0.3s ease;
   transform-origin: center;
   width: 50%;
-  pointer-events: auto; /* <--- QUÍTALO si está en none */
+  pointer-events: none; /* Asegúrate de que no interfiera */
 }
