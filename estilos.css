@@ -579,7 +579,6 @@ h2, .alerta, .plantilla-btn-container {
 
 
 
-/* Pantallas grandes: panel izquierdo al lado */
 
 
 /* Pantallas chicas: panel debajo */
@@ -657,6 +656,7 @@ h2, .alerta, .plantilla-btn-container {
   .lateral {
     max-width: 400px;
     margin-left: 40px;
+    transform: translateY(-50px); /* Ajusta el valor exacto según visualmente lo necesites */
   }
 
   #resultado,
