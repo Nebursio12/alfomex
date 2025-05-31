@@ -732,3 +732,28 @@ h2, .alerta, .plantilla-btn-container {
   visibility: visible;
   opacity: 1;
 }
+
+.zoom-preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+.zoom-popup {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 105%;
+  width: 300px;
+  z-index: 10;
+  border: 2px solid #ccc;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.zoom-popup img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
