@@ -716,32 +716,25 @@ h2, .alerta, .plantilla-btn-container {
   aspect-ratio: 1 / 1;
 }
 
-.zoom-wrapper {
-  position: relative;
+.zoom-container img:first-child {
   width: 100%;
-  height: 100%;
-  transition: transform 0.3s ease;
-}
-
-.zoom-container:hover .zoom-wrapper {
-  transform: scale(1.5);
-}
-
-.zoom-wrapper img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  display: block;
 }
 
 .zoom-img {
-  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease;
+  z-index: 10;
   pointer-events: none;
 }
 
-.zoom-wrapper img:first-child {
-  z-index: 1;
+.zoom-container:hover .zoom-img {
+  transform: translate(-50%, -50%) scale(2.2);
+  z-index: 99;
 }
+
 
