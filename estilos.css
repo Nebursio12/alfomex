@@ -566,12 +566,15 @@ h2, .alerta, .plantilla-btn-container {
 .lateral-izquierda {
   width: 100%;
   max-width: 500px;
-  background: #ffffff;
   padding: 20px;
+  background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+
 }
 
 
