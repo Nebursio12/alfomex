@@ -593,7 +593,7 @@ h2, .alerta, .plantilla-btn-container {
 
   .lateral {
     margin-left: 30px;
-    transform: translateY(-10px); /* Opcional: ajusta el valor si lo quieres más arriba o más abajo */
+    transform: translateY(-100px); /* Opcional: ajusta el valor si lo quieres más arriba o más abajo */
   }
 }
 
