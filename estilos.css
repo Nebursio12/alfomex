@@ -610,10 +610,6 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-.lateral-izquierda,
-.lateral {
-  height: 100%;
-}
 
 /* Pantallas chicas: panel debajo */
 @media (max-width: 767px) {
@@ -626,6 +622,8 @@ h2, .alerta, .plantilla-btn-container {
 
   .lateral-izquierda {
     order: 2;
+    height: auto !important;
+    margin-bottom: 10px !important;
   }
 
   .lateral {
@@ -637,7 +635,6 @@ h2, .alerta, .plantilla-btn-container {
     margin: 0 auto;
   }
 }
-
 
 .boton-total:hover {
   background-color: #0055cc;
