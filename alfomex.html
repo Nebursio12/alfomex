@@ -360,7 +360,10 @@
               - Evitar el uso de lavadora o secadora para prolongar su vida útil.
             </p>
             <div style="margin-top: 20px;">
-              <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; border-radius: 10px;">
+              <div id="vistaCuarto" style="position: relative; width: 100%; border-radius: 10px; overflow: hidden;">
+  <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
+  <img id="vistaAlfombra" src="" style="position: absolute; width: 50%; top: 45%; left: 25%; transform: translate(-50%, -50%); pointer-events: none;">
+</div>
             </div>
           `;
         } else {
@@ -460,19 +463,35 @@
           imgY = (canvas.height - img.height * scale) / 2;
 
           if (fondoSrc) {
-            fondoCuarto = new Image();
-            fondoCuarto.crossOrigin = "anonymous";
-            fondoCuarto.onload = () => {
-              mostrarFondoCuarto = true;
-              draw();
-              calcularEstambre();
-            };
-            fondoCuarto.src = fondoSrc;
-          } else {
-            mostrarFondoCuarto = false;
-            draw();
-            calcularEstambre();
-          }
+  fondoCuarto = new Image();
+  fondoCuarto.crossOrigin = "anonymous";
+  fondoCuarto.onload = () => {
+    mostrarFondoCuarto = true;
+    draw();
+    calcularEstambre();
+  };
+  fondoCuarto.src = fondoSrc;
+
+  // Mostrar la imagen en el cuarto de vista previa
+  const vista = document.getElementById("vistaAlfombra");
+  if (vista) {
+    vista.src = fondoSrc;
+    vista.style.display = "block";
+  }
+
+} else {
+  mostrarFondoCuarto = false;
+  draw();
+  calcularEstambre();
+
+  // Ocultar la imagen en el cuarto de vista previa si no hay fondo
+  const vista = document.getElementById("vistaAlfombra");
+  if (vista) {
+    vista.src = "";
+    vista.style.display = "none";
+  }
+}
+
 
           const panelDerecho = document.querySelector('.lateral');
           panelDerecho.style.display = 'flex';
