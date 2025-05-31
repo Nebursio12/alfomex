@@ -282,6 +282,11 @@
         document.getElementById("areaCubierta").innerHTML =
           `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
           `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
+          const vistaAlfombra = document.getElementById("vistaAlfombra");
+          if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+            vistaAlfombra.style.width = `${(img.width * scale * 100) / canvas.width}%`;
+          }
+
       }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
         for (let [key, _] of mapa.entries()) {
