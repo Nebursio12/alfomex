@@ -654,9 +654,13 @@ h2, .alerta, .plantilla-btn-container {
   }
 
   .lateral {
+    display: flex !important;
+    flex-direction: column;
     max-width: 400px;
     margin-left: 40px;
-    transform: translateY(-50px); /* Ajusta el valor exacto según visualmente lo necesites */
+    margin-top: 0;
+    align-self: flex-start;
+    transform: translateY(-20px); /* Ajusta el valor exacto según visualmente lo necesites */
   }
 
   #resultado,
