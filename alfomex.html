@@ -364,15 +364,15 @@
         const panelEstambre = document.getElementById("panelEstambre");
         const descContenido = document.getElementById("descripcionContenido");
         // Solo mostrar el panel si hay colores detectados
-        if (coloresUsados.length > 0) {
+        if (img.src && img.width > 0 && img.height > 0) {
           panelEstambre.style.display = "flex";
           panelEstambre.style.visibility = "visible";
           panelEstambre.style.opacity = "1";
           panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
         } else {
           panelEstambre.style.display = "none";
-          descContenido.innerHTML = "";
         }
+
       }
       imgInput.addEventListener('change', e => {
         const file = e.target.files[0];
