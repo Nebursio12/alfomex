@@ -285,6 +285,9 @@
           const vistaAlfombra = document.getElementById("vistaAlfombra");
           if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
             vistaAlfombra.style.width = `${(img.width * scale * 100) / canvas.width}%`;
+            vistaAlfombra.style.top = "50%";
+            vistaAlfombra.style.left = "50%";
+            vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
 
       }
