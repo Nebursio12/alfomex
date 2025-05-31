@@ -440,7 +440,10 @@
         const nuevaAlturaCm = (img.height * nuevoScale) / pxPorCm;
 
         // Si alguno excede 100 cm, no aplicar el zoom
-        if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) return;
+        if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) {
+            alert("⚠️ Tamaño máximo alcanzado (100 cm).");
+            return;
+        }
 
         scale = nuevoScale;
         draw();
