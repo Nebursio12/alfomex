@@ -592,9 +592,13 @@ h2, .alerta, .plantilla-btn-container {
   }
 
   .lateral {
+    display: flex !important;
+    flex-direction: column;
+    max-width: 400px;
+    margin-left: 40px;
     margin-top: 0;
     align-self: flex-start;
-    transform: translateY(-100px); /* Opcional: ajusta el valor si lo quieres más arriba o más abajo */
+    transform: translateY(-20px); /* Ajusta el valor exacto según visualmente lo necesites */
   }
 }
 
@@ -664,29 +668,7 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-@media (min-width: 768px) {
-  .contenedor-principal {
-    flex-wrap: nowrap;
-    align-items: flex-start;
-  }
 
-  .lateral {
-    max-width: 400px;
-    margin-left: 40px;
-  }
-
-  #resultado,
-  #totalFinal,
-  #añadirCarrito {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  canvas {
-    width: 500px;
-    height: 500px;
-  }
-}
 
 .boton-total:hover #totalFinal {
   color: black;
