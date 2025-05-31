@@ -598,19 +598,18 @@ h2, .alerta, .plantilla-btn-container {
 
 /* Pantallas chicas: panel debajo */
 @media (max-width: 767px) {
-  .contenedor-principal {
-    flex-direction: column;
+  .lateral-izquierda,
+  .lateral {
+    width: 100%;
+    max-width: 500px;
+    margin: 10px auto;
   }
 
   .lateral-izquierda {
-    width: 90%;
-    margin: 10px auto;
     order: 2;
   }
 
   .lateral {
-    width: 90%;
-    margin: 10px auto;
     order: 3;
   }
 
@@ -619,6 +618,7 @@ h2, .alerta, .plantilla-btn-container {
     margin: 0 auto;
   }
 }
+
 
 .boton-total:hover {
   background-color: #0055cc;
