@@ -712,11 +712,14 @@ h2, .alerta, .plantilla-btn-container {
   position: relative;
   overflow: hidden;
   border-radius: 10px;
+  width: 100%;
+  height: auto;
 }
 
-.zoom-container:hover .zoom-img {
-  transform: translate(-50%, -50%) scale(2);
-  z-index: 10;
+.zoom-container img:first-child {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .zoom-img {
@@ -727,5 +730,12 @@ h2, .alerta, .plantilla-btn-container {
   transition: transform 0.3s ease;
   transform-origin: center;
   width: 50%;
-  pointer-events: none; /* Asegúrate de que no interfiera */
+  pointer-events: none;
+  z-index: 2;
 }
+
+.zoom-container:hover .zoom-img {
+  transform: translate(-50%, -50%) scale(2);
+  z-index: 99;
+}
+
