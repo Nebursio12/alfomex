@@ -439,11 +439,20 @@
       }
       let zoomInterval;
       function aplicarZoom(delta) {
-        scale += delta;
-        if (scale < 0.1) scale = 0.1;
+        const nuevoScale = scale + delta;
+        if (nuevoScale < 0.1) return; // Mínimo permitido
+
+        const nuevaAnchuraCm = (img.width * nuevoScale) / pxPorCm;
+        const nuevaAlturaCm = (img.height * nuevoScale) / pxPorCm;
+
+        // Si alguno excede 100 cm, no aplicar el zoom
+        if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) return;
+
+        scale = nuevoScale;
         draw();
         calcularEstambre();
       }
+
       function iniciarZoom(delta) {
         aplicarZoom(delta);
         zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
