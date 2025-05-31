@@ -760,8 +760,8 @@ h2, .alerta, .plantilla-btn-container {
 
 .miniatura-cuadro {
   position: relative;
-  width: 100px; /* Tamaño fijo reducido */
-  height: 100px;
+  width: 50px; /* Tamaño fijo reducido */
+  height: 50px;
   border-radius: 10px;
   overflow: hidden;
   margin-top: 10px;
