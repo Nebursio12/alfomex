@@ -160,9 +160,26 @@
     <div class="contenedor-principal">
       <!-- Lateral izquierdo para descripción del estambre -->
       <div class="lateral-izquierda" id="panelEstambre">
-        <div id="descripcionContenido"></div>
+        <div id="descripcionContenido">
+          <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Material</h3>
+          <p>
+            Esta alfombra está elaborada 100% con hilo de estambre acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
+          </p>
+          <p>
+            <strong>Cuidados:</strong><br>
+            - Lavar a mano con agua fría y jabón neutro.<br>
+            - No usar cloro ni exprimir.<br>
+            - Secar colgada a la sombra.<br>
+            - Evitar el uso de lavadora o secadora para prolongar su vida útil.
+          </p>
+          <div style="margin-top: 20px;">
+            <div id="vistaCuarto" style="position: relative; width: 100%; border-radius: 10px; overflow: hidden;">
+              <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
+              <img id="vistaAlfombra" src="" style="position: absolute; width: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;">
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- Centro con el lienzo -->
       <div>
         <canvas id="lienzo"></canvas>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
@@ -258,7 +275,6 @@
             ctx.fillText(`0cm`, 2, 10);
           }
         }
-      
         ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
         // Calcular tamaño real de la imagen y mostrarlo
         const anchoCm = (img.width * scale) / pxPorCm;
@@ -345,25 +361,6 @@
           panelEstambre.style.visibility = "visible";
           panelEstambre.style.opacity = "1";
           panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-          descContenido.innerHTML = `
-            <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Material</h3>
-            <p>
-              Esta alfombra está elaborada 100% con hilo de estambre acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
-            </p>
-            <p>
-              <strong>Cuidados:</strong><br>
-              - Lavar a mano con agua fría y jabón neutro.<br>
-              - No usar cloro ni exprimir.<br>
-              - Secar colgada a la sombra.<br>
-              - Evitar el uso de lavadora o secadora para prolongar su vida útil.
-            </p>
-            <div style="margin-top: 20px;">
-              <div id="vistaCuarto" style="position: relative; width: 100%; border-radius: 10px; overflow: hidden;">
-  <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
-  <img id="vistaAlfombra" src="" style="position: absolute; width: 50%; top: 45%; left: 25%; transform: translate(-50%, -50%); pointer-events: none;">
-</div>
-            </div>
-          `;
         } else {
           panelEstambre.style.display = "none";
           descContenido.innerHTML = "";
@@ -459,38 +456,32 @@
           scale = Math.min(factorX, factorY, 1);
           imgX = (canvas.width - img.width * scale) / 2;
           imgY = (canvas.height - img.height * scale) / 2;
-
           if (fondoSrc) {
-  fondoCuarto = new Image();
-  fondoCuarto.crossOrigin = "anonymous";
-  fondoCuarto.onload = () => {
-    mostrarFondoCuarto = true;
-    draw();
-    calcularEstambre();
-  };
-  fondoCuarto.src = fondoSrc;
-
-  // Mostrar la imagen en el cuarto de vista previa
-  const vista = document.getElementById("vistaAlfombra");
-  if (vista) {
-    vista.src = fondoSrc;
-    vista.style.display = "block";
-  }
-
-} else {
-  mostrarFondoCuarto = false;
-  draw();
-  calcularEstambre();
-
-  // Ocultar la imagen en el cuarto de vista previa si no hay fondo
-  const vista = document.getElementById("vistaAlfombra");
-  if (vista) {
-    vista.src = "";
-    vista.style.display = "none";
-  }
-}
-
-
+            fondoCuarto = new Image();
+            fondoCuarto.crossOrigin = "anonymous";
+            fondoCuarto.onload = () => {
+              mostrarFondoCuarto = true;
+              draw();
+              calcularEstambre();
+            };
+            fondoCuarto.src = fondoSrc;
+            // Mostrar la imagen en el cuarto de vista previa
+            const vista = document.getElementById("vistaAlfombra");
+            if (vista) {
+              vista.src = fondoSrc;
+              vista.style.display = "block";
+            }
+          } else {
+            mostrarFondoCuarto = false;
+            draw();
+            calcularEstambre();
+            // Ocultar la imagen en el cuarto de vista previa si no hay fondo
+            const vista = document.getElementById("vistaAlfombra");
+            if (vista) {
+              vista.src = "";
+              vista.style.display = "none";
+            }
+          }
           const panelDerecho = document.querySelector('.lateral');
           panelDerecho.style.display = 'flex';
           panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
