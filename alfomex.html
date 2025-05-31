@@ -215,6 +215,8 @@
       const totalFinal = document.getElementById('totalFinal');
       const pxPorCm = canvas.width / 100;
       let img = new Image();
+      let fondoCuarto = new Image();
+      let mostrarFondoCuarto = false;
       let dragging = false;
       let offsetX = 0, offsetY = 0;
       let imgX = 0, imgY = 0;
@@ -255,6 +257,9 @@
           } else {
             ctx.fillText(`0cm`, 2, 10);
           }
+        }
+        if (mostrarFondoCuarto && fondoCuarto.complete) {
+          ctx.drawImage(fondoCuarto, imgX, imgY, fondoCuarto.width * scale, fondoCuarto.height * scale);
         }
         ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
         // Calcular tamaño real de la imagen y mostrarlo
