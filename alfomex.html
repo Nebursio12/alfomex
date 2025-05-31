@@ -183,27 +183,10 @@
         <canvas id="lienzo"></canvas>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
         <div class="controls">
-          <button 
-            onmousedown="iniciarZoom(0.01)" 
-            onmouseup="detenerZoom()" 
-            onmouseleave="detenerZoom()" 
-            ontouchstart="iniciarZoom(0.01)" 
-            ontouchend="detenerZoom()" 
-            title="Zoom +">
-            <i class="fas fa-search-plus"></i>
-          </button>
-          <button onclick="centrarImagen()" title="Centrar">
-            <i class="fas fa-compress-arrows-alt"></i>
-          </button>
-          <button 
-            onmousedown="iniciarZoom(-0.01)" 
-            onmouseup="detenerZoom()" 
-            onmouseleave="detenerZoom()" 
-            ontouchstart="iniciarZoom(-0.01)" 
-            ontouchend="detenerZoom()" 
-            title="Zoom -">
-            <i class="fas fa-search-minus"></i>
-          </button>
+          <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
+          <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
+          <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
+
         </div>
       </div>
       <!-- Lateral derecho para presupuesto -->
@@ -461,6 +444,24 @@
       function detenerZoom() {
         clearInterval(zoomInterval);
       }
+      const zoomMas = document.getElementById("zoomMas");
+      const zoomMenos = document.getElementById("zoomMenos");
+
+      function iniciarZoomSeguro(delta) {
+        detenerZoom(); // por si estaba uno activo
+        aplicarZoom(delta);
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100);
+      }
+
+      zoomMas.addEventListener("mousedown", () => iniciarZoomSeguro(0.01));
+      zoomMenos.addEventListener("mousedown", () => iniciarZoomSeguro(-0.01));
+      zoomMas.addEventListener("touchstart", () => iniciarZoomSeguro(0.01));
+      zoomMenos.addEventListener("touchstart", () => iniciarZoomSeguro(-0.01));
+
+      ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach(evt => {
+        zoomMas.addEventListener(evt, detenerZoom);
+        zoomMenos.addEventListener(evt, detenerZoom);
+      });
       document.getElementById('añadirCarrito').addEventListener('click', () => {
         alert('Producto añadido al carrito');
       });
