@@ -719,3 +719,14 @@ h2, .alerta, .plantilla-btn-container {
   width: 50%;
   pointer-events: none; /* Asegúrate de que no interfiera */
 }
+
+.lateral {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.lateral.mostrar {
+  display: flex !important;
+  visibility: visible;
+  opacity: 1;
+}
