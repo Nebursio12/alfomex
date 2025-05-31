@@ -123,15 +123,17 @@
           const categoria = doc.id;
           const imagenes = doc.data().imagenes;
           html += `<div class=\"categoria\">\n            <h4>${categoria.toUpperCase()}</h4>`;
-          imagenes.forEach(url => {
-            html += `<img src=\"${url}\" data-url=\"${url}\" class=\"img-plantilla\">`;
+          imagenes.forEach(obj => {
+            const imgNormal = obj.normal;
+            const imgFondo = obj.fondo;
+            html += `<img src="${imgNormal}" data-url="${imgNormal}" data-fondo="${imgFondo}" class="img-plantilla">`;
           });
           html += `</div>`;
         });
         modal.innerHTML = html;
         document.querySelectorAll('.img-plantilla').forEach(img => {
           img.addEventListener('click', () => {
-            cargarImagenAlLienzo(img.dataset.url);
+            cargarImagenAlLienzo(img.dataset.url, img.dataset.fondo);
           });
         });
       }
@@ -441,7 +443,7 @@
       document.getElementById('añadirCarrito').addEventListener('click', () => {
         alert('Producto añadido al carrito');
       });
-      window.cargarImagenAlLienzo = function(src) {
+      window.cargarImagenAlLienzo = function(src, fondoSrc = null) {
         let tempImg = new Image();
         tempImg.crossOrigin = "anonymous";
         tempImg.onload = () => {
@@ -451,44 +453,34 @@
           scale = Math.min(factorX, factorY, 1);
           imgX = (canvas.width - img.width * scale) / 2;
           imgY = (canvas.height - img.height * scale) / 2;
-          draw();
-          requestAnimationFrame(() => {
-            calcularEstambre();
-            const panelDerecho = document.querySelector('.lateral');
-            panelDerecho.style.display = 'flex';
-            panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
-            const panelEstambre = document.getElementById("panelEstambre");
-            const descripcionContenido = document.getElementById("descripcionContenido");
-            if (descripcionContenido.innerHTML.trim() !== "") {
-              panelEstambre.style.display = 'flex';
-              panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-            }
-            document.getElementById("resultado").style.display = "block";
-            document.getElementById("añadirCarrito").style.display = "flex";
-            cerrarPlantillas();
-          });
-        };
-        tempImg.onerror = () => {
-          let fallbackImg = new Image();
-          fallbackImg.onload = () => {
-            img = fallbackImg;
-            const factorX = canvas.width / img.width;
-            const factorY = canvas.height / img.height;
-            scale = Math.min(factorX, factorY, 1);
-            imgX = (canvas.width - img.width * scale) / 2;
-            imgY = (canvas.height - img.height * scale) / 2;
-            draw();
-            requestAnimationFrame(() => {
+
+          if (fondoSrc) {
+            fondoCuarto = new Image();
+            fondoCuarto.crossOrigin = "anonymous";
+            fondoCuarto.onload = () => {
+              mostrarFondoCuarto = true;
+              draw();
               calcularEstambre();
-              const panelDerecho = document.querySelector('.lateral');
-              panelDerecho.style.display = 'flex';
-              panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
-              document.getElementById("resultado").style.display = "block";
-              document.getElementById("añadirCarrito").style.display = "flex";
-              cerrarPlantillas();
-            });
-          };
-          fallbackImg.src = src;
+            };
+            fondoCuarto.src = fondoSrc;
+          } else {
+            mostrarFondoCuarto = false;
+            draw();
+            calcularEstambre();
+          }
+
+          const panelDerecho = document.querySelector('.lateral');
+          panelDerecho.style.display = 'flex';
+          panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          const panelEstambre = document.getElementById("panelEstambre");
+          const descripcionContenido = document.getElementById("descripcionContenido");
+          if (descripcionContenido.innerHTML.trim() !== "") {
+            panelEstambre.style.display = 'flex';
+            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          }
+          document.getElementById("resultado").style.display = "block";
+          document.getElementById("añadirCarrito").style.display = "flex";
+          cerrarPlantillas();
         };
         tempImg.src = src;
       };
