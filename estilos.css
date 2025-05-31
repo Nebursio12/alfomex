@@ -656,11 +656,13 @@ h2, .alerta, .plantilla-btn-container {
   .lateral {
     display: flex !important;
     flex-direction: column;
-    max-width: 400px;
+    justify-content: flex-start; /* ← esto es clave */
+    align-self: flex-start;      /* ← esto también */
     margin-left: 40px;
     margin-top: 0;
-    align-self: flex-start;
-    transform: translateY(-30px); /* Ajusta el valor exacto según visualmente lo necesites */
+    max-width: 400px;
+    height: auto; /* ← elimina la altura fija para que se ajuste automáticamente */
+    transform: none; /* ← quita cualquier desplazamiento forzado */
   }
 
   #resultado,
