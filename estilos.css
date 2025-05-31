@@ -717,7 +717,7 @@ h2, .alerta, .plantilla-btn-container {
 .zoom-img {
   transition: transform 0.3s ease;
   transform-origin: center center;
-  pointer-events: none;
+  pointer-events: auto;
   position: absolute;
   top: 50%;
   left: 50%;
