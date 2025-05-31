@@ -176,9 +176,6 @@
             <img src="cuarto.png" alt="Cuarto de muestra" class="fondo-miniatura">
             <img id="vistaAlfombra" src="..." class="alfombra-miniatura" alt="Vista previa" />
           </div>
-
-
-
         </div>
       </div>
       <div>
@@ -188,7 +185,6 @@
           <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
           <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
           <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
-
         </div>
       </div>
       <!-- Lateral derecho para presupuesto -->
@@ -266,13 +262,31 @@
         document.getElementById("areaCubierta").innerHTML =
           `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
           `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
-          const vistaAlfombra = document.getElementById("vistaAlfombra");
-          if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-            vistaAlfombra.style.width = `${(img.width * scale * 100) / canvas.width}%`;
-            vistaAlfombra.style.top = "60%";
-            vistaAlfombra.style.left = "50%";
-            vistaAlfombra.style.transform = "translate(-50%, -50%)";
-          }
+        const vistaAlfombra = document.getElementById("vistaAlfombra");
+        if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+          vistaAlfombra.style.width = `${(img.width * scale * 100) / canvas.width}%`;
+          vistaAlfombra.style.top = "60%";
+          vistaAlfombra.style.left = "50%";
+          vistaAlfombra.style.transform = "translate(-50%, -50%)";
+        }
+      function generarImagenZoom() {
+  const zoomCanvas = document.createElement("canvas");
+  zoomCanvas.width = canvas.width;
+  zoomCanvas.height = canvas.height;
+  const zoomCtx = zoomCanvas.getContext("2d");
+
+  // Fondo del cuarto
+  if (mostrarFondoCuarto && fondoCuarto.complete) {
+    zoomCtx.drawImage(fondoCuarto, 0, 0, zoomCanvas.width, zoomCanvas.height);
+  }
+
+  // Imagen de la alfombra
+  if (img && img.complete) {
+    zoomCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+  }
+
+  return zoomCanvas.toDataURL("image/png");
+}
 
       }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
@@ -535,13 +549,12 @@
       const imgZoom = document.getElementById("imgZoom");
 
       if (vistaMiniatura) {
-       vistaMiniatura.addEventListener("click", () => {
-          if (vistaMiniatura.src && vistaMiniatura.style.display !== "none") {
-            imgZoom.src = vistaMiniatura.src;
-           modalZoom.style.display = "flex";
-          }
-        });
-      }
+  vistaMiniatura.addEventListener("click", () => {
+    const combinada = generarImagenZoom();
+    imgZoom.src = combinada;
+    modalZoom.style.display = "flex";
+  });
+}
 
       function cerrarZoom() {
        modalZoom.style.display = "none";
