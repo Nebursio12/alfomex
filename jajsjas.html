@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+    <title>Personaliza tu Alfombra - Alfomex</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+    <style>
+      /* El CSS ha sido movido a estilos.css */
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <button id="menuBtn" onclick="openNav()">☰</button>
+        <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil">
+          <i class="fas fa-shopping-cart"></i>
+        </button>
+      </div>
+      <div class="logo">ALFOMEX</div>
+      <nav class="header-right" id="navOptions">
+        <span style="color: white;">Cargando...</span>
+      </nav>
+    </header>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
+      <a href="#">Categorías</a>
+    </div>
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <!-- Firebase App, Auth y Firestore -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs
+      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+        authDomain: "alfomex-f4efa.firebaseapp.com",
+        projectId: "alfomex-f4efa",
+        storageBucket: "alfomex-f4efa.appspot.com",
+        messagingSenderId: "1090528818564",
+        appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
+      };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      // Espera a que el DOM esté cargado antes de acceder a elementos
+      window.addEventListener("DOMContentLoaded", () => {
+        onAuthStateChanged(auth, (user) => {
+          if (!user) {
+            window.location.href = "index.html";
+            return;
+          }
+          const nav = document.getElementById("navOptions");
+          nav.innerHTML = `
+            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          `;
+        });
+        window.cerrarSesion = async () => {
+          await signOut(auth);
+          window.location.href = "index.html";
+        };
+        window.openNav = () => {
+          document.getElementById("mySidenav").classList.add("open");
+          document.getElementById("modalOverlay").classList.add("active");
+        };
+        window.closeNav = () => {
+          document.getElementById("mySidenav").classList.remove("open");
+          document.getElementById("modalOverlay").classList.remove("active");
+        };
+        document.getElementById("modalOverlay").addEventListener("click", closeNav);
+        document.getElementById("fondoPlantillas").addEventListener("click", function (e) {
+          if (e.target.id === "fondoPlantillas") {
+            cerrarPlantillas();
+          }
+        });
+        canvas.width = 500;
+        canvas.height = 500;
+        draw();
+      });
+      // Carrito
+      window.toggleCart = (show) => {
+        document.getElementById("cartPanel")?.classList.toggle("open", show);
+        document.getElementById("cartOverlay")?.classList.toggle("active", show);
+      };
+      document.getElementById("cartBtn").addEventListener("click", () => toggleCart(true));
+      window.agregarAlCarrito = (producto) => {
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        carrito.push(producto);
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+        actualizarVistaCarrito();
+      };
+      function actualizarVistaCarrito() {
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const lista = document.getElementById("cartItems");
+        if (lista) lista.innerHTML = carrito.map(p => `<li>${p.nombre} - $${p.precio}</li>`).join('');
+      }
+      window.vaciarCarrito = () => {
+        localStorage.removeItem("carrito");
+        actualizarVistaCarrito();
+      };
+      // Firestore: cargar plantillas dinámicamente
+      async function cargarPlantillasDesdeFirestore() {
+        const modal = document.getElementById("modalPlantillas");
+        const coleccion = collection(db, "plantillas");
+        const querySnapshot = await getDocs(coleccion);
+        let html = '<h3>Selecciona una plantilla</h3>';
+        querySnapshot.forEach(doc => {
+          const categoria = doc.id;
+          const imagenes = doc.data().imagenes;
+          html += `<div class=\"categoria\">\n            <h4>${categoria.toUpperCase()}</h4>`;
+          imagenes.forEach(obj => {
+            const imgNormal = obj.normal;
+            const imgFondo = obj.fondo;
+            html += `<img src="${imgNormal}" data-url="${imgNormal}" data-fondo="${imgFondo}" class="img-plantilla">`;
+          });
+          html += `</div>`;
+        });
+        modal.innerHTML = html;
+        document.querySelectorAll('.img-plantilla').forEach(img => {
+          img.addEventListener('click', () => {
+            cargarImagenAlLienzo(img.dataset.url, img.dataset.fondo);
+          });
+        });
+      }
+      window.abrirPlantillas = async function () {
+        const fondo = document.getElementById('fondoPlantillas');
+        const modal = document.getElementById('modalPlantillas');
+        // Muestra el fondo (lo centra automáticamente por el display:flex)
+        fondo.classList.add('active');
+        // Puedes mostrar "cargando..." mientras carga
+        modal.innerHTML = `<h3 style="text-align:center; color:#003366">Cargando plantillas...</h3>`;
+        // Luego cargas las plantillas
+        await cargarPlantillasDesdeFirestore();
+      };
+      window.cerrarPlantillas = function() {
+        document.getElementById('modalPlantillas').classList.remove('show');
+        document.getElementById('fondoPlantillas').classList.remove('active');
+      };
+    </script>
+    <h2>PERSONALIZA TU ALFOMBRA</h2>
+    <div class="plantilla-btn-container">
+      <button onclick="abrirPlantillas()">PLANTILLAS</button>
+    </div>
+    <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
+    <div class="contenedor-principal">
+      <!-- Lateral izquierdo para descripción del estambre -->
+      <div class="lateral-izquierda" id="panelEstambre">
+        <div id="descripcionContenido">
+          <h3 style="color: var(--secondary); margin-top: 0;">Descripción del Material</h3>
+          <p>
+            Esta alfombra está elaborada 100% con hilo de estambre acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
+          </p>
+          <p>
+            <strong>Cuidados:</strong><br>
+            - Lavar a mano con agua fría y jabón neutro.<br>
+            - No usar cloro ni exprimir.<br>
+            - Secar colgada a la sombra.<br>
+            - Evitar el uso de lavadora o secadora para prolongar su vida útil.
+          </p>
+          <div id="vistaCuarto" class="zoom-container">
+            <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
+            <img id="vistaAlfombra" src="..." class="zoom-img" alt="Vista previa" style="display: block;" />
+          </div>
+
+        </div>
+      </div>
+      <div>
+        <canvas id="lienzo"></canvas>
+        <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
+        <div class="controls">
+          <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
+          <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
+          <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
+
+        </div>
+      </div>
+      <!-- Lateral derecho para presupuesto -->
+      <div class="lateral">
+        <div id="resultado"></div>
+        <button id="añadirCarrito" class="boton-total">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="totalFinal">$0.00 MXN</span>
+        </button>
+      </div>
+    </div>
+    <div class="social-links">
+      <p>Sígueme en redes sociales:</p>
+      <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/_alfomex/" target="_blank"><i class="fab fa-instagram"></i></a>
+    </div>
+    <script>
+      const canvas = document.getElementById('lienzo');
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientWidth;
+      const ctx = canvas.getContext('2d');
+      const imgInput = document.getElementById('imgInput');
+      const resultado = document.getElementById('resultado');
+      const colorDetalle = document.getElementById('colorDetalle');
+      const totalFinal = document.getElementById('totalFinal');
+      const pxPorCm = canvas.width / 100;
+      let img = new Image();
+      let fondoCuarto = new Image();
+      let mostrarFondoCuarto = false;
+      let dragging = false;
+      let offsetX = 0, offsetY = 0;
+      let imgX = 0, imgY = 0;
+      let scale = 1;
+      const COSTOS = {
+        bolaEstambre: 35 * 4,
+        metrosBola: 200,
+        telaBase: 50 * 4,
+        fieltro: 30 * 4,
+        personalizacion: 399,
+        tejidoCm: 10,
+        distanciaPuntada: 0.3
+      };
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i <= 100; i++) {
+          const px = i * pxPorCm;
+          ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
+          ctx.fillRect(px, 0, 1, canvas.height);
+          ctx.fillRect(0, px, canvas.width, 1);
+        }
+        ctx.strokeStyle = '#999';
+        for (let i = 0; i <= 100; i += 10) {
+          const px = i * pxPorCm;
+          ctx.beginPath();
+          ctx.moveTo(px, 0);
+          ctx.lineTo(px, canvas.height);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, px);
+          ctx.lineTo(canvas.width, px);
+          ctx.stroke();
+          ctx.fillStyle = '#000';
+          ctx.font = '10px Arial';
+          if (i !== 0) {
+            ctx.fillText(`${i}cm`, px + 2, 12);
+            ctx.fillText(`${i}cm`, 2, px + 10);
+          } else {
+            ctx.fillText(`0cm`, 2, 10);
+          }
+        }
+        ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        // Calcular tamaño real de la imagen y mostrarlo
+        const anchoCm = (img.width * scale) / pxPorCm;
+        const altoCm = (img.height * scale) / pxPorCm;
+        document.getElementById("areaCubierta").innerHTML =
+          `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
+          `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
+          const vistaAlfombra = document.getElementById("vistaAlfombra");
+          if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+            vistaAlfombra.style.width = `${(img.width * scale * 100) / canvas.width}%`;
+            vistaAlfombra.style.top = "60%";
+            vistaAlfombra.style.left = "50%";
+            vistaAlfombra.style.transform = "translate(-50%, -50%)";
+          }
+
+      }
+      function agruparColor(r, g, b, mapa, tolerancia = 50) {
+        for (let [key, _] of mapa.entries()) {
+          const [r2, g2, b2] = key.split(',').map(Number);
+          const distancia = Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
+          if (distancia <= tolerancia) return key;
+        }
+        return `${r},${g},${b}`;
+      }
+      function calcularEstambre() {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        const imageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+        let pixelCount = 0;
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          if (imageData.data[i + 3] > 10) pixelCount++;
+        }
+        const totalPixels = canvas.width * canvas.height;
+        const porcentaje = pixelCount / totalPixels;
+        const areaCm2 = 10000 * porcentaje;
+        const areaM2 = areaCm2 / 10000;
+        const altoTejido = Math.sqrt(areaCm2);
+        const lineas = altoTejido / COSTOS.distanciaPuntada;
+        const estambreTotal = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+        const bolas = estambreTotal / COSTOS.metrosBola;
+        const costoEstambre = bolas * COSTOS.bolaEstambre;
+        const costoTela = areaM2 * COSTOS.telaBase;
+        const costoFieltro = areaM2 * COSTOS.fieltro;
+        const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
+        resultado.innerHTML = `<strong>Área cubierta:</strong> ${areaCm2.toFixed(2)} cm²<br>` +
+                              `<strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>` +
+                              `<strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>` +
+                              `<strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>` +
+                              `<strong>Personalización:</strong> $${COSTOS.personalizacion.toFixed(2)} MXN`;
+        calcularPorColor(imageData, totalPixels, costoFinal);
+      }
+      function calcularPorColor(imageData, totalPixels, total) {
+        const mapa = new Map();
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          if (imageData.data[i + 3] < 10) continue;
+          const r = imageData.data[i];
+          const g = imageData.data[i + 1];
+          const b = imageData.data[i + 2];
+          const key = agruparColor(r, g, b, mapa, 50);
+          mapa.set(key, (mapa.get(key) || 0) + 1);
+        }
+        const coloresUsados = [...mapa.entries()].filter(([_, count]) => count / totalPixels > 0.01);
+        let detalle = '<strong>Estambre por color:</strong><br>';
+        if (coloresUsados.length > 5) {
+          detalle += `<span style="color:red;font-weight:bold">Demasiados colores detectados (${coloresUsados.length}). Contacta para personalización avanzada.</span>`;
+          document.getElementById('añadirCarrito').disabled = true;
+        } else {
+          document.getElementById('añadirCarrito').disabled = false;
+        }
+        coloresUsados.forEach(([key, count]) => {
+          const porcentaje = count / totalPixels;
+          const areaCm2 = 10000 * porcentaje;
+          const altoTejido = Math.sqrt(areaCm2);
+          const lineas = altoTejido / COSTOS.distanciaPuntada;
+          const estambre = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+          const bolas = estambre / COSTOS.metrosBola;
+          const costo = bolas * COSTOS.bolaEstambre;
+          const [r, g, b] = key.split(',');
+          detalle += `<div><div style="background:rgb(${r},${g},${b})"></div>${estambre.toFixed(2)} m - $${costo.toFixed(2)} MXN</div>`;
+        });
+        document.getElementById("totalFinal").innerText = `$${total.toFixed(2)} MXN`;
+        // ✅ Mostrar y llenar la descripción
+        // ✅ Mostrar el panel izquierdo y rellenar descripción
+        const panelEstambre = document.getElementById("panelEstambre");
+        const descContenido = document.getElementById("descripcionContenido");
+        // Solo mostrar el panel si hay colores detectados
+        if (img.src && img.width > 0 && img.height > 0) {
+          panelEstambre.style.display = "flex";
+          panelEstambre.style.visibility = "visible";
+          panelEstambre.style.opacity = "1";
+          panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+        } else {
+          panelEstambre.style.display = "none";
+        }
+
+      }
+      imgInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          img = new Image();
+          img.onload = function () {
+            if (img.width < 1000 || img.height < 1000) {
+              alert("La imagen debe tener al menos 1000x1000 píxeles.");
+              return;
+            }
+            const factorX = canvas.width / img.width;
+            const factorY = canvas.height / img.height;
+            scale = Math.min(factorX, factorY, 1);
+            imgX = (canvas.width - img.width * scale) / 2;
+            imgY = (canvas.height - img.height * scale) / 2;
+            draw();
+            calcularEstambre();
+            const panelDerecho = document.querySelector('.lateral');
+            panelDerecho.style.display = 'flex';
+            panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
+            document.getElementById("resultado").style.display = "block";
+            document.getElementById("añadirCarrito").style.display = "flex";
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+      canvas.addEventListener('mousedown', e => {
+        dragging = true;
+        offsetX = e.offsetX - imgX;
+        offsetY = e.offsetY - imgY;
+      });
+      canvas.addEventListener('mousemove', e => {
+        if (dragging) {
+          imgX = e.offsetX - offsetX;
+          imgY = e.offsetY - offsetY;
+          draw();
+          calcularEstambre();
+          const panelEstambre = document.getElementById("panelEstambre");
+          const descripcionContenido = document.getElementById("descripcionContenido");
+          if (descripcionContenido.innerHTML.trim() !== "") {
+            panelEstambre.style.display = 'flex';
+            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          }
+        }
+      });
+      canvas.addEventListener('mouseup', () => dragging = false);
+      canvas.addEventListener('mouseleave', () => dragging = false);
+
+      function centrarImagen() {
+        if (!img.src) return;
+        imgX = (canvas.width - img.width * scale) / 2;
+        imgY = (canvas.height - img.height * scale) / 2;
+        draw();
+        calcularEstambre();
+      }
+      let zoomInterval;
+      function aplicarZoom(delta) {
+        const nuevoScale = scale + delta;
+        if (nuevoScale < 0.1) return; // Mínimo permitido
+
+        const nuevaAnchuraCm = (img.width * nuevoScale) / pxPorCm;
+        const nuevaAlturaCm = (img.height * nuevoScale) / pxPorCm;
+
+        // Si alguno excede 100 cm, no aplicar el zoom
+        if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) {
+            alert("⚠️ Tamaño máximo alcanzado (100 cm).");
+            return;
+        }
+
+        if (nuevaAnchuraCm < 25 || nuevaAlturaCm < 25) {
+           alert("⚠️ Tamaño mínimo alcanzado (25 cm).");
+           return;
+        }
+
+        scale = nuevoScale;
+        draw();
+        calcularEstambre();
+      }
+
+      function iniciarZoom(delta) {
+        aplicarZoom(delta);
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
+      }
+      function detenerZoom() {
+        clearInterval(zoomInterval);
+      }
+      const zoomMas = document.getElementById("zoomMas");
+      const zoomMenos = document.getElementById("zoomMenos");
+
+      function iniciarZoomSeguro(delta) {
+        detenerZoom(); // por si estaba uno activo
+        aplicarZoom(delta);
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100);
+      }
+
+      zoomMas.addEventListener("mousedown", () => iniciarZoomSeguro(0.01));
+      zoomMenos.addEventListener("mousedown", () => iniciarZoomSeguro(-0.01));
+      zoomMas.addEventListener("touchstart", () => iniciarZoomSeguro(0.01));
+      zoomMenos.addEventListener("touchstart", () => iniciarZoomSeguro(-0.01));
+
+      ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach(evt => {
+        zoomMas.addEventListener(evt, detenerZoom);
+        zoomMenos.addEventListener(evt, detenerZoom);
+      });
+      document.getElementById('añadirCarrito').addEventListener('click', () => {
+        alert('Producto añadido al carrito');
+      });
+      window.cargarImagenAlLienzo = function(src, fondoSrc = null) {
+        let tempImg = new Image();
+        tempImg.crossOrigin = "anonymous";
+        tempImg.onload = () => {
+          img = tempImg;
+          const factorX = canvas.width / img.width;
+          const factorY = canvas.height / img.height;
+          scale = Math.min(factorX, factorY, 1);
+          imgX = (canvas.width - img.width * scale) / 2;
+          imgY = (canvas.height - img.height * scale) / 2;
+          if (fondoSrc) {
+            fondoCuarto = new Image();
+            fondoCuarto.crossOrigin = "anonymous";
+            fondoCuarto.onload = () => {
+              mostrarFondoCuarto = true;
+              draw();
+              calcularEstambre();
+            };
+            fondoCuarto.src = fondoSrc;
+            // Mostrar la imagen en el cuarto de vista previa
+            const vista = document.getElementById("vistaAlfombra");
+            if (vista) {
+              vista.src = fondoSrc;
+              vista.style.display = "block";
+            }
+          } else {
+            mostrarFondoCuarto = false;
+            draw();
+            calcularEstambre();
+            // Ocultar la imagen en el cuarto de vista previa si no hay fondo
+            const vista = document.getElementById("vistaAlfombra");
+            if (vista) {
+              vista.src = "";
+              vista.style.display = "none";
+            }
+          }
+          const panelDerecho = document.querySelector('.lateral');
+          panelDerecho.classList.add("mostrar");
+          panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          const panelEstambre = document.getElementById("panelEstambre");
+          const descripcionContenido = document.getElementById("descripcionContenido");
+          if (descripcionContenido.innerHTML.trim() !== "") {
+            panelEstambre.style.display = 'flex';
+            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          }
+          document.getElementById("resultado").style.display = "block";
+          document.getElementById("añadirCarrito").style.display = "flex";
+          cerrarPlantillas();
+        };
+        tempImg.src = src;
+      };
+    </script>
+    <div class="modal-overlay-plantillas" id="fondoPlantillas">
+      <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
+      </div>
+    </div>
+  </body>
+</html>
