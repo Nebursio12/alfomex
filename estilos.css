@@ -714,18 +714,18 @@ h2, .alerta, .plantilla-btn-container {
   border-radius: 10px;
 }
 
-.zoom-img {
-  transition: transform 0.3s ease;
-  transform-origin: center center;
-  pointer-events: auto;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  transform: translate(-50%, -50%);
+.zoom-container:hover .zoom-img {
+  transform: translate(-50%, -50%) scale(2); /* Zoom al pasar el mouse */
+  z-index: 10;
 }
 
-.zoom-container:hover .zoom-img {
-  transform: translate(-50%, -50%) scale(2); /* Puedes ajustar el nivel de zoom aquí */
-  z-index: 10;
+.zoom-img {
+  position: absolute;
+  top: 60%; /* Ajustado para que quede más abajo */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease;
+  transform-origin: center;
+  width: 50%;
+  pointer-events: auto; /* <--- QUÍTALO si está en none */
 }
