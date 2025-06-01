@@ -1427,3 +1427,32 @@ h2, .alerta, .plantilla-btn-container {
 #vistaAlfombra[src=""] {
   display: none !important;
 }
+
+/* Oculta el contenedor de vista y el botón por defecto */
+#vistaCuarto {
+  display: none;
+}
+
+/* Solo mostrar el botón en pantallas grandes */
+@media (min-width: 1000px) {
+  .vista-cuarto-toggle {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .vista-cuarto-toggle button {
+    background-color: #003366;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .vista-cuarto-toggle button:hover {
+    background-color: #ffcc00;
+    color: black;
+  }
+}
