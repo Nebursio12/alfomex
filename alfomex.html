@@ -495,6 +495,11 @@
             const vista = document.getElementById("vistaAlfombra");
             if (vista) {
                vista.src = fondoSrc;
+               // Forzar recarga de botón preview si está en escritorio
+               const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
+               if (btnPreviewImg && window.innerWidth >= 1000) {
+                btnPreviewImg.src = fondoSrc;
+              }
 
               // Mostrar siempre en móviles, ocultar en escritorio hasta que el usuario active
               if (window.innerWidth < 1000) {
