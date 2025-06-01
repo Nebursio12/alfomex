@@ -1549,5 +1549,8 @@ h2, .alerta, .plantilla-btn-container {
   object-fit: contain;
   z-index: 1;
   pointer-events: none;
-  transform-origin: center center; /* importante para que el zoom se aplique bien */
+  transform-origin: center center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1); /* el scale se actualiza vía JS */
 }
