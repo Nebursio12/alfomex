@@ -500,8 +500,8 @@
             if (vista) {
               vista.src = ""; // 🔄 forzar recarga
               setTimeout(() => {
-                vista.src = fondoSrc;
-                vista.style.display = "block";
+                vista.removeAttribute("style"); // ✅ Esto forzará que el CSS controle el display
+                vista.style.display = "block";  // ✅ Y se asegura visibilidad en móviles
 
                 // Aplicar también al botón
                 if (btnPreviewImg) btnPreviewImg.src = fondoSrc;
