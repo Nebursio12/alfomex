@@ -496,13 +496,6 @@
             // Mostrar la imagen en el cuarto de vista previa
             const vista = document.getElementById("vistaAlfombra");
             if (vista) {
-               vista.onload = () => {
-               // ✅ Solo actualizar botón cuando la imagen ya cargó
-               const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
-               if (btnPreviewImg && window.innerWidth >= 1000) {
-                  btnPreviewImg.src = fondoSrc;
-                }
-              };
               vista.onload = () => {
                 const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
                 if (btnPreviewImg) {
