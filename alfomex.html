@@ -503,7 +503,14 @@
                   btnPreviewImg.src = fondoSrc;
                 }
               };
+              vista.onload = () => {
+                const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
+                if (btnPreviewImg) {
+                  btnPreviewImg.src = fondoSrc;
+                }
+              };
               vista.src = fondoSrc;
+
             }
           } else {
             mostrarFondoCuarto = false;
