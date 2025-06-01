@@ -436,12 +436,12 @@
 
         // Si alguno excede 100 cm, no aplicar el zoom
         if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) {
-            alert("⚠️ Tamaño máximo alcanzado (100 cm).");
+            mostrarNotificacion("⚠️ Tamaño máximo alcanzado (100 cm)");
             return;
         }
 
         if (nuevaAnchuraCm < 25 || nuevaAlturaCm < 25) {
-           alert("⚠️ Tamaño mínimo alcanzado (25 cm).");
+           mostrarNotificacion("⚠️ Tamaño mínimo alcanzado (25 cm)");
            return;
         }
 
@@ -451,6 +451,18 @@
         imgX = Math.min(Math.max(imgX, 0), canvas.width - img.width * scale);
         imgY = Math.min(Math.max(imgY, 0), canvas.height - img.height * scale);
       }
+
+      function mostrarNotificacion(mensaje) {
+        const toast = document.getElementById("toastNotificacion");
+        if (!toast) return;
+        toast.innerText = mensaje;
+        toast.classList.add("mostrar");
+
+        setTimeout(() => {
+          toast.classList.remove("mostrar");
+        }, 3000); // 3 segundos visible
+      }
+
 
       function iniciarZoom(delta) {
         aplicarZoom(delta);
@@ -610,6 +622,6 @@
           <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
         </div>
     </div>
-
+  <div id="toastNotificacion" class="toast-notificacion"></div>
   </body>
 </html>
