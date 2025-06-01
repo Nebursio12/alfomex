@@ -581,19 +581,13 @@
        const btnPreview = document.querySelector(".btn-preview-cuarto");
        const modal = document.getElementById("modalVistaCuarto");
 
-      if (btnPreview && modal && window.innerWidth >= 1000) {
-        // Abrir al pasar el mouse
+     if (btnPreview && modal && window.innerWidth >= 1000) {
         btnPreview.addEventListener("mouseenter", () => {
-         toggleVistaCuarto();
-        });
-
-        // Cerrar cuando el mouse sale del botón o del modal
-        btnPreview.addEventListener("mouseleave", () => {
-         cerrarVistaCuarto();
+         if (!vistaModalAbierto) toggleVistaCuarto();
         });
 
         modal.addEventListener("mouseleave", () => {
-         cerrarVistaCuarto();
+          if (vistaModalAbierto) cerrarVistaCuarto();
         });
       }
     });
