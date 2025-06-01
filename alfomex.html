@@ -535,16 +535,19 @@
         const modal = document.getElementById("modalVistaCuarto");
         const imgGenerada = document.getElementById("imagenVistaGenerada");
 
-        if (!modal || !imgGenerada) return;
+        if (!modal || !imgAlfombra || !img.complete) return;
 
-        const vistaDataURL = generarImagenZoom();
-        imgGenerada.src = vistaDataURL;
+        // Usar la misma imagen cargada
+        imgAlfombra.src = img.src;
+
+        // Escalar la imagen según el zoom (scale)
+        imgAlfombra.style.transform = `scale(${scale})`;
+
         modal.classList.add("activo");
       }
 
       function cerrarVistaCuarto() {
-        const modal = document.getElementById("modalVistaCuarto");
-        if (modal) modal.classList.remove("activo");
+        document.getElementById("modalVistaCuarto")?.classList.remove("activo");
       }
       
       function generarImagenZoom() {
@@ -571,11 +574,14 @@
       <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
       </div>
     </div>
-    <div id="modalVistaCuarto" class="modal-vista-cuarto">
-      <div class="modal-contenido">
-       <img id="imagenVistaGenerada" src="" alt="Vista previa generada" />
-       <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
-      </div>
+    <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
+      <div class="modal-contenido" onclick="event.stopPropagation()">
+         <div class="contenedor-superpuesto">
+           <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
+           <img id="modalImagenAlfombra" src="" alt="Alfombra" />
+          </div>
+          <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
+        </div>
     </div>
 
   </body>
