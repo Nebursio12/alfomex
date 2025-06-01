@@ -532,16 +532,22 @@
         tempImg.src = src;
       };
       function toggleVistaCuarto() {
-        const vistaCuarto = document.getElementById("vistaCuarto");
-        const btn = document.querySelector(".vista-cuarto-toggle button");
+        const modal = document.getElementById("modalVistaCuarto");
+        const modalAlfombra = document.getElementById("modalAlfombra");
         const vistaAlfombra = document.getElementById("vistaAlfombra");
-        if (!vistaCuarto) return;
 
-        const visible = vistaCuarto.style.display === "block";
-        vistaCuarto.style.display = visible ? "none" : "block";
-        vistaAlfombra.style.display = visible ? "none" : "block";
-        btn.textContent = visible ? "Mostrar vista previa en cuarto" : "Ocultar vista previa";
-        draw(); // <-- Esto fuerza el reposicionamiento correcto
+        if (!modal || !modalAlfombra || !vistaAlfombra) return;
+
+        // Copia el src actual de la alfombra dentro del modal
+        modalAlfombra.src = vistaAlfombra.src;
+
+        // Muestra el modal 
+        modal.classList.add("activo");
+      }
+
+      function cerrarVistaCuarto() {
+        const modal = document.getElementById("modalVistaCuarto");
+        if (modal) modal.classList.remove("activo");
       }
 
     </script>
@@ -549,5 +555,13 @@
       <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
       </div>
     </div>
+    <div id="modalVistaCuarto" class="modal-vista-cuarto">
+      <div class="modal-contenido">
+       <img src="cuarto.png" alt="Cuarto" id="modalCuarto" />
+       <img src="" alt="Alfombra" id="modalAlfombra" />
+       <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
+      </div>
+    </div>
+
   </body>
 </html>
