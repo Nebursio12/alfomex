@@ -1686,6 +1686,8 @@ h2, .alerta, .plantilla-btn-container {
   z-index: 1000;
   display: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  color: #333; /* 👈 Color oscuro para que el texto se vea */
 }
 
 .carrito-lista:not(.oculto) {
@@ -1699,4 +1701,12 @@ h2, .alerta, .plantilla-btn-container {
   margin-bottom: 10px;
   border-bottom: 1px solid #eee;
   padding-bottom: 8px;
+}
+
+.item-carrito strong {
+  color: #003366; /* 👈 Color azul fuerte para nombre */
+}
+
+.item-carrito div {
+  font-size: 14px; /* 👈 Tamaño uniforme del texto */
 }
