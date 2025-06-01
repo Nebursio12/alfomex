@@ -172,6 +172,10 @@
             - Secar colgada a la sombra.<br>
             - Evitar el uso de lavadora o secadora para prolongar su vida útil.
           </p>
+          <div class="vista-cuarto-toggle">
+            <button onclick="toggleVistaCuarto()">Mostrar vista previa en cuarto</button>
+          </div>
+
           <div id="vistaCuarto" class="zoom-container">
             <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
             <img id="vistaAlfombra" src="" class="zoom-img" alt="Vista previa" style="display: none;" />
@@ -517,6 +521,16 @@
         };
         tempImg.src = src;
       };
+      function toggleVistaCuarto() {
+        const vistaCuarto = document.getElementById("vistaCuarto");
+        const btn = document.querySelector(".vista-cuarto-toggle button");
+        if (!vistaCuarto) return;
+
+        const visible = vistaCuarto.style.display === "block";
+        vistaCuarto.style.display = visible ? "none" : "block";
+        btn.textContent = visible ? "Mostrar vista previa en cuarto" : "Ocultar vista previa";
+      }
+
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas">
       <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
