@@ -493,7 +493,11 @@
             const vista = document.getElementById("vistaAlfombra");
             if (vista) {
               vista.src = fondoSrc;
-              vista.style.display = "block";
+              vista.style.display = "none"; // Se oculta hasta que el usuario la active
+              const toggleBtn = document.querySelector(".vista-cuarto-toggle button");
+              if (toggleBtn) {
+              toggleBtn.textContent = "Mostrar vista previa en cuarto";
+              }
             }
           } else {
             mostrarFondoCuarto = false;
