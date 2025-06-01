@@ -1656,7 +1656,7 @@ h2, .alerta, .plantilla-btn-container {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #333;
+  background: crimson;
   color: #fff;
   padding: 12px 20px;
   border-radius: 8px;
