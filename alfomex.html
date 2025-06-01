@@ -495,15 +495,17 @@
             fondoCuarto.src = fondoSrc;
             // Mostrar la imagen en el cuarto de vista previa
             const vista = document.getElementById("vistaAlfombra");
+            const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
+            
             if (vista) {
-              vista.onload = () => {
-                const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
-                if (btnPreviewImg) {
-                  btnPreviewImg.src = fondoSrc;
-                }
-              };
-              vista.src = fondoSrc;
+              vista.src = ""; // 🔄 forzar recarga
+              setTimeout(() => {
+                vista.src = fondoSrc;
+                vista.style.display = "block";
 
+                // Aplicar también al botón
+                if (btnPreviewImg) btnPreviewImg.src = fondoSrc;
+              }, 50);
             }
           } else {
             mostrarFondoCuarto = false;
