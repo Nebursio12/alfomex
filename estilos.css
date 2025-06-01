@@ -582,7 +582,7 @@ h2, .alerta, .plantilla-btn-container {
 
 
 /* Pantallas chicas: panel debajo */
-@media (max-width: 767px) {
+@media (max-width: 999px) {
   .lateral-izquierda,
   .lateral {
     width: 100%;
@@ -647,7 +647,7 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1000px) {
   .contenedor-principal {
     flex-wrap: nowrap;
     align-items: flex-start;
@@ -1234,7 +1234,7 @@ h2, .alerta, .plantilla-btn-container {
 
 
 /* Pantallas grandes: panel izquierdo al lado */
-@media (min-width: 768px) {
+@media (min-width: 1000px) {
   .contenedor-principal {
     flex-direction: row;
     align-items: flex-start;
@@ -1250,7 +1250,7 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 999px) {
   .lateral-izquierda,
   .lateral {
     width: 100%;
@@ -1318,7 +1318,7 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1000px) {
   .contenedor-principal {
     flex-wrap: nowrap;
     align-items: flex-start;
