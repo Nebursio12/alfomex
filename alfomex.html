@@ -140,16 +140,21 @@
       window.abrirPlantillas = async function () {
         const fondo = document.getElementById('fondoPlantillas');
         const modal = document.getElementById('modalPlantillas');
-        // Muestra el fondo (lo centra automáticamente por el display:flex)
         fondo.classList.add('active');
-        // Puedes mostrar "cargando..." mientras carga
         modal.innerHTML = `<h3 style="text-align:center; color:#003366">Cargando plantillas...</h3>`;
-        // Luego cargas las plantillas
+        modal.classList.remove('animarSalida');
+        modal.classList.add('animarEntrada');
         await cargarPlantillasDesdeFirestore();
       };
       window.cerrarPlantillas = function() {
-        document.getElementById('modalPlantillas').classList.remove('show');
-        document.getElementById('fondoPlantillas').classList.remove('active');
+        const fondo = document.getElementById('fondoPlantillas');
+        const modal = document.getElementById('modalPlantillas');
+        modal.classList.remove('animarEntrada');
+        modal.classList.add('animarSalida');
+        setTimeout(() => {
+          fondo.classList.remove('active');
+          modal.classList.remove('animarSalida');
+        }, 200); // Espera a que termine la animación
       };
     </script>
     <h2>PERSONALIZA TU ALFOMBRA</h2>
