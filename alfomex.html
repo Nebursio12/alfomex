@@ -547,11 +547,18 @@
         imgAlfombra.style.transform = `translate(-50%, -50%) scale(${scale})`;
 
 
-        modal.classList.add("activo");
+        modal.classList.add("activo", "animarEntrada");
+        modal.classList.remove("animarSalida");
       }
 
       function cerrarVistaCuarto() {
-        document.getElementById("modalVistaCuarto")?.classList.remove("activo");
+        const modal = document.getElementById("modalVistaCuarto");
+        if (!modal) return;
+        modal.classList.remove("animarEntrada");
+        modal.classList.add("animarSalida");
+        setTimeout(() => {
+          modal.classList.remove("activo", "animarSalida");
+        }, 200);
       }
       
       function generarImagenZoom() {
