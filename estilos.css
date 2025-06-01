@@ -1419,3 +1419,7 @@ h2, .alerta, .plantilla-btn-container {
   aspect-ratio: 1 / 1; /* cuadrado */
   overflow: hidden;
 }
+
+#vistaAlfombra[src=""] {
+  display: none !important;
+}
