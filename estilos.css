@@ -1250,7 +1250,6 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-/* Pantallas chicas: panel debajo */
 @media (max-width: 767px) {
   .lateral-izquierda,
   .lateral {
@@ -1271,7 +1270,28 @@ h2, .alerta, .plantilla-btn-container {
     order: 1;
     margin: 0 auto;
   }
+
+  /* <-- Agrégalo aquí */
+  .zoom-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .zoom-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    height: auto;
+  }
 }
+
 
 
 .boton-total:hover {
