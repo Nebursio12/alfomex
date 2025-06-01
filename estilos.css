@@ -1439,7 +1439,7 @@ h2, .alerta, .plantilla-btn-container {
     margin-top: 10px;
   }
 
-  .vista-cuarto-toggle button {
+  .vista-cuarto-toggle button:not(.btn-preview-cuarto) {
     background-color: #003366;
     color: white;
     padding: 10px 20px;
@@ -1449,7 +1449,7 @@ h2, .alerta, .plantilla-btn-container {
     font-weight: bold;
   }
 
-  .vista-cuarto-toggle button:hover {
+  .vista-cuarto-toggle button:not(.btn-preview-cuarto):hover {
     background-color: #ffcc00;
     color: black;
   }
