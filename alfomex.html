@@ -494,23 +494,14 @@
             // Mostrar la imagen en el cuarto de vista previa
             const vista = document.getElementById("vistaAlfombra");
             if (vista) {
-               vista.src = fondoSrc;
-               // Forzar recarga de botón preview si está en escritorio
+               vista.onload = () => {
+               // ✅ Solo actualizar botón cuando la imagen ya cargó
                const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
                if (btnPreviewImg && window.innerWidth >= 1000) {
-                btnPreviewImg.src = fondoSrc;
-              }
-
-              // Mostrar siempre en móviles, ocultar en escritorio hasta que el usuario active
-              if (window.innerWidth < 1000) {
-                vista.style.display = "block";
-              } else {
-                vista.style.display = "none";
-                const toggleBtn = document.querySelector(".vista-cuarto-toggle button");
-                if (toggleBtn) {
-                  toggleBtn.textContent = "Mostrar vista previa en cuarto";
+                  btnPreviewImg.src = fondoSrc;
                 }
-              }
+              };
+              vista.src = fondoSrc;
             }
           } else {
             mostrarFondoCuarto = false;
