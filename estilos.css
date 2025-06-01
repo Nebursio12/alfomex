@@ -1550,7 +1550,7 @@ h2, .alerta, .plantilla-btn-container {
   z-index: 1;
   pointer-events: none;
   transform-origin: center center;
-  left: 50%;
+  left: 65%;
   top: 50%;
   transform: translate(-50%, -50%) scale(1); /* el scale se actualiza vía JS */
 }
