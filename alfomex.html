@@ -173,7 +173,7 @@
             - Evitar el uso de lavadora o secadora para prolongar su vida útil.
           </p>
           <div class="vista-cuarto-toggle">
-            <button class="btn-preview-cuarto" onclick="toggleVistaCuarto()" title="Vista previa en cuarto">
+            <button class="btn-preview-cuarto" title="Vista previa en cuarto">
               <img src="cuarto.png" alt="Vista previa" />
             </button>
           </div>
@@ -568,7 +568,26 @@
 
         return zoomCanvas.toDataURL("image/png");
       }
+    document.addEventListener("DOMContentLoaded", () => {
+       const btnPreview = document.querySelector(".btn-preview-cuarto");
+       const modal = document.getElementById("modalVistaCuarto");
 
+      if (btnPreview && modal && window.innerWidth >= 1000) {
+        // Abrir al pasar el mouse
+        btnPreview.addEventListener("mouseenter", () => {
+         toggleVistaCuarto();
+        });
+
+        // Cerrar cuando el mouse sale del botón o del modal
+        btnPreview.addEventListener("mouseleave", () => {
+         cerrarVistaCuarto();
+        });
+
+        modal.addEventListener("mouseleave", () => {
+         cerrarVistaCuarto();
+        });
+      }
+    });
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas">
       <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
