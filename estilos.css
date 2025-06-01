@@ -1467,8 +1467,9 @@ h2, .alerta, .plantilla-btn-container {
 /* En móviles: mostrar vista previa directamente y ocultar el botón */
 @media (max-width: 999px) {
   .vista-cuarto-toggle {
-    display: none;
+    display: none !important;
   }
+
 
   #vistaCuarto {
     display: block;
@@ -1476,6 +1477,14 @@ h2, .alerta, .plantilla-btn-container {
 
   #vistaAlfombra {
     display: block !important;
+  }
+}
+
+@media (min-width: 1000px) {
+  .vista-cuarto-toggle {
+    display: flex !important;
+    justify-content: center;
+    margin-top: 10px;
   }
 }
 
