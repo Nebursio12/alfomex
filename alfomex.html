@@ -185,15 +185,15 @@
 
         </div>
       </div>
-      <div class="canvas-con-controles">
+      <div>
         <canvas id="lienzo"></canvas>
-        <div class="zona-controles">
-          <div class="controls">
-            <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
-            <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
-            <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
-          </div>
-        <div id="areaCubierta" class="medidas-canvas"></div>
+        <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
+        <div class="controls">
+          <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
+          <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
+          <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
+
+        </div>
       </div>
       <!-- Lateral derecho para presupuesto -->
       <div class="lateral">
@@ -505,7 +505,7 @@
               // Aplicar también al botón (escritorio)
               if (btnPreviewImg && window.innerWidth >= 1000) {
               btnPreviewImg.src = fondoSrc;
-              }
+  }
             }
           } else {
             mostrarFondoCuarto = false;
