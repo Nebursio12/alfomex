@@ -528,11 +528,14 @@
       function toggleVistaCuarto() {
         const vistaCuarto = document.getElementById("vistaCuarto");
         const btn = document.querySelector(".vista-cuarto-toggle button");
+        const vistaAlfombra = document.getElementById("vistaAlfombra");
         if (!vistaCuarto) return;
 
         const visible = vistaCuarto.style.display === "block";
         vistaCuarto.style.display = visible ? "none" : "block";
+        vistaAlfombra.style.display = visible ? "none" : "block";
         btn.textContent = visible ? "Mostrar vista previa en cuarto" : "Ocultar vista previa";
+        draw(); // <-- Esto fuerza el reposicionamiento correcto
       }
 
     </script>
