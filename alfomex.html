@@ -542,7 +542,8 @@
         imgAlfombra.src = vistaAlfombra.src;
 
         // Escalar según el zoom actual
-        imgAlfombra.style.transform = `scale(${scale})`;
+        imgAlfombra.style.transform = `translate(-50%, -50%) scale(${scale})`;
+
 
         modal.classList.add("activo");
       }
