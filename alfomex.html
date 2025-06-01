@@ -214,6 +214,7 @@
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientWidth;
       const ctx = canvas.getContext('2d');
+      let vistaModalAbierto = false;
       const imgInput = document.getElementById('imgInput');
       const resultado = document.getElementById('resultado');
       const colorDetalle = document.getElementById('colorDetalle');
@@ -538,22 +539,19 @@
         const imgAlfombra = document.getElementById("modalImagenAlfombra");
 
 
-        if (!modal || !imgAlfombra || !vistaAlfombra.src) return;
-
-        // Usar la imagen de fondo-alfombra (ya integrada visualmente con el cuarto)
+        if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return;
+        vistaModalAbierto = true;
         imgAlfombra.src = vistaAlfombra.src;
-
-        // Escalar según el zoom actual
         imgAlfombra.style.transform = `translate(-50%, -50%) scale(${scale})`;
-
-
         modal.classList.add("activo", "animarEntrada");
         modal.classList.remove("animarSalida");
+
       }
 
       function cerrarVistaCuarto() {
         const modal = document.getElementById("modalVistaCuarto");
-        if (!modal) return;
+        if (!modal || !vistaModalAbierto) return;
+        vistaModalAbierto = false;
         modal.classList.remove("animarEntrada");
         modal.classList.add("animarSalida");
         setTimeout(() => {
