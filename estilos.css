@@ -1526,3 +1526,28 @@ h2, .alerta, .plantilla-btn-container {
   height: 30px;
   cursor: pointer;
 }
+
+.contenedor-superpuesto {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#modalFondoCuarto {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+#modalImagenAlfombra {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: center center; /* importante para que el zoom se aplique bien */
+}
