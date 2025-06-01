@@ -230,6 +230,9 @@
         distanciaPuntada: 0.3
       };
       function draw() {
+        if (!vistaAlfombra.src || vistaAlfombra.src.trim() === "") {
+          vistaAlfombra.style.display = "none";
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
@@ -265,13 +268,14 @@
           `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
           `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
           const vistaAlfombra = document.getElementById("vistaAlfombra");
-          if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+          if (vistaAlfombra && vistaAlfombra.src && vistaAlfombra.src.trim() !== "" && vistaAlfombra.style.display !== "none") {
             vistaAlfombra.style.position = "absolute";
             vistaAlfombra.style.width = `${(img.width * scale * 100) / canvas.width}%`;
             vistaAlfombra.style.top = "60%";
             vistaAlfombra.style.left = "50%";
             vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
+
 
       }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
