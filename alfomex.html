@@ -533,21 +533,37 @@
       };
       function toggleVistaCuarto() {
         const modal = document.getElementById("modalVistaCuarto");
-        const modalAlfombra = document.getElementById("modalAlfombra");
-        const vistaAlfombra = document.getElementById("vistaAlfombra");
+        const imgGenerada = document.getElementById("imagenVistaGenerada");
 
-        if (!modal || !modalAlfombra || !vistaAlfombra) return;
+        if (!modal || !imgGenerada) return;
 
-        // Copia el src actual de la alfombra dentro del modal
-        modalAlfombra.src = vistaAlfombra.src;
-
-        // Muestra el modal 
+        const vistaDataURL = generarImagenZoom();
+        imgGenerada.src = vistaDataURL;
         modal.classList.add("activo");
       }
 
       function cerrarVistaCuarto() {
         const modal = document.getElementById("modalVistaCuarto");
         if (modal) modal.classList.remove("activo");
+      }
+      
+      function generarImagenZoom() {
+        const zoomCanvas = document.createElement("canvas");
+        zoomCanvas.width = canvas.width;
+        zoomCanvas.height = canvas.height;
+        const zoomCtx = zoomCanvas.getContext("2d");
+
+        // Fondo del cuarto
+        if (mostrarFondoCuarto && fondoCuarto.complete) {
+         zoomCtx.drawImage(fondoCuarto, 0, 0, zoomCanvas.width, zoomCanvas.height);
+        }
+
+        // Imagen de la alfombra
+        if (img && img.complete) {
+         zoomCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        }
+
+        return zoomCanvas.toDataURL("image/png");
       }
 
     </script>
@@ -557,8 +573,7 @@
     </div>
     <div id="modalVistaCuarto" class="modal-vista-cuarto">
       <div class="modal-contenido">
-       <img src="cuarto.png" alt="Cuarto" id="modalCuarto" />
-       <img src="" alt="Alfombra" id="modalAlfombra" />
+       <img id="imagenVistaGenerada" src="" alt="Vista previa generada" />
        <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
       </div>
     </div>
