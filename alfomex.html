@@ -536,12 +536,12 @@
         const imgAlfombra = document.getElementById("modalImagenAlfombra");
 
 
-        if (!modal || !imgAlfombra || !img.complete) return;
+        if (!modal || !imgAlfombra || !vistaAlfombra.src) return;
 
-        // Usar la misma imagen cargada
-        imgAlfombra.src = img.src;
+        // Usar la imagen de fondo-alfombra (ya integrada visualmente con el cuarto)
+        imgAlfombra.src = vistaAlfombra.src;
 
-        // Escalar la imagen según el zoom (scale)
+        // Escalar según el zoom actual
         imgAlfombra.style.transform = `scale(${scale})`;
 
         modal.classList.add("activo");
