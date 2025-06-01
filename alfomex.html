@@ -266,6 +266,7 @@
           `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
           const vistaAlfombra = document.getElementById("vistaAlfombra");
           if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+            vistaAlfombra.style.position = "absolute";
             vistaAlfombra.style.width = `${(img.width * scale * 100) / canvas.width}%`;
             vistaAlfombra.style.top = "60%";
             vistaAlfombra.style.left = "50%";
