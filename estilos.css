@@ -1591,7 +1591,6 @@ h2, .alerta, .plantilla-btn-container {
 .btn-preview-cuarto::after {
   content: none !important;
 }
-
 @keyframes vistaZoomIn {
   from {
     opacity: 0;
