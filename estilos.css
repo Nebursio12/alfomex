@@ -1364,27 +1364,6 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-/*.zoom-container {
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-/*.zoom-container:hover .zoom-img {
-  transform: translate(-50%, -50%) scale(2);
-  z-index: 10;
-}
-
-/*.zoom-img {
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: transform 0.3s ease;
-  transform-origin: center;
-  width: 50%;
-  pointer-events: none; /* Asegúrate de que no interfiera */
-
 
   .lateral {
     display: flex !important;
