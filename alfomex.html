@@ -18,6 +18,8 @@
         <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil">
           <i class="fas fa-shopping-cart"></i>
         </button>
+        <div id="carritoLista" class="carrito-lista oculto"></div>
+      </div>
       </div>
       <div class="logo">ALFOMEX</div>
       <nav class="header-right" id="navOptions">
@@ -490,8 +492,82 @@
         zoomMenos.addEventListener(evt, detenerZoom);
       });
       document.getElementById('añadirCarrito').addEventListener('click', () => {
-        alert('Producto añadido al carrito');
+        const anchoTexto = document.getElementById("areaCubierta").innerText;
+        const matchAncho = anchoTexto.match(/Anchura:\s([\d.]+)/);
+        const matchAlto = anchoTexto.match(/Altura:\s([\d.]+)/);
+        const ancho = matchAncho ? matchAncho[1] : "0";
+        const alto = matchAlto ? matchAlto[1] : "0";
+        const costo = totalFinal.innerText.replace("MXN", "").trim();
+        const imagen = document.getElementById("vistaAlfombra").src;
+        const nombre = obtenerNombreDesdeURL(imagen);
+
+        const item = {
+         id: Date.now(),
+         nombre,
+         ancho,
+         alto,
+         costo,
+         imagen
+        };
+
+        let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+        carrito.push(item);
+        localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
+        renderizarCarrito();
       });
+
+      function obtenerNombreDesdeURL(url) {
+        try {
+          const path = decodeURIComponent(url);
+          const nombreConExtension = path.split("/").pop().split("?")[0];
+          return nombreConExtension.split(".")[0];
+        } catch (e) {
+          return "Alfombra personalizada";
+        }
+      }
+
+      function renderizarCarrito() {
+        const contenedor = document.getElementById("carritoLista");
+        const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+        contenedor.innerHTML = "";
+
+        if (carrito.length === 0) {
+          contenedor.classList.add("oculto");
+          return;
+        }
+
+        carrito.forEach(item => {
+          const div = document.createElement("div");
+          div.classList.add("item-carrito");
+          div.innerHTML = `
+            <img src="${item.imagen}" alt="${item.nombre}" style="width:50px;height:50px;border-radius:8px;">
+            <div style="flex:1">
+              <strong>${item.nombre}</strong><br>
+              Tamaño: ${item.ancho} x ${item.alto} cm<br>
+              Precio: $${item.costo}
+            </div>
+            <button onclick="eliminarDelCarrito(${item.id})" style="color:red;">✖</button>
+          `;
+          contenedor.appendChild(div);
+        });
+
+        contenedor.classList.remove("oculto");
+      }
+
+      function eliminarDelCarrito(id) {
+       let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+       carrito = carrito.filter(item => item.id !== id);
+       localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
+       renderizarCarrito();
+      }
+
+      document.getElementById("cartBtn").addEventListener("click", () => {
+       const carrito = document.getElementById("carritoLista");
+       carrito.classList.toggle("oculto");
+      });
+
+      document.addEventListener("DOMContentLoaded", renderizarCarrito);
+
       window.cargarImagenAlLienzo = function(src, fondoSrc = null) {
         let tempImg = new Image();
         tempImg.crossOrigin = "anonymous";
