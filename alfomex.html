@@ -498,14 +498,14 @@
             const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
             
             if (vista) {
-              vista.src = ""; // 🔄 forzar recarga
-              setTimeout(() => {
-                vista.removeAttribute("style"); // ✅ Esto forzará que el CSS controle el display
-                vista.style.display = "block";  // ✅ Y se asegura visibilidad en móviles
+              vista.src = fondoSrc; // ✅ Asigna inmediatamente
+              vista.style.display = "block"; // ✅ Muestra directamente
+              vista.removeAttribute("style"); // ✅ Elimina estilos residuales (si los hay)
 
-                // Aplicar también al botón
-                if (btnPreviewImg) btnPreviewImg.src = fondoSrc;
-              }, 50);
+              // Aplicar también al botón (escritorio)
+              if (btnPreviewImg && window.innerWidth >= 1000) {
+              btnPreviewImg.src = fondoSrc;
+              }
             }
           } else {
             mostrarFondoCuarto = false;
