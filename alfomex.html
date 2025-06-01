@@ -398,8 +398,8 @@
       });
       canvas.addEventListener('mousemove', e => {
         if (dragging) {
-          imgX = e.offsetX - offsetX;
-          imgY = e.offsetY - offsetY;
+          imgX = Math.min(Math.max(e.offsetX - offsetX, 0), canvas.width - img.width * scale);
+          imgY = Math.min(Math.max(e.offsetY - offsetY, 0), canvas.height - img.height * scale);
           draw();
           calcularEstambre();
           const panelEstambre = document.getElementById("panelEstambre");
@@ -442,6 +442,8 @@
         scale = nuevoScale;
         draw();
         calcularEstambre();
+        imgX = Math.min(Math.max(imgX, 0), canvas.width - img.width * scale);
+        imgY = Math.min(Math.max(imgY, 0), canvas.height - img.height * scale);
       }
 
       function iniciarZoom(delta) {
