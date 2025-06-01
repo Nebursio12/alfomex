@@ -492,11 +492,17 @@
             // Mostrar la imagen en el cuarto de vista previa
             const vista = document.getElementById("vistaAlfombra");
             if (vista) {
-              vista.src = fondoSrc;
-              vista.style.display = "none"; // Se oculta hasta que el usuario la active
-              const toggleBtn = document.querySelector(".vista-cuarto-toggle button");
-              if (toggleBtn) {
-              toggleBtn.textContent = "Mostrar vista previa en cuarto";
+               vista.src = fondoSrc;
+
+              // Mostrar siempre en móviles, ocultar en escritorio hasta que el usuario active
+              if (window.innerWidth < 1000) {
+                vista.style.display = "block";
+              } else {
+                vista.style.display = "none";
+                const toggleBtn = document.querySelector(".vista-cuarto-toggle button");
+                if (toggleBtn) {
+                  toggleBtn.textContent = "Mostrar vista previa en cuarto";
+                }
               }
             }
           } else {
