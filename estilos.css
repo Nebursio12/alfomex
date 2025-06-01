@@ -1416,21 +1416,19 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
+/* Estilo base para el contenedor */
 #vistaCuarto {
   position: relative;
   width: 100%;
   max-width: 100%;
   aspect-ratio: 1 / 1; /* cuadrado */
   overflow: hidden;
+  display: none; /* Oculto por defecto (solo se mostrará si el botón lo activa o si es móvil) */
 }
 
+/* Oculta la imagen si no tiene src */
 #vistaAlfombra[src=""] {
   display: none !important;
-}
-
-/* Oculta el contenedor de vista y el botón por defecto */
-#vistaCuarto {
-  display: none;
 }
 
 /* Solo mostrar el botón en pantallas grandes */
@@ -1454,5 +1452,29 @@ h2, .alerta, .plantilla-btn-container {
   .vista-cuarto-toggle button:hover {
     background-color: #ffcc00;
     color: black;
+  }
+
+  /* En escritorio: la vista previa inicia oculta */
+  #vistaCuarto {
+    display: none;
+  }
+
+  #vistaAlfombra {
+    display: none;
+  }
+}
+
+/* En móviles: mostrar vista previa directamente y ocultar el botón */
+@media (max-width: 999px) {
+  .vista-cuarto-toggle {
+    display: none;
+  }
+
+  #vistaCuarto {
+    display: block;
+  }
+
+  #vistaAlfombra {
+    display: block !important;
   }
 }
