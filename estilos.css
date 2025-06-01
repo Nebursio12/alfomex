@@ -1286,9 +1286,11 @@ h2, .alerta, .plantilla-btn-container {
     top: 50%;
     left: 50%;
     width: 60%;
-    transform: translate(-50%, -50%);
     max-width: 100%;
-    height: auto;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease;
+    transform-origin: center;
+    pointer-events: none;
   }
 }
 
@@ -1451,3 +1453,10 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
+#vistaCuarto {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1; /* cuadrado */
+  overflow: hidden;
+}
