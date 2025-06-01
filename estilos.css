@@ -1285,13 +1285,14 @@ h2, .alerta, .plantilla-btn-container {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 60%;
-    max-width: 100%;
     transform: translate(-50%, -50%);
-    transition: transform 0.3s ease;
-    transform-origin: center;
+    width: 50%;
+    max-width: 80%;
+    height: auto;
     pointer-events: none;
-  }
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+}
 }
 
 
