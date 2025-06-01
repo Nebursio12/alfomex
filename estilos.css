@@ -1566,6 +1566,9 @@ h2, .alerta, .plantilla-btn-container {
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-preview-cuarto:hover {
@@ -1578,4 +1581,3 @@ h2, .alerta, .plantilla-btn-container {
   object-fit: cover;
   display: block;
 }
-
