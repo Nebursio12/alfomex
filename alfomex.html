@@ -20,6 +20,7 @@
         </button>
         <div id="carritoLista" class="carrito-lista oculto"></div>
       </div>
+      </div>
       <div class="logo">ALFOMEX</div>
       <nav class="header-right" id="navOptions">
         <span style="color: white;">Cargando...</span>
@@ -127,23 +128,14 @@
           imagenes.forEach(obj => {
             const imgNormal = obj.normal;
             const imgFondo = obj.fondo;
-            html += `<img 
-             src="${imgNormal}" 
-             class="img-plantilla"
-             data-url="${encodeURI(imgNormal)}"
-             data-fondo="${encodeURI(imgFondo)}"
-            >`;
+            html += `<img src="${imgNormal}" data-url="${imgNormal}" data-fondo="${imgFondo}" class="img-plantilla">`;
           });
           html += `</div>`;
         });
         modal.innerHTML = html;
         document.querySelectorAll('.img-plantilla').forEach(img => {
           img.addEventListener('click', () => {
-            const url = img.dataset.url;
-            const fondo = img.dataset.fondo;
-            console.log("✅ Cargando imagen:", url);
-            console.log("✅ Fondo aplicado:", fondo);
-            cargarImagenAlLienzo(url, fondo);
+            cargarImagenAlLienzo(img.dataset.url, img.dataset.fondo);
           });
         });
       }
@@ -561,143 +553,137 @@
 
         contenedor.classList.remove("oculto");
       }
-  function eliminarDelCarrito(id) {
-  let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-  carrito = carrito.filter(item => item.id !== id);
-  localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
-  renderizarCarrito();
-}
 
-document.getElementById("cartBtn").addEventListener("click", () => {
-  const carrito = document.getElementById("carritoLista");
-  carrito.classList.toggle("oculto");
-});
+      function eliminarDelCarrito(id) {
+       let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+       carrito = carrito.filter(item => item.id !== id);
+       localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
+       renderizarCarrito();
+      }
 
-document.addEventListener("DOMContentLoaded", renderizarCarrito);
+      document.getElementById("cartBtn").addEventListener("click", () => {
+       const carrito = document.getElementById("carritoLista");
+       carrito.classList.toggle("oculto");
+      });
 
-// ✅ Función unificada y estable para cargar imágenes y fondo
-window.cargarImagenAlLienzo = function (src, fondoSrc = null) {
-  const tempImg = new Image();
-  tempImg.crossOrigin = "anonymous";
+      document.addEventListener("DOMContentLoaded", renderizarCarrito);
 
-  tempImg.onload = () => {
-    img = tempImg;
-    const factorX = canvas.width / img.width;
-    const factorY = canvas.height / img.height;
-    scale = Math.min(factorX, factorY, 1);
-    imgX = (canvas.width - img.width * scale) / 2;
-    imgY = (canvas.height - img.height * scale) / 2;
+      window.cargarImagenAlLienzo = function(src, fondoSrc = null) {
+        let tempImg = new Image();
+        tempImg.crossOrigin = "anonymous";
+        tempImg.onload = () => {
+          img = tempImg;
+          const factorX = canvas.width / img.width;
+          const factorY = canvas.height / img.height;
+          scale = Math.min(factorX, factorY, 1);
+          imgX = (canvas.width - img.width * scale) / 2;
+          imgY = (canvas.height - img.height * scale) / 2;
+          if (fondoSrc) {
+            fondoCuarto = new Image();
+            fondoCuarto.crossOrigin = "anonymous";
+            fondoCuarto.onload = () => {
+              mostrarFondoCuarto = true;
+              draw();
+              calcularEstambre();
+            };
+            fondoCuarto.src = fondoSrc;
+            // Mostrar la imagen en el cuarto de vista previa
+            const vista = document.getElementById("vistaAlfombra");
+            const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
+            
+            if (vista) {
+              vista.src = fondoSrc; // ✅ Asigna inmediatamente
+              vista.style.display = "block"; // ✅ Muestra directamente
+              vista.removeAttribute("style"); // ✅ Elimina estilos residuales (si los hay)
 
-    // ✅ Si hay fondo, cargarlo
-    if (fondoSrc) {
-      fondoCuarto = new Image();
-      fondoCuarto.crossOrigin = "anonymous";
-      fondoCuarto.onload = () => {
-        mostrarFondoCuarto = true;
-        draw();
-        calcularEstambre();
-        actualizarVistaPrevia(fondoSrc);
+              // Aplicar también al botón (escritorio)
+              if (btnPreviewImg && window.innerWidth >= 1000) {
+              btnPreviewImg.src = fondoSrc;
+  }
+            }
+          } else {
+            mostrarFondoCuarto = false;
+            draw();
+            calcularEstambre();
+            // Ocultar la imagen en el cuarto de vista previa si no hay fondo
+            const vista = document.getElementById("vistaAlfombra");
+            if (vista) {
+              vista.src = "";
+              vista.style.display = "none";
+            }
+          }
+          const panelDerecho = document.querySelector('.lateral');
+          panelDerecho.style.display = 'flex';
+          panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          const panelEstambre = document.getElementById("panelEstambre");
+          const descripcionContenido = document.getElementById("descripcionContenido");
+          if (descripcionContenido.innerHTML.trim() !== "") {
+            panelEstambre.style.display = 'flex';
+            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          }
+          document.getElementById("resultado").style.display = "block";
+          document.getElementById("añadirCarrito").style.display = "flex";
+          cerrarPlantillas();
+        };
+        tempImg.src = src;
       };
-      fondoCuarto.src = fondoSrc;
-    } else {
-      mostrarFondoCuarto = false;
-      draw();
-      calcularEstambre();
-      actualizarVistaPrevia(src);
-    }
+      function toggleVistaCuarto() {
+        const modal = document.getElementById("modalVistaCuarto");
+        const imgAlfombra = document.getElementById("modalImagenAlfombra");
 
-    // Mostrar paneles visuales
-    document.querySelector('.lateral').style.display = 'flex';
-    document.querySelector('.lateral').style.animation = 'fadeSlideIn 0.4s ease forwards';
-    document.getElementById("resultado").style.display = "block";
-    document.getElementById("añadirCarrito").style.display = "flex";
 
-    const panelEstambre = document.getElementById("panelEstambre");
-    const descripcionContenido = document.getElementById("descripcionContenido");
-    if (descripcionContenido.innerHTML.trim() !== "") {
-      panelEstambre.style.display = 'flex';
-      panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-    }
+        if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return;
+        vistaModalAbierto = true;
+        imgAlfombra.src = vistaAlfombra.src;
+        imgAlfombra.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        modal.classList.add("activo", "animarEntrada");
+        modal.classList.remove("animarSalida");
 
-    cerrarPlantillas();
-  };
+      }
 
-  tempImg.src = src;
-};
+      function cerrarVistaCuarto() {
+        const modal = document.getElementById("modalVistaCuarto");
+        if (!modal || !vistaModalAbierto) return;
+        vistaModalAbierto = false;
+        modal.classList.remove("animarEntrada");
+        modal.classList.add("animarSalida");
+        setTimeout(() => {
+          modal.classList.remove("activo", "animarSalida");
+        }, 200);
+      }
+      
+      function generarImagenZoom() {
+        const zoomCanvas = document.createElement("canvas");
+        zoomCanvas.width = canvas.width;
+        zoomCanvas.height = canvas.height;
+        const zoomCtx = zoomCanvas.getContext("2d");
 
-// ✅ Nueva función auxiliar para actualizar imagen en vista previa y botón
-function actualizarVistaPrevia(imagenSrc) {
-  const vista = document.getElementById("vistaAlfombra");
-  const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
+        // Fondo del cuarto
+        if (mostrarFondoCuarto && fondoCuarto.complete) {
+         zoomCtx.drawImage(fondoCuarto, 0, 0, zoomCanvas.width, zoomCanvas.height);
+        }
 
-  if (vista) {
-    vista.src = imagenSrc;
-    vista.style.display = "block";
-    vista.removeAttribute("style");
-  }
+        // Imagen de la alfombra
+        if (img && img.complete) {
+         zoomCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        }
 
-  if (btnPreviewImg && window.innerWidth >= 1000) {
-    btnPreviewImg.src = imagenSrc;
-  }
-}
+        return zoomCanvas.toDataURL("image/png");
+      }
+    document.addEventListener("DOMContentLoaded", () => {
+       const btnPreview = document.querySelector(".btn-preview-cuarto");
+       const modal = document.getElementById("modalVistaCuarto");
 
-// Modal de vista previa (hover en escritorio)
-function toggleVistaCuarto() {
-  const modal = document.getElementById("modalVistaCuarto");
-  const imgAlfombra = document.getElementById("modalImagenAlfombra");
+     if (btnPreview && modal && window.innerWidth >= 1000) {
+        btnPreview.addEventListener("mouseenter", () => {
+         if (!vistaModalAbierto) toggleVistaCuarto();
+        });
 
-  if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return;
-  vistaModalAbierto = true;
-  imgAlfombra.src = vistaAlfombra.src;
-  imgAlfombra.style.transform = `translate(-50%, -50%) scale(${scale})`;
-  modal.classList.add("activo", "animarEntrada");
-  modal.classList.remove("animarSalida");
-}
-
-function cerrarVistaCuarto() {
-  const modal = document.getElementById("modalVistaCuarto");
-  if (!modal || !vistaModalAbierto) return;
-  vistaModalAbierto = false;
-  modal.classList.remove("animarEntrada");
-  modal.classList.add("animarSalida");
-  setTimeout(() => {
-    modal.classList.remove("activo", "animarSalida");
-  }, 200);
-}
-
-function generarImagenZoom() {
-  const zoomCanvas = document.createElement("canvas");
-  zoomCanvas.width = canvas.width;
-  zoomCanvas.height = canvas.height;
-  const zoomCtx = zoomCanvas.getContext("2d");
-
-  // Fondo del cuarto
-  if (mostrarFondoCuarto && fondoCuarto.complete) {
-    zoomCtx.drawImage(fondoCuarto, 0, 0, zoomCanvas.width, zoomCanvas.height);
-  }
-
-  // Imagen de la alfombra
-  if (img && img.complete) {
-    zoomCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
-  }
-
-  return zoomCanvas.toDataURL("image/png");
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const btnPreview = document.querySelector(".btn-preview-cuarto");
-  const modal = document.getElementById("modalVistaCuarto");
-
-  if (btnPreview && modal && window.innerWidth >= 1000) {
-    btnPreview.addEventListener("mouseenter", () => {
-      if (!vistaModalAbierto) toggleVistaCuarto();
+        modal.addEventListener("mouseleave", () => {
+          if (vistaModalAbierto) cerrarVistaCuarto();
+        });
+      }
     });
-
-    modal.addEventListener("mouseleave", () => {
-      if (vistaModalAbierto) cerrarVistaCuarto();
-    });
-  }
-});
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas">
       <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
@@ -705,12 +691,12 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
       <div class="modal-contenido" onclick="event.stopPropagation()">
-        <div class="contenedor-superpuesto">
-          <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
-          <img id="modalImagenAlfombra" src="" alt="Alfombra" />
+         <div class="contenedor-superpuesto">
+           <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
+           <img id="modalImagenAlfombra" src="" alt="Alfombra" />
+          </div>
+          <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
         </div>
-        <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
-      </div>
     </div>
   <div id="toastNotificacion" class="toast-notificacion"></div>
   </body>
