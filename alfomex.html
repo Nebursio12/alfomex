@@ -128,14 +128,23 @@
           imagenes.forEach(obj => {
             const imgNormal = obj.normal;
             const imgFondo = obj.fondo;
-            html += `<img src="${imgNormal}" data-url="${imgNormal}" data-fondo="${imgFondo}" class="img-plantilla">`;
+            html += `<img 
+             src="${imgNormal}" 
+             class="img-plantilla"
+             data-url="${encodeURI(imgNormal)}"
+             data-fondo="${encodeURI(imgFondo)}"
+            >`;
           });
           html += `</div>`;
         });
         modal.innerHTML = html;
         document.querySelectorAll('.img-plantilla').forEach(img => {
           img.addEventListener('click', () => {
-            cargarImagenAlLienzo(img.dataset.url, img.dataset.fondo);
+            const url = img.dataset.url;
+            const fondo = img.dataset.fondo;
+            console.log("✅ Cargando imagen:", url);
+            console.log("✅ Fondo aplicado:", fondo);
+            cargarImagenAlLienzo(url, fondo);
           });
         });
       }
@@ -592,7 +601,7 @@
             const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
             
             if (vista) {
-              vista.src = fondoSrc; // ✅ Asigna inmediatamente
+              vista.src = fondoSrc && fondoSrc.trim() !== "" ? fondoSrc : src;
               vista.style.display = "block"; // ✅ Muestra directamente
               vista.removeAttribute("style"); // ✅ Elimina estilos residuales (si los hay)
 
