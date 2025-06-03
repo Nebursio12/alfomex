@@ -571,6 +571,7 @@
       window.cargarImagenAlLienzo = function(src, fondoSrc = null) {
         let tempImg = new Image();
         tempImg.crossOrigin = "anonymous";
+
         tempImg.onload = () => {
           img = tempImg;
           const factorX = canvas.width / img.width;
@@ -579,58 +580,50 @@
           imgX = (canvas.width - img.width * scale) / 2;
           imgY = (canvas.height - img.height * scale) / 2;
 
-          const vista = document.getElementById("vistaAlfombra");
-          const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
-          if (fondoSrc) {
-            fondoCuarto = new Image();
-            fondoCuarto.crossOrigin = "anonymous";
-            fondoCuarto.onload = () => {
-              mostrarFondoCuarto = true;
-              draw();
-              calcularEstambre();
-            };
-            fondoCuarto.src = fondoSrc;
-            // Mostrar la imagen en el cuarto de vista previa
-            const vista = document.getElementById("vistaAlfombra");
-            const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
-            
-            if (vista) {
-              vista.src = fondoSrc;
-              vista.style.display = "block";
-              vista.style.position = "absolute";
-              vista.style.top = "65%";
-              vista.style.left = "50%";
-              vista.style.transform = "translate(-50%, -50%)";
-              vista.style.width = `${(img.width * scale * 100) / canvas.width}%`;
+          // Forzar siempre el cálculo
+          draw();
+          calcularEstambre();
 
-              // Aplicar también al botón (escritorio)
-              if (btnPreviewImg && window.innerWidth >= 1000) {
-                 btnPreviewImg.src = fondoSrc;   
-              }
-            }
-          } else {
-            mostrarFondoCuarto = false;
-            draw();
-            calcularEstambre();
-            if (vista) {
-              vista.src = "";
-              vista.style.display = "none";
-            }
-          }
-          const panelDerecho = document.querySelector('.lateral');
-          panelDerecho.style.display = 'flex';
-          panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
-          
-          const panelEstambre = document.getElementById("panelEstambre");
-          const descripcionContenido = document.getElementById("descripcionContenido");
-          if (descripcionContenido.innerHTML.trim() !== "") {
-            panelEstambre.style.display = 'flex';
-            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-          }
+          // Mostrar panel derecho y botón
+          document.querySelector('.lateral').style.display = 'flex';
           document.getElementById("resultado").style.display = "block";
           document.getElementById("añadirCarrito").style.display = "flex";
-          cerrarPlantillas();
+
+          // Mostrar vista previa en cuarto
+          const vista = document.getElementById("vistaAlfombra");
+          const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
+
+          if (fondoSrc && vista) {
+            vista.src = fondoSrc;
+            vista.style.display = "block";
+            vista.style.position = "absolute";
+            vista.style.top = "65%";
+            vista.style.left = "50%";
+            vista.style.transform = "translate(-50%, -50%)";
+            vista.style.width = `${(img.width * scale * 100) / canvas.width}%`;
+
+            if (btnPreviewImg && window.innerWidth >= 1000) {
+               btnPreviewImg.src = fondoSrc;
+            }
+          }
+
+          // Mostrar el panel izquierdo
+          const panelEstambre = document.getElementById("panelEstambre");
+          if (panelEstambre) {
+            panelEstambre.style.display = "flex";
+            panelEstambre.style.visibility = "visible";
+            panelEstambre.style.opacity = "1";
+            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          }
+
+          cerrarPlantillas(); // ✅ cerrar modal al terminar
         };
+
+        // 🔥 Este onerror detecta si la imagen falla
+        tempImg.onerror = () => {
+          mostrarNotificacion("❌ No se pudo cargar la imagen. Verifica el enlace.");
+        };
+
         tempImg.src = src;
       };
       function toggleVistaCuarto() {
