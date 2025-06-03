@@ -338,7 +338,7 @@
         }
         const coloresUsados = [...mapa.entries()].filter(([_, count]) => count / totalPixels > 0.01);
         let detalle = '<strong>Estambre por color:</strong><br>';
-        if (coloresUsados.length > 5) {
+        if (coloresUsados.length > 50) {
           detalle += `<span style="color:red;font-weight:bold">Demasiados colores detectados (${coloresUsados.length}). Contacta para personalización avanzada.</span>`;
           document.getElementById('añadirCarrito').disabled = true;
         } else {
