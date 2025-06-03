@@ -498,7 +498,7 @@
         const ancho = matchAncho ? matchAncho[1] : "0";
         const alto = matchAlto ? matchAlto[1] : "0";
         const costo = totalFinal.innerText.replace("MXN", "").trim();
-        const imagen = document.getElementById("vistaAlfombra").src;
+        const imagen = document.getElementById("vistaAlfombra").getAttribute("data-src-real");
         if (!imagen || !imagen.includes("http")) {
           mostrarNotificacion("❌ Error: La imagen de la alfombra no está bien definida.");
           return;
@@ -604,6 +604,7 @@
           if (fondoSrc && vista) {
             vista.src = fondoSrc;
             vista.style.display = "block";
+            vista.setAttribute("data-src-real", fondoSrc); // ← Añade esto justo aquí
             vista.style.position = "absolute";
             vista.style.top = "65%";
             vista.style.left = "50%";
