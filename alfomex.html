@@ -499,7 +499,12 @@
         const alto = matchAlto ? matchAlto[1] : "0";
         const costo = totalFinal.innerText.replace("MXN", "").trim();
         const imagen = document.getElementById("vistaAlfombra").src;
-        const nombre = obtenerNombreDesdeURL(imagen);
+        if (!imagen || !imagen.includes("http")) {
+          mostrarNotificacion("❌ Error: La imagen de la alfombra no está bien definida.");
+          return;
+        }
+        let nombre = obtenerNombreDesdeURL(imagen);
+        if (!nombre || nombre.length < 2) nombre = "Alfombra personalizada";
 
         const item = {
          id: Date.now(),
@@ -519,8 +524,11 @@
       function obtenerNombreDesdeURL(url) {
         try {
           const path = decodeURIComponent(url);
-          const nombreConExtension = path.split("/").pop().split("?")[0];
-          return nombreConExtension.split(".")[0];
+          const partes = path.split("/");
+          if (!partes.length) return "Alfombra personalizada";
+          const nombreConExtension = partes[partes.length - 1].split("?")[0];
+          const nombre = nombreConExtension.split(".")[0];
+          return nombre || "Alfombra personalizada";
         } catch (e) {
           return "Alfombra personalizada";
         }
