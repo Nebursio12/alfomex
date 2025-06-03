@@ -578,7 +578,7 @@
           if (fondoSrc && vista) {
             vista.src = fondoSrc;
             vista.style.display = "block";
-            vista.setAttribute("data-src-real", fondoSrc); // ← Añade esto justo aquí
+            vista.setAttribute("data-src-real", fondoSrc || src);
             vista.style.position = "absolute";
             vista.style.top = "65%";
             vista.style.left = "50%";
