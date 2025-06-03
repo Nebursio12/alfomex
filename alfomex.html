@@ -592,9 +592,13 @@
             const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
             
             if (vista) {
-              vista.src = fondoSrc; // ✅ Asigna inmediatamente
-              vista.style.display = "block"; // ✅ Muestra directamente
-              vista.removeAttribute("style"); // ✅ Elimina estilos residuales (si los hay)
+              vista.src = fondoSrc;
+              vista.style.display = "block";
+              vista.style.position = "absolute";
+              vista.style.top = "65%";
+              vista.style.left = "50%";
+              vista.style.transform = "translate(-50%, -50%)";
+              vista.style.width = `${(img.width * scale * 100) / canvas.width}%`;
 
               // Aplicar también al botón (escritorio)
               if (btnPreviewImg && window.innerWidth >= 1000) {
