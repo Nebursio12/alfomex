@@ -578,6 +578,9 @@
           scale = Math.min(factorX, factorY, 1);
           imgX = (canvas.width - img.width * scale) / 2;
           imgY = (canvas.height - img.height * scale) / 2;
+
+          const vista = document.getElementById("vistaAlfombra");
+          const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
           if (fondoSrc) {
             fondoCuarto = new Image();
             fondoCuarto.crossOrigin = "anonymous";
@@ -602,15 +605,13 @@
 
               // Aplicar también al botón (escritorio)
               if (btnPreviewImg && window.innerWidth >= 1000) {
-              btnPreviewImg.src = fondoSrc;
-  }
+                 btnPreviewImg.src = fondoSrc;   
+              }
             }
           } else {
             mostrarFondoCuarto = false;
             draw();
             calcularEstambre();
-            // Ocultar la imagen en el cuarto de vista previa si no hay fondo
-            const vista = document.getElementById("vistaAlfombra");
             if (vista) {
               vista.src = "";
               vista.style.display = "none";
@@ -619,6 +620,7 @@
           const panelDerecho = document.querySelector('.lateral');
           panelDerecho.style.display = 'flex';
           panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          
           const panelEstambre = document.getElementById("panelEstambre");
           const descripcionContenido = document.getElementById("descripcionContenido");
           if (descripcionContenido.innerHTML.trim() !== "") {
