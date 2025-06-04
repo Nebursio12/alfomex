@@ -460,17 +460,14 @@
         imgY = Math.min(Math.max(imgY, 0), canvas.height - img.height * scale);
       }
 
-      function mostrarNotificacion(mensaje) {
+      function mostrarNotificacion(mensaje, tipo = "error") {
         const toast = document.getElementById("toastNotificacion");
         if (!toast) return;
         toast.innerText = mensaje;
-        // Cambiar color según tipo
-        if (tipo === "success") {
-          toast.style.background = "green";
-        } else {
-          toast.style.background = "crimson";
-        }
+        toast.style.background = tipo === "success" ? "green" : "crimson";
+
         toast.classList.add("mostrar");
+
         setTimeout(() => {
           toast.classList.remove("mostrar");
         }, 3000);
@@ -541,8 +538,6 @@
           `;
           contenedor.appendChild(div);
         });
-
-        contenedor.classList.remove("oculto");
       }
 
       function eliminarDelCarrito(id) {
