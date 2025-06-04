@@ -1710,3 +1710,15 @@ h2, .alerta, .plantilla-btn-container {
 .item-carrito div {
   font-size: 14px; /* 👈 Tamaño uniforme del texto */
 }
+
+#contadorCarrito {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none;
+}
