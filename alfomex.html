@@ -66,6 +66,11 @@
           nav.innerHTML = `
             <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
               <i class="fas fa-user-circle"></i>
+              <span id="contadorCarrito"
+                  style="position:absolute; top:0; right:0; background:red; color:white;
+                     font-size:10px; padding:2px 6px; border-radius:50%; display:none;">
+              </span>
+
             </button>
             <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
               <i class="fas fa-sign-out-alt"></i>
@@ -458,11 +463,16 @@
         const toast = document.getElementById("toastNotificacion");
         if (!toast) return;
         toast.innerText = mensaje;
+        // Cambiar color según tipo
+        if (tipo === "success") {
+          toast.style.background = "green";
+        } else {
+          toast.style.background = "crimson";
+        }
         toast.classList.add("mostrar");
-
         setTimeout(() => {
           toast.classList.remove("mostrar");
-        }, 3000); // 3 segundos visible
+        }, 3000);
       }
 
 
@@ -657,6 +667,8 @@
     document.addEventListener("DOMContentLoaded", () => {
        const btnPreview = document.querySelector(".btn-preview-cuarto");
        const modal = document.getElementById("modalVistaCuarto");
+       renderizarCarrito();
+       actualizarContadorCarrito(); // ✅ Nuevo
 
        document.getElementById('añadirCarrito').addEventListener('click', () => {
          const anchoTexto = document.getElementById("areaCubierta").innerText;
@@ -688,6 +700,9 @@
          carrito.push(item);
          localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
          renderizarCarrito();
+         actualizarContadorCarrito();
+
+         mostrarNotificacion("✅ Producto añadido correctamente", "success");
        });
 
      if (btnPreview && modal && window.innerWidth >= 1000) {
@@ -700,6 +715,17 @@
         });
       }
     });
+
+    function actualizarContadorCarrito() {
+      const contador = document.getElementById("contadorCarrito");
+      const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+      if (carrito.length > 0) {
+        contador.innerText = carrito.length;
+        contador.style.display = "block";
+      } else {
+        contador.style.display = "none";
+      }
+    }
     </script>
     <div class="modal-overlay-plantillas" id="fondoPlantillas">
       <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
