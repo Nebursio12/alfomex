@@ -545,6 +545,7 @@
        carrito = carrito.filter(item => item.id !== id);
        localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
        renderizarCarrito();
+       actualizarContadorCarrito();
       }
 
       document.getElementById("cartBtn").addEventListener("click", () => {
