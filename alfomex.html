@@ -17,6 +17,10 @@
         <button id="menuBtn" onclick="openNav()">☰</button>
         <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil">
           <i class="fas fa-shopping-cart"></i>
+          <span id="contadorCarrito"
+              style="position:absolute; top:-6px; right:-6px; background:red; color:white;
+                   font-size:10px; padding:2px 6px; border-radius:50%; display:none;">
+          </span>
         </button>
         <div id="carritoLista" class="carrito-lista oculto"></div>
       </div>
@@ -66,10 +70,7 @@
           nav.innerHTML = `
             <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
               <i class="fas fa-user-circle"></i>
-              <span id="contadorCarrito"
-                  style="position:absolute; top:0; right:0; background:red; color:white;
-                     font-size:10px; padding:2px 6px; border-radius:50%; display:none;">
-              </span>
+
 
             </button>
             <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
