@@ -50,7 +50,8 @@
       import {
         getFirestore,
         collection,
-        getDocs
+        getDocs,
+        addDoc
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
       const firebaseConfig = {
         apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -215,9 +216,8 @@
       <!-- Lateral derecho para presupuesto -->
       <div class="lateral">
         <div id="resultado"></div>
-        <button id="añadirCarrito" class="boton-total">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="totalFinal">$0.00 MXN</span>
+        <button id="btnCotizar" class="boton-total">
+          <i class="fas fa-paper-plane"></i> Pedir cotización
         </button>
       </div>
     </div>
@@ -676,7 +676,7 @@
        renderizarCarrito();
        actualizarContadorCarrito(); // ✅ Nuevo
 
-       document.getElementById('añadirCarrito').addEventListener('click', () => {
+       document.getElementById('btnCotizar').addEventListener('click', async () => {
          const anchoTexto = document.getElementById("areaCubierta").innerText;
          const matchAncho = anchoTexto.match(/Anchura:\s([\d.]+)/);
          const matchAlto = anchoTexto.match(/Altura:\s([\d.]+)/);
@@ -686,29 +686,31 @@
          const imagen = document.getElementById("vistaAlfombra").getAttribute("data-src-real");
 
          if (!imagen || !imagen.includes("http")) {
-           mostrarNotificacion("❌ Error: La imagen de la alfombra no está bien definida.");
+           mostrarNotificacion("❌ Imagen no válida. Sube un diseño primero.");
            return;
          }
 
-         let nombre = obtenerNombreDesdeURL(imagen);
-         if (!nombre || nombre.length < 2) nombre = "Alfombra personalizada";
-
-         const item = {
-           id: Date.now(),
-           nombre,
-           ancho,
-           alto,
-           costo,
-           imagen
+         const cotizacion = {
+           fecha: new Date().toISOString(),
+           ancho: `${ancho} cm`,
+           alto: `${alto} cm`,
+           costo: `$${costo} MXN`,
+           imagenURL: imagen,
+           estado: "Pendiente"
          };
 
-         let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-         carrito.push(item);
-         localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
-         renderizarCarrito();
-         actualizarContadorCarrito();
+         try {
+          // Si usas Firestore:
+          const { getFirestore, collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+          const db = getFirestore();
+          await addDoc(collection(db, "cotizaciones"), cotizacion);
 
-         mostrarNotificacion("✅ Producto añadido al carrito", "success");
+          mostrarNotificacion("✅ Tu solicitud ha sido enviada. Te contactaremos pronto.", "success");
+        } catch (e) {
+          console.error(e);
+          mostrarNotificacion("❌ Error al enviar la cotización.");
+        }
+
        });
 
      if (btnPreview && modal && window.innerWidth >= 1000) {
