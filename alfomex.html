@@ -522,16 +522,16 @@
         const contenedor = document.getElementById("carritoLista");
         const mensajeVacio = document.getElementById("mensajeCarritoVacio");
         const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-        contenedor.innerHTML = `
-            <div id="mensajeCarritoVacio" style="color: #666; font-size: 0.95rem; text-align: center; padding: 20px;">
-              🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
-            </div>
-        `;
-
+        // Limpia todos los elementos excepto el mensaje
+        const itemsActuales = contenedor.querySelectorAll(".item-carrito");
+        itemsActuales.forEach(item => item.remove());
         if (carrito.length === 0) {
+          mensajeVacio.style.display = "block";
           contenedor.classList.add("oculto");
           return;
         }
+        mensajeVacio.style.display = "none";
+        contenedor.classList.remove("oculto");
 
         carrito.forEach(item => {
           const div = document.createElement("div");
