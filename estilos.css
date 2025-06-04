@@ -1676,7 +1676,7 @@ h2, .alerta, .plantilla-btn-container {
 .carrito-lista {
   position: absolute;
   top: 60px;
-  right: 10px;
+  left: 10px; /* 🔄 cambia de right a left */
   background: #fff;
   border: 1px solid #ccc;
   padding: 10px;
