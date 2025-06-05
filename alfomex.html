@@ -372,17 +372,22 @@
 
         draw();
         calcularEstambre();
+        // Mostrar el panel derecho y resultado
         document.querySelector('.lateral').style.display = 'flex';
         document.getElementById("resultado").style.display = "block";
         document.getElementById("añadirCarrito").style.display = "flex";
 
-        document.getElementById("vistaAlfombra").src = evt.target.result;
+        // ✅ Cargar imagen recortada en ambas vistas
+        const recorteSrc = imagenRecortada.src;
+        document.getElementById("vistaAlfombra").src = recorteSrc;
         document.getElementById("vistaAlfombra").style.display = "block";
-        document.getElementById("vistaAlfombra").setAttribute("data-src-real", evt.target.result);
+        document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
+        document.getElementById("modalImagenAlfombra").src = recorteSrc; // ✅ para vista modal
 
+        // ✅ Actualizar vista previa de botón
         const previewImg = document.querySelector(".btn-preview-cuarto img");
         if (previewImg && window.innerWidth >= 1000) {
-          previewImg.src = evt.target.result;
+            previewImg.src = recorteSrc;
         }
       });
     };
