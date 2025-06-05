@@ -179,6 +179,7 @@
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientWidth;
       const ctx = canvas.getContext('2d');
+      draw();
       let vistaModalAbierto = false;
       const imgInput = document.getElementById('imgInput');
       const resultado = document.getElementById('resultado');
@@ -730,6 +731,7 @@ function recortarTransparencias(imagen, callback) {
        const modal = document.getElementById("modalVistaCuarto");
        renderizarCarrito();
        actualizarContadorCarrito(); // ✅ Nuevo
+       
 
        document.getElementById('añadirCarrito').addEventListener('click', () => {
          const anchoTexto = document.getElementById("areaCubierta").innerText;
