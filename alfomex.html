@@ -244,28 +244,25 @@
             const anchoCm = (img.width * scale) / pxPorCm;
             const altoCm = (img.height * scale) / pxPorCm;
 
-            // Tamaño real del cuarto en centímetros
+            // Medidas físicas del cuarto
             const anchoCuartoCm = 450;
             const altoCuartoCm = 350;
 
-            // Tamaño del cuarto.png en píxeles
+            // Resolución de la imagen cuarto.png
             const pxCuartoWidth = 495;
             const pxCuartoHeight = 495;
 
-            // Escala real de pixeles por cm según cada eje
-            const escalaX = pxCuartoWidth / anchoCuartoCm;
-            const escalaY = pxCuartoHeight / altoCuartoCm;
+            // Escala real en píxeles por centímetro
+            const pixelesPorCmX = pxCuartoWidth / anchoCuartoCm;
+            const pixelesPorCmY = pxCuartoHeight / altoCuartoCm;
 
-            // Usamos el mismo valor para ambos para mantener proporciones estables
-            const escalaPromedio = (escalaX + escalaY) / 2;
+            // Escalamos respetando el tamaño físico real
+            vistaAlfombra.style.width = `${anchoCm * pixelesPorCmX}px`;
+            vistaAlfombra.style.height = `${altoCm * pixelesPorCmY}px`;
 
-            // Asignamos el tamaño físico real de la alfombra, usando su medida en cm
-            vistaAlfombra.style.width = `${anchoCm * escalaPromedio}px`;
-            vistaAlfombra.style.height = `${altoCm * escalaPromedio}px`;
-
-            // Centramos
+            // Centramos en la parte baja del cuarto para que parezca en el suelo
             vistaAlfombra.style.position = "absolute";
-            vistaAlfombra.style.top = "65%";
+            vistaAlfombra.style.top = "80%";
             vistaAlfombra.style.left = "50%";
             vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
