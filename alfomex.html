@@ -662,7 +662,10 @@ function recortarTransparencias(imagen, callback) {
         const modal = document.getElementById("modalVistaCuarto");
         const imgAlfombra = document.getElementById("modalImagenAlfombra");
 
-
+        console.log("Modal:", modal);
+        console.log("imgAlfombra:", imgAlfombra);
+        console.log("vistaAlfombra.src:", vistaAlfombra.src);
+        console.log("vistaModalAbierto:", vistaModalAbierto);
         if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return;
         vistaModalAbierto = true;
         imgAlfombra.src = vistaAlfombra.src;
