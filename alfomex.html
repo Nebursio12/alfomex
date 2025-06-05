@@ -151,13 +151,11 @@
       </div>
       <div>
         <canvas id="lienzo"></canvas>
-        <div id="areaCubierta" style="margin-top: 5px; font-weight: bold;"></div>
-  
-        <div class="controls" style="flex-direction: column; gap: 8px;">
-          <div class="plantilla-btn-container" style="margin: 0;">
-             <button onclick="document.getElementById('imgInput').click()">AÑADIR FOTO</button>
-          </div>
-        <div style="display: flex; justify-content: center; gap: 10px;">
+        <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
+        <div class="plantilla-btn-container">
+          <button onclick="document.getElementById('imgInput').click()">AÑADIR FOTO</button>
+        </div>
+        <div class="controls">
           <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
           <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
           <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
