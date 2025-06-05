@@ -245,26 +245,19 @@
             const anchoCanvasCm = (img.width * scale) / pxPorCm;
             const altoCanvasCm = (img.height * scale) / pxPorCm;
 
-            // Dimensiones físicas del cuarto
-            const cuartoCmX = 450;
-            const cuartoCmY = 350;
+            // Nuevo cuarto: 300 cm de lado, 800 px de resolución
+            const cuartoPx = 800;
+            const cuartoCm = 300;
+            const pxPorCmCuarto = cuartoPx / cuartoCm;
 
-            // Dimensiones en píxeles de cuarto.png
-            const cuartoPxX = 495;
-            const cuartoPxY = 495;
-
-            // Escala en píxeles por centímetro
-            const pxPorCmX = cuartoPxX / cuartoCmX;
-            const pxPorCmY = cuartoPxY / cuartoCmY;
-
-            // Escalamos en proporción real
-            vistaAlfombra.style.width = `${anchoCanvasCm * pxPorCmX}px`;
-            vistaAlfombra.style.height = `${altoCanvasCm * pxPorCmY}px`;
+            // Escalar imagen a tamaño real dentro del cuarto
+            vistaAlfombra.style.width = `${anchoCanvasCm * pxPorCmCuarto}px`;
+            vistaAlfombra.style.height = `${altoCanvasCm * pxPorCmCuarto}px`;
 
             // Centramos
             vistaAlfombra.style.position = "absolute";
             vistaAlfombra.style.top = "80%";
-            vistaAlfombra.style.left = "50%";
+            vistaAlfombra.style.left = "20%";
             vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
 
@@ -678,14 +671,15 @@ function recortarTransparencias(imagen, callback) {
         const anchoCm = (img.width * scale) / pxPorCm;
         const altoCm = (img.height * scale) / pxPorCm;
 
-        const pxPorCmX = 495 / 450;
-        const pxPorCmY = 495 / 350;
+        const cuartoPx = 800;
+        const cuartoCm = 300;
+        const pxPorCmCuarto = cuartoPx / cuartoCm;
 
         imgAlfombra.style.width = `${anchoCm * pxPorCmX}px`;
         imgAlfombra.style.height = `${altoCm * pxPorCmY}px`;
         imgAlfombra.style.position = "absolute";
-        imgAlfombra.style.top = "73%";
-        imgAlfombra.style.left = "50%";
+        imgAlfombra.style.top = "80%";
+        imgAlfombra.style.left = "20%";
         imgAlfombra.style.transform = "translate(-50%, -50%)";
 
         modal.classList.add("activo", "animarEntrada");
