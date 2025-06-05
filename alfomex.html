@@ -216,6 +216,7 @@
         }
 
         // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
+        
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
           ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
@@ -224,6 +225,8 @@
         }
 
         ctx.strokeStyle = '#999';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top"; // asegura que se dibuje desde la esquina
         for (let i = 0; i <= 100; i += 10) {
           const px = i * pxPorCm;
           ctx.beginPath();
@@ -236,8 +239,12 @@
           ctx.stroke();
           ctx.fillStyle = '#000';
           ctx.font = '10px Arial';
-          ctx.fillText(`${i}cm`, px + 2, 12);
-          ctx.fillText(`${i}cm`, 2, px + 10);
+          if (i !== 0) {
+            ctx.fillText(`${i}cm`, px + 4, 4);        // arriba (X)
+            ctx.fillText(`${i}cm`, 4, px + 4);        // izquierda (Y)
+          } else {
+            ctx.fillText(`0cm`, 4, 4); // esquina superior izquierda
+          }
         }
 
         // 🖼 Dibuja la imagen
