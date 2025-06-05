@@ -1653,10 +1653,9 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
+.zoom-activo {
+  display: inline-block !important;
+}
 .zoom-btn {
   display: none;
-}
-
-.controls.zoom-activo .zoom-btn {
-  display: inline-block;
 }
