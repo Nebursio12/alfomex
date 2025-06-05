@@ -617,22 +617,21 @@ function recortarTransparencias(imagen, callback) {
           if (fondoSrc && vista) {
             vista.src = fondoSrc;
             vista.style.display = "block";
-            vista.style.top = "65%";
-            vista.style.left = "50%";
-            vista.style.transform = "translate(-50%, -50%)";
+        
             const anchoCmReal = (img.width * scale) / pxPorCm;
             const altoCmReal = (img.height * scale) / pxPorCm;
 
-            const cuartoPxX = 300;
-            const cuartoPxY = 300;
-            const cuartoCmX = 800;
-            const cuartoCmY = 800;
+            const cuartoPxX = 800;
+            const cuartoPxY = 800;
+            const cuartoCmX = 300;
+            const cuartoCmY = 300;
 
             const pxPorCmX = cuartoPxX / cuartoCmX;
             const pxPorCmY = cuartoPxY / cuartoCmY;
 
             vista.style.width = `${anchoCmReal * pxPorCmX}px`;
             vista.style.height = `${altoCmReal * pxPorCmY}px`;
+
             vista.style.position = "absolute";
             vista.style.top = "80%";
             vista.style.left = "20%";
