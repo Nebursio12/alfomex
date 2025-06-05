@@ -125,49 +125,9 @@
         localStorage.removeItem("carrito");
         actualizarVistaCarrito();
       };
-      // Firestore: cargar plantillas dinámicamente
-      async function cargarPlantillasDesdeFirestore() {
-        const modal = document.getElementById("modalPlantillas");
-        const coleccion = collection(db, "plantillas");
-        const querySnapshot = await getDocs(coleccion);
-        let html = '<h3>Selecciona una plantilla</h3>';
-        querySnapshot.forEach(doc => {
-          const categoria = doc.id;
-          const imagenes = doc.data().imagenes;
-          html += `<div class=\"categoria\">\n            <h4>${categoria.toUpperCase()}</h4>`;
-          imagenes.forEach(obj => {
-            const imgNormal = obj.normal;
-            const imgFondo = obj.fondo;
-            html += `<img src="${imgNormal}" data-url="${imgNormal}" data-fondo="${imgFondo}" class="img-plantilla">`;
-          });
-          html += `</div>`;
-        });
-        modal.innerHTML = html;
-        document.querySelectorAll('.img-plantilla').forEach(img => {
-          img.addEventListener('click', () => {
-            cargarImagenAlLienzo(img.dataset.url, img.dataset.fondo);
-          });
-        });
-      }
-      window.abrirPlantillas = async function () {
-        const fondo = document.getElementById('fondoPlantillas');
-        const modal = document.getElementById('modalPlantillas');
-        fondo.classList.add('active');
-        modal.innerHTML = `<h3 style="text-align:center; color:#003366">Cargando plantillas...</h3>`;
-        modal.classList.remove('animarSalida');
-        modal.classList.add('animarEntrada');
-        await cargarPlantillasDesdeFirestore();
-      };
-      window.cerrarPlantillas = function() {
-        const fondo = document.getElementById('fondoPlantillas');
-        const modal = document.getElementById('modalPlantillas');
-        modal.classList.remove('animarEntrada');
-        modal.classList.add('animarSalida');
-        setTimeout(() => {
-          fondo.classList.remove('active');
-          modal.classList.remove('animarSalida');
-        }, 200); // Espera a que termine la animación
-      };
+      
+      
+      
     </script>
     <h2>PERSONALIZA TU ALFOMBRA</h2>
     <div class="plantilla-btn-container">
@@ -406,6 +366,14 @@
             document.getElementById("añadirCarrito").style.display = "flex";
           };
           img.src = evt.target.result;
+          document.getElementById("vistaAlfombra").src = evt.target.result;
+          document.getElementById("vistaAlfombra").style.display = "block";
+          document.getElementById("vistaAlfombra").setAttribute("data-src-real", evt.target.result);
+
+          const previewImg = document.querySelector(".btn-preview-cuarto img");
+          if (previewImg && window.innerWidth >= 1000) {
+            previewImg.src = evt.target.result;
+          }
         };
         reader.readAsDataURL(file);
       });
@@ -733,10 +701,7 @@
       }
     }
     </script>
-    <div class="modal-overlay-plantillas" id="fondoPlantillas">
-      <div class="plantillas-modal" id="modalPlantillas" onclick="event.stopPropagation()">
-      </div>
-    </div>
+   
     <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
       <div class="modal-contenido" onclick="event.stopPropagation()">
          <div class="contenedor-superpuesto">
