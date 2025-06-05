@@ -666,7 +666,7 @@ function recortarTransparencias(imagen, callback) {
         console.log("imgAlfombra:", imgAlfombra);
         console.log("vistaAlfombra.src:", vistaAlfombra.src);
         console.log("vistaModalAbierto:", vistaModalAbierto);
-        if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return;
+        if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return; 
         vistaModalAbierto = true;
         imgAlfombra.src = vistaAlfombra.src;
 
@@ -678,8 +678,8 @@ function recortarTransparencias(imagen, callback) {
         const cuartoCm = 300;
         const pxPorCmCuarto = cuartoPx / cuartoCm;
 
-        imgAlfombra.style.width = `${anchoCm * pxPorCmX}px`;
-        imgAlfombra.style.height = `${altoCm * pxPorCmY}px`;
+        imgAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
+        imgAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
         imgAlfombra.style.position = "absolute";
         imgAlfombra.style.top = "80%";
         imgAlfombra.style.left = "20%";
