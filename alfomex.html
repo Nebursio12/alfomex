@@ -176,8 +176,8 @@
     </div>
     <script>
       const canvas = document.getElementById('lienzo');
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientWidth;
+      canvas.width = canvas.clientWidth || 500;
+      canvas.height = canvas.clientWidth || 500;
       const ctx = canvas.getContext('2d');
       let vistaModalAbierto = false;
       const imgInput = document.getElementById('imgInput');
