@@ -121,9 +121,7 @@
       };
     </script>
     <h2>PERSONALIZA TU ALFOMBRA</h2>
-    <div class="plantilla-btn-container">
-      <button onclick="document.getElementById('imgInput').click()">AÑADIR FOTO</button>
-    </div>
+    
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal">
       <!-- Lateral izquierdo para descripción del estambre -->
@@ -154,6 +152,9 @@
       <div>
         <canvas id="lienzo"></canvas>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
+        <div class="plantilla-btn-container">
+          <button onclick="document.getElementById('imgInput').click()">AÑADIR FOTO</button>
+        </div>
         <div class="controls">
           <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
           <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
@@ -176,8 +177,8 @@
     </div>
     <script>
       const canvas = document.getElementById('lienzo');
-      canvas.width = canvas.clientWidth || 500;
-      canvas.height = canvas.clientWidth || 500;
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientWidth;
       const ctx = canvas.getContext('2d');
       let vistaModalAbierto = false;
       const imgInput = document.getElementById('imgInput');
