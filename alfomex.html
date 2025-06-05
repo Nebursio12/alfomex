@@ -612,11 +612,27 @@ function recortarTransparencias(imagen, callback) {
           if (fondoSrc && vista) {
             vista.src = fondoSrc;
             vista.style.display = "block";
-            vista.style.position = "absolute";
             vista.style.top = "65%";
             vista.style.left = "50%";
             vista.style.transform = "translate(-50%, -50%)";
-            vista.style.width = `${(img.width * scale * 100) / canvas.width}%`;
+            const anchoCmReal = (img.width * scale) / pxPorCm;
+            const altoCmReal = (img.height * scale) / pxPorCm;
+
+            const cuartoPxX = 495;
+            const cuartoPxY = 495;
+            const cuartoCmX = 450;
+            const cuartoCmY = 350;
+
+            const pxPorCmX = cuartoPxX / cuartoCmX;
+            const pxPorCmY = cuartoPxY / cuartoCmY;
+
+            vista.style.width = `${anchoCmReal * pxPorCmX}px`;
+            vista.style.height = `${altoCmReal * pxPorCmY}px`;
+            vista.style.position = "absolute";
+            vista.style.top = "80%";
+            vista.style.left = "50%";
+            vista.style.transform = "translate(-50%, -50%)";
+
 
             if (btnPreviewImg && window.innerWidth >= 1000) {
                btnPreviewImg.src = fondoSrc;
@@ -653,7 +669,21 @@ function recortarTransparencias(imagen, callback) {
         if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return;
         vistaModalAbierto = true;
         imgAlfombra.src = vistaAlfombra.src;
-        imgAlfombra.style.transform = `translate(-50%, -50%) scale(${scale})`;
+
+        // Escalado en proporción real
+        const anchoCm = (img.width * scale) / pxPorCm;
+        const altoCm = (img.height * scale) / pxPorCm;
+
+        const pxPorCmX = 495 / 450;
+        const pxPorCmY = 495 / 350;
+
+        imgAlfombra.style.width = `${anchoCm * pxPorCmX}px`;
+        imgAlfombra.style.height = `${altoCm * pxPorCmY}px`;
+        imgAlfombra.style.position = "absolute";
+        imgAlfombra.style.top = "73%";
+        imgAlfombra.style.left = "50%";
+        imgAlfombra.style.transform = "translate(-50%, -50%)";
+
         modal.classList.add("activo", "animarEntrada");
         modal.classList.remove("animarSalida");
 
