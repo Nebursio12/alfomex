@@ -149,13 +149,19 @@
       </div>
       <div>
         <canvas id="lienzo"></canvas>
-        <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
-        <div class="controls">
-          <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>  
-          <button onclick="document.getElementById('imgInput').click()" title="Añadir Foto">
-            <i class="fas fa-image"></i>
-          </button>
-          <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
+        <div class="zona-inferior">
+          <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
+          <div class="controls">
+            <button id="zoomMas" class="zoom-btn" title="Zoom +">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button onclick="document.getElementById('imgInput').click()" title="Añadir Foto">
+              <i class="fas fa-image"></i>
+            </button>
+            <button id="zoomMenos" class="zoom-btn" title="Zoom -">
+              <i class="fas fa-search-minus"></i>
+            </button>
+          </div>
         </div>
       </div>
       <!-- Lateral derecho para presupuesto -->
@@ -216,7 +222,6 @@
         }
 
         // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
-        
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
           ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
