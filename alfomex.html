@@ -241,20 +241,35 @@
           const vistaAlfombra = document.getElementById("vistaAlfombra");
 
           if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-           const anchoCm = (img.width * scale) / pxPorCm;
-           const altoCm = (img.height * scale) / pxPorCm;
+            const anchoCm = (img.width * scale) / pxPorCm;
+            const altoCm = (img.height * scale) / pxPorCm;
 
-           // Escala correcta basada en dimensiones reales del cuarto (4.5 m x 3.5 m)
-           const escalaCuartoX = 495 / 450; // px/cm en ancho real
-           const escalaCuartoY = 495 / 350; // px/cm en alto real
+            // Tamaño real del cuarto en centímetros
+            const anchoCuartoCm = 450;
+            const altoCuartoCm = 350;
 
-           vistaAlfombra.style.position = "absolute";
-           vistaAlfombra.style.width = `${anchoCm * escalaX}px`;
-           vistaAlfombra.style.height = `${altoCm * escalaY}px`;
-           vistaAlfombra.style.top = "65%";
-           vistaAlfombra.style.left = "50%";
-           vistaAlfombra.style.transform = "translate(-50%, -50%)";
+            // Tamaño del cuarto.png en píxeles
+            const pxCuartoWidth = 495;
+            const pxCuartoHeight = 495;
+
+            // Escala real de pixeles por cm según cada eje
+            const escalaX = pxCuartoWidth / anchoCuartoCm;
+            const escalaY = pxCuartoHeight / altoCuartoCm;
+
+            // Usamos el mismo valor para ambos para mantener proporciones estables
+            const escalaPromedio = (escalaX + escalaY) / 2;
+
+            // Asignamos el tamaño físico real de la alfombra, usando su medida en cm
+            vistaAlfombra.style.width = `${anchoCm * escalaPromedio}px`;
+            vistaAlfombra.style.height = `${altoCm * escalaPromedio}px`;
+
+            // Centramos
+            vistaAlfombra.style.position = "absolute";
+            vistaAlfombra.style.top = "65%";
+            vistaAlfombra.style.left = "50%";
+            vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
+
 
       }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
