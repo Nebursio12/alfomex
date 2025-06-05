@@ -518,7 +518,7 @@ h2, .alerta, .plantilla-btn-container {
 .plantilla-btn-container {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin: 10px 0 5px;
 }
 
 .plantilla-btn-container button {
@@ -1117,7 +1117,7 @@ h2, .alerta, .plantilla-btn-container {
 .plantilla-btn-container {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin: 10px 0 5px;
 }
 
 .plantilla-btn-container button {
