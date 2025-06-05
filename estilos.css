@@ -1656,6 +1656,7 @@ h2, .alerta, .plantilla-btn-container {
 .zoom-btn {
   display: none;
 }
-.zoom-activo .zoom-btn {
+
+.controls.zoom-activo .zoom-btn {
   display: inline-block;
 }
