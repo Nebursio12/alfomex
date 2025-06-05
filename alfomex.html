@@ -163,7 +163,7 @@
         <div id="resultado"></div>
         <button id="añadirCarrito" class="boton-total">
           <i class="fas fa-paper-plane"></i>
-          <span id="">Enviar aprobación de pedido</span>
+          <span id="totalFinal">Solicitar cotización</span>
         </button>
       </div>
     </div>
@@ -208,14 +208,12 @@
           ctx.fillStyle = '#999';
           ctx.font = '14px Segoe UI';
           ctx.textAlign = 'center';
-          ctx.fillText("Aquí puedes subir cualquier imagen para solicitar una aprobación de pedido", canvas.width / 2, canvas.height / 2 - 10);
-          ctx.fillText("Usa formato PNG de buena calidad para mejores resultados y posible aceptación", canvas.width / 2, canvas.height / 2 + 10);
-          ctx.fillText("Da clic en el botón de imagen y añade para comenzar.", canvas.width / 2, canvas.height / 2 + 10);
+          ctx.fillText("Aquí puedes subir cualquier imagen para solicitar una cotización.", canvas.width / 2, canvas.height / 2 - 10);
+          ctx.fillText("Usa formato PNG de buena calidad. Da clic en el botón de imagen para comenzar.", canvas.width / 2, canvas.height / 2 + 10);
           document.getElementById("areaCubierta").innerHTML = "";
           return;
         }
 
-        
         // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
