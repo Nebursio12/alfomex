@@ -588,7 +588,8 @@ h2, .alerta, .plantilla-btn-container {
   .lateral {
     width: 100%;
     max-width: 500px;
-    margin: 10px auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .lateral-izquierda {
@@ -597,27 +598,25 @@ h2, .alerta, .plantilla-btn-container {
 
   .lateral {
     order: 3;
+    margin-top: 0 !important;
+    padding: 10px !important;
   }
 
   canvas {
     order: 1;
     margin: 0 auto;
   }
+
+  #resultado {
+    margin: 0 auto 10px auto !important;
+    padding: 15px !important;
+  }
+
+  #añadirCarrito {
+    margin: 0 auto 10px auto !important;
+  }
 }
 
-
-.boton-total:hover {
-  background-color: #0055cc;
-}
-
-.boton-total i {
-  font-size: 1.4rem;
-}
-
-#resultado,
-#añadirCarrito {
-  display: none;
-}
 
 @media (max-width: 600px) {
   .controls {
