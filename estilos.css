@@ -1652,3 +1652,12 @@ h2, .alerta, .plantilla-btn-container {
     display: none;
   }
 }
+
+#areaCubierta {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+#lienzo + #areaCubierta + .plantilla-btn-container {
+  margin-top: 5px !important;
+}
