@@ -240,18 +240,18 @@
           `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
           const vistaAlfombra = document.getElementById("vistaAlfombra");
 
-if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-  const pxPorCmVista = 5; // 1 cm = 5px en la vista previa
-  const anchoCm = (img.width * scale) / pxPorCm;
-  const altoCm = (img.height * scale) / pxPorCm;
+          if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+           const pxPorCmVista = 5; // 1 cm = 5px en la vista previa
+           const anchoCm = (img.width * scale) / pxPorCm;
+           const altoCm = (img.height * scale) / pxPorCm;
 
-  vistaAlfombra.style.position = "absolute";
-  vistaAlfombra.style.width = `${anchoCm * pxPorCmVista}px`;
-  vistaAlfombra.style.height = `${altoCm * pxPorCmVista}px`;
-  vistaAlfombra.style.top = "65%";
-  vistaAlfombra.style.left = "50%";
-  vistaAlfombra.style.transform = "translate(-50%, -50%)";
-}
+           vistaAlfombra.style.position = "absolute";
+           vistaAlfombra.style.width = `${anchoCm * pxPorCmVista}px`;
+           vistaAlfombra.style.height = `${altoCm * pxPorCmVista}px`;
+           vistaAlfombra.style.top = "65%";
+           vistaAlfombra.style.left = "50%";
+           vistaAlfombra.style.transform = "translate(-50%, -50%)";
+          }
 
       }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
