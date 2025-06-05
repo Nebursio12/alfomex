@@ -151,11 +151,15 @@
         <canvas id="lienzo"></canvas>
         <div id="areaCubierta" style="margin-top: 10px; font-weight: bold;"></div>
         <div class="controls">
-          <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>  
+          <button id="zoomMas" class="zoom-btn" title="Zoom +">
+            <i class="fas fa-search-plus"></i>
+          </button>  
           <button onclick="document.getElementById('imgInput').click()" title="Añadir Foto">
             <i class="fas fa-image"></i>
           </button>
-          <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
+          <button id="zoomMenos" class="zoom-btn" title="Zoom -">
+            <i class="fas fa-search-minus"></i>
+          </button>  
         </div>
       </div>
       <!-- Lateral derecho para presupuesto -->
@@ -372,6 +376,7 @@
 
               draw();
               calcularEstambre();
+              document.querySelector(".controls").classList.add("zoom-activo");
               // Mostrar el panel derecho y resultado
               document.querySelector('.lateral').style.display = 'flex';
               document.getElementById("resultado").style.display = "block";
