@@ -241,23 +241,17 @@
           const vistaAlfombra = document.getElementById("vistaAlfombra");
 
           if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-            // Estas son las medidas REALES ya calculadas del canvas
             const anchoCanvasCm = (img.width * scale) / pxPorCm;
             const altoCanvasCm = (img.height * scale) / pxPorCm;
 
-            // Nuevo cuarto: 300 cm de lado, 800 px de resolución
-            const cuartoPx = 800;
-            const cuartoCm = 300;
-            const pxPorCmCuarto = cuartoPx / cuartoCm;
+            const pxPorCmCuarto = 800 / 300; // 800 px = 300 cm
 
-            // Escalar imagen a tamaño real dentro del cuarto
             vistaAlfombra.style.width = `${anchoCanvasCm * pxPorCmCuarto}px`;
             vistaAlfombra.style.height = `${altoCanvasCm * pxPorCmCuarto}px`;
 
-            // Centramos
             vistaAlfombra.style.position = "absolute";
-            vistaAlfombra.style.top = "65%";
-            vistaAlfombra.style.left = "30%";
+            vistaAlfombra.style.top = "50%";
+            vistaAlfombra.style.left = "50%";
             vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
 
@@ -614,20 +608,14 @@ function recortarTransparencias(imagen, callback) {
             const anchoCmReal = (img.width * scale) / pxPorCm;
             const altoCmReal = (img.height * scale) / pxPorCm;
 
-            const cuartoPxX = 800;
-            const cuartoPxY = 800;
-            const cuartoCmX = 300;
-            const cuartoCmY = 300;
-
-            const pxPorCmX = cuartoPxX / cuartoCmX;
-            const pxPorCmY = cuartoPxY / cuartoCmY;
-
-            vista.style.width = `${anchoCmReal * pxPorCmX}px`;
-            vista.style.height = `${altoCmReal * pxPorCmY}px`;
+            const pxPorCmCuarto = 800 / 300;
+ 
+            vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
+            vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
 
             vista.style.position = "absolute";
-            vista.style.top = "65%";
-            vista.style.left = "30%";
+            vista.style.top = "50%";
+            vista.style.left = "50%";
             vista.style.transform = "translate(-50%, -50%)";
 
 
@@ -670,19 +658,16 @@ function recortarTransparencias(imagen, callback) {
         vistaModalAbierto = true;
         imgAlfombra.src = vistaAlfombra.src;
 
-        // Escalado en proporción real
         const anchoCm = (img.width * scale) / pxPorCm;
         const altoCm = (img.height * scale) / pxPorCm;
 
-        const cuartoPx = 800;
-        const cuartoCm = 300;
-        const pxPorCmCuarto = cuartoPx / cuartoCm;
+        const pxPorCmCuarto = 800 / 300;
 
         imgAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
         imgAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
         imgAlfombra.style.position = "absolute";
-        imgAlfombra.style.top = "65%";
-        imgAlfombra.style.left = "30%";
+        imgAlfombra.style.top = "50%";
+        imgAlfombra.style.left = "50%";
         imgAlfombra.style.transform = "translate(-50%, -50%)";
 
         modal.classList.add("activo", "animarEntrada");
