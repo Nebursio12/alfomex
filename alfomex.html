@@ -350,32 +350,26 @@
         reader.onload = function(evt) {
           img = new Image();
         img.onload = function () {
-          // 🔧 Convertimos el tamaño más grande a ocupar máximo 100 cm (500 px)
-          const maxCm = 100;
-          const maxPxLienzo = canvas.width;
-          const pxPorCm = maxPxLienzo / maxCm;
+          // 🔧 Siempre forzamos que el lado más largo mida como máximo 100 cm (500 px)
+         const maxCm = 100;
+         const pxPorCm = canvas.width / maxCm;
 
-          const anchoCm = img.width / pxPorCm;
-          const altoCm = img.height / pxPorCm;
+         const escalaAncho = canvas.width / img.width;
+         const escalaAlto = canvas.height / img.height;
 
-          if (anchoCm < 25 && altoCm < 25) {
-             alert("❌ La imagen es demasiado pequeña. Se requiere al menos 25 cm en alguna dimensión.");
-             return;
-          }
-          // 🔄 Escalamos proporcionalmente la imagen al canvas de 500x500
-          const factorX = canvas.width / img.width;
-          const factorY = canvas.height / img.height;
-          scale = Math.min(factorX, factorY, 1);
+         // ⚖️ Escalamos para que encaje dentro del lienzo (max 100 cm de lado)
+         scale = Math.min(escalaAncho, escalaAlto);
 
-          imgX = (canvas.width - img.width * scale) / 2;
-          imgY = (canvas.height - img.height * scale) / 2;
+         imgX = (canvas.width - img.width * scale) / 2;
+         imgY = (canvas.height - img.height * scale) / 2;
 
-          draw();
-          calcularEstambre();
-          document.querySelector('.lateral').style.display = 'flex';
-          document.getElementById("resultado").style.display = "block";
-          document.getElementById("añadirCarrito").style.display = "flex";
+         draw();
+         calcularEstambre();
+         document.querySelector('.lateral').style.display = 'flex';
+         document.getElementById("resultado").style.display = "block";
+         document.getElementById("añadirCarrito").style.display = "flex";
         };
+
           img.src = evt.target.result;
           document.getElementById("vistaAlfombra").src = evt.target.result;
           document.getElementById("vistaAlfombra").style.display = "block";
