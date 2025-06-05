@@ -203,6 +203,24 @@
       };
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!img.src) {
+           ctx.fillStyle = "#999";
+           ctx.font = "14px 'Segoe UI', sans-serif";
+           ctx.textAlign = "center";
+           ctx.textBaseline = "middle";
+
+           const mensaje = [
+             "Aquí puedes subir cualquier imagen de tu agrado",
+             "para poder solicitar una cotización.",
+             "Trata de escoger una imagen de alta calidad",
+             "en formato PNG para mejores resultados.",
+             "Puedes dar clic en el botón de en medio para añadir la imagen."
+           ];
+
+           mensaje.forEach((linea, i) => {
+             ctx.fillText(linea, canvas.width / 2, canvas.height / 2 - 60 + i * 20);
+           });
+          }
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
           ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
