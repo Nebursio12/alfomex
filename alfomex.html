@@ -241,13 +241,12 @@
           const vistaAlfombra = document.getElementById("vistaAlfombra");
 
           if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-           const anchoCuartoCm = 450;
-           const altoCuartoCm = 350;
-           const anchoImagenCuartoPx = 495;
-           const altoImagenCuartoPx = 495;
+           const anchoCm = (img.width * scale) / pxPorCm;
+           const altoCm = (img.height * scale) / pxPorCm;
 
-           const escalaX = anchoImagenCuartoPx / anchoCuartoCm;
-           const escalaY = altoImagenCuartoPx / altoCuartoCm;
+           // Escala correcta basada en dimensiones reales del cuarto (4.5 m x 3.5 m)
+           const escalaCuartoX = 495 / 450; // px/cm en ancho real
+           const escalaCuartoY = 495 / 350; // px/cm en alto real
 
            vistaAlfombra.style.position = "absolute";
            vistaAlfombra.style.width = `${anchoCm * escalaX}px`;
