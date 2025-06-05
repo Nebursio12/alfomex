@@ -1619,6 +1619,22 @@ h2, .alerta, .plantilla-btn-container {
     flex-wrap: nowrap;
   }
 
+  .zona-inferior {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+  }
+
+  .zona-inferior .controls {
+    margin: 0;
+  }
+
+  #areaCubierta {
+    text-align: center;
+  }
+
   .lateral-izquierda {
     order: -1;
     margin-right: 30px;
@@ -1653,10 +1669,3 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-.zoom-btn {
-  display: none;
-}
-
-.controls.zoom-activo .zoom-btn {
-  display: inline-block;
-}
