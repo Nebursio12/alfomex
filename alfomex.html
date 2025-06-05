@@ -244,7 +244,7 @@
             const anchoCanvasCm = (img.width * scale) / pxPorCm;
             const altoCanvasCm = (img.height * scale) / pxPorCm;
 
-            const pxPorCmCuarto = 800 / 300; // 800 px = 300 cm
+            const pxPorCmCuarto = 496 / 300; // 800 px = 300 cm
 
             vistaAlfombra.style.width = `${anchoCanvasCm * pxPorCmCuarto}px`;
             vistaAlfombra.style.height = `${altoCanvasCm * pxPorCmCuarto}px`;
@@ -608,7 +608,7 @@ function recortarTransparencias(imagen, callback) {
             const anchoCmReal = (img.width * scale) / pxPorCm;
             const altoCmReal = (img.height * scale) / pxPorCm;
 
-            const pxPorCmCuarto = 800 / 300;
+            const pxPorCmCuarto = 496 / 300;
  
             vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
             vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
@@ -661,7 +661,7 @@ function recortarTransparencias(imagen, callback) {
         const anchoCm = (img.width * scale) / pxPorCm;
         const altoCm = (img.height * scale) / pxPorCm;
 
-        const pxPorCmCuarto = 800 / 300;
+        const pxPorCmCuarto = 496 / 300;
 
         imgAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
         imgAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
@@ -750,9 +750,9 @@ function recortarTransparencias(imagen, callback) {
          if (!vistaModalAbierto) toggleVistaCuarto();
         });
 
-        //modal.addEventListener("mouseleave", () => {
-        //  if (vistaModalAbierto) cerrarVistaCuarto();
-        //});
+        modal.addEventListener("mouseleave", () => {
+          if (vistaModalAbierto) cerrarVistaCuarto();
+        });
       }
     });
 
