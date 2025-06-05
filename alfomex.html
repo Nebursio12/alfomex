@@ -349,24 +349,33 @@
         const reader = new FileReader();
         reader.onload = function(evt) {
           img = new Image();
-          img.onload = function () {
-            if (img.width < 500 || img.height < 500) {
-              alert("La imagen debe tener al menos 500x500 píxeles.");
-              return;
-            }
-            const factorX = canvas.width / img.width;
-            const factorY = canvas.height / img.height;
-            scale = Math.min(factorX, factorY, 1);
-            imgX = (canvas.width - img.width * scale) / 2;
-            imgY = (canvas.height - img.height * scale) / 2;
-            draw();
-            calcularEstambre();
-            const panelDerecho = document.querySelector('.lateral');
-            panelDerecho.style.display = 'flex';
-            panelDerecho.style.animation = 'fadeSlideIn 0.4s ease forwards';
-            document.getElementById("resultado").style.display = "block";
-            document.getElementById("añadirCarrito").style.display = "flex";
-          };
+        img.onload = function () {
+          // 🔧 Convertimos el tamaño más grande a ocupar máximo 100 cm (500 px)
+          const maxCm = 100;
+          const maxPxLienzo = canvas.width;
+          const pxPorCm = maxPxLienzo / maxCm;
+
+          const anchoCm = img.width / pxPorCm;
+          const altoCm = img.height / pxPorCm;
+
+          if (anchoCm < 25 && altoCm < 25) {
+             alert("❌ La imagen es demasiado pequeña. Se requiere al menos 25 cm en alguna dimensión.");
+             return;
+          }
+          // 🔄 Escalamos proporcionalmente la imagen al canvas de 500x500
+          const factorX = canvas.width / img.width;
+          const factorY = canvas.height / img.height;
+          scale = Math.min(factorX, factorY, 1);
+
+          imgX = (canvas.width - img.width * scale) / 2;
+          imgY = (canvas.height - img.height * scale) / 2;
+
+          draw();
+          calcularEstambre();
+          document.querySelector('.lateral').style.display = 'flex';
+          document.getElementById("resultado").style.display = "block";
+          document.getElementById("añadirCarrito").style.display = "flex";
+        };
           img.src = evt.target.result;
           document.getElementById("vistaAlfombra").src = evt.target.result;
           document.getElementById("vistaAlfombra").style.display = "block";
