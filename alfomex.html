@@ -241,13 +241,13 @@
           const vistaAlfombra = document.getElementById("vistaAlfombra");
 
           if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-           const pxPorCmVista = 5; // 1 cm = 5px en la vista previa
-           const anchoCm = (img.width * scale) / pxPorCm;
-           const altoCm = (img.height * scale) / pxPorCm;
+           const anchoCuartoCm = 450; // Cuarto físico en cm
+           const anchoImagenCuartoPx = 495; // px reales de cuarto.png
+           const escalaCuartoPxPorCm = anchoImagenCuartoPx / anchoCuartoCm;
 
            vistaAlfombra.style.position = "absolute";
-           vistaAlfombra.style.width = `${anchoCm * pxPorCmVista}px`;
-           vistaAlfombra.style.height = `${altoCm * pxPorCmVista}px`;
+           vistaAlfombra.style.width = `${anchoCm * escalaCuartoPxPorCm}px`;
+           vistaAlfombra.style.height = `${altoCm * escalaCuartoPxPorCm}px`;
            vistaAlfombra.style.top = "65%";
            vistaAlfombra.style.left = "50%";
            vistaAlfombra.style.transform = "translate(-50%, -50%)";
