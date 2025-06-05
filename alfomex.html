@@ -371,9 +371,15 @@
       // Mostrar vista automáticamente también en móviles
       if (window.innerWidth < 1000) {
         const vista = document.getElementById("vistaAlfombra");
+        const contenedor = document.querySelector(".zoom-container");
+        const anchoRealPx = contenedor.offsetWidth;
+        const altoRealPx = contenedor.offsetHeight;
+        const cuartoCm = 300;
+
+        const pxPorCmCuarto = anchoRealPx / cuartoCm;
+
         const anchoCmReal = (img.width * scale) / pxPorCm;
         const altoCmReal = (img.height * scale) / pxPorCm;
-        const pxPorCmCuarto = 800 / 300;
 
         vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
         vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
