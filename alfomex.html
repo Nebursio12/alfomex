@@ -454,9 +454,9 @@ function recortarTransparencias(imagen, callback) {
           calcularEstambre();
           const panelEstambre = document.getElementById("panelEstambre");
           const descripcionContenido = document.getElementById("descripcionContenido");
-          if (descripcionContenido.innerHTML.trim() !== "") {
-            panelEstambre.style.display = 'flex';
-            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          if (img && img.src && descripcionContenido.innerHTML.trim() !== "") {
+             panelEstambre.style.display = 'flex';
+             panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
           }
         }
       });
