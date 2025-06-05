@@ -255,7 +255,9 @@
             vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
 
-
+        if (!img || !img.src) {
+          document.getElementById("panelEstambre").style.display = "none";
+        }
       }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
         for (let [key, _] of mapa.entries()) {
