@@ -241,6 +241,9 @@
             ctx.fillText(`0cm`, 2, 10);
           }
         }
+        if (img && img.complete && img.src) {
+          ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        }
         ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
         // Calcular tamaño real de la imagen y mostrarlo
         const anchoCm = (img.width * scale) / pxPorCm;
