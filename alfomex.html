@@ -120,8 +120,6 @@
         actualizarVistaCarrito();
       };
     </script>
- 
-    
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal" style="margin-top: 80px;">
       <!-- Lateral izquierdo para descripción del estambre -->
@@ -203,12 +201,27 @@
       };
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // ⛔️ SALIR si no hay imagen
+        if (!img || !img.src) {
+          // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
+          ctx.fillStyle = '#999';
+          ctx.font = '14px Segoe UI';
+          ctx.textAlign = 'center';
+          ctx.fillText("Aquí puedes subir cualquier imagen para solicitar una cotización.", canvas.width / 2, canvas.height / 2 - 10);
+          ctx.fillText("Usa formato PNG de buena calidad. Da clic en el botón de imagen para comenzar.", canvas.width / 2, canvas.height / 2 + 10);
+          document.getElementById("areaCubierta").innerHTML = "";
+          return;
+        }
+
+        // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
           ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
           ctx.fillRect(px, 0, 1, canvas.height);
           ctx.fillRect(0, px, canvas.width, 1);
         }
+
         ctx.strokeStyle = '#999';
         for (let i = 0; i <= 100; i += 10) {
           const px = i * pxPorCm;
@@ -222,43 +235,33 @@
           ctx.stroke();
           ctx.fillStyle = '#000';
           ctx.font = '10px Arial';
-          if (i !== 0) {
-            ctx.fillText(`${i}cm`, px + 2, 12);
-            ctx.fillText(`${i}cm`, 2, px + 10);
-          } else {
-            ctx.fillText(`0cm`, 2, 10);
-          }
+          ctx.fillText(`${i}cm`, px + 2, 12);
+          ctx.fillText(`${i}cm`, 2, px + 10);
         }
-        if (img && img.complete && img.src) {
-          ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
-        }
-        // Calcular tamaño real de la imagen y mostrarlo
+
+        // 🖼 Dibuja la imagen
+        ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+
+        // Calcula y muestra dimensiones
         const anchoCm = (img.width * scale) / pxPorCm;
         const altoCm = (img.height * scale) / pxPorCm;
         document.getElementById("areaCubierta").innerHTML =
           `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
           `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
-          const vistaAlfombra = document.getElementById("vistaAlfombra");
 
-          if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-            const anchoCanvasCm = (img.width * scale) / pxPorCm;
-            const altoCanvasCm = (img.height * scale) / pxPorCm;
-
-            const pxPorCmCuarto = 496 / 300; // 800 px = 300 cm
-
-            vistaAlfombra.style.width = `${anchoCanvasCm * pxPorCmCuarto}px`;
-            vistaAlfombra.style.height = `${altoCanvasCm * pxPorCmCuarto}px`;
-
-            vistaAlfombra.style.position = "absolute";
-            vistaAlfombra.style.top = "78%";
-            vistaAlfombra.style.left = "25%";
-            vistaAlfombra.style.transform = "translate(-50%, -50%)";
-          }
-
-        if (!img || !img.src) {
-          document.getElementById("panelEstambre").style.display = "none";
+        // Ajusta la vista en el cuarto
+        const vistaAlfombra = document.getElementById("vistaAlfombra");
+        if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+          const pxPorCmCuarto = 496 / 300;
+          vistaAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
+          vistaAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
+          vistaAlfombra.style.position = "absolute";
+          vistaAlfombra.style.top = "78%";
+          vistaAlfombra.style.left = "25%";
+          vistaAlfombra.style.transform = "translate(-50%, -50%)";
         }
       }
+
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
         for (let [key, _] of mapa.entries()) {
           const [r2, g2, b2] = key.split(',').map(Number);
@@ -342,106 +345,106 @@
         }
       }
       imgInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
+        const file = e.target.files[0];
+        if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    const imagenOriginal = new Image();
-    imagenOriginal.onload = function () {
-      recortarTransparencias(imagenOriginal, function(imagenRecortada) {
-        img = imagenRecortada;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const imagenOriginal = new Image();
+          imagenOriginal.onload = function () {
+            recortarTransparencias(imagenOriginal, function(imagenRecortada) {
+              img = imagenRecortada;
 
-        const factorX = canvas.width / img.width;
-        const factorY = canvas.height / img.height;
-        scale = Math.min(factorX, factorY, 1);
+              const factorX = canvas.width / img.width;
+              const factorY = canvas.height / img.height;
+              scale = Math.min(factorX, factorY, 1);
 
-        imgX = (canvas.width - img.width * scale) / 2;
-        imgY = (canvas.height - img.height * scale) / 2;
+              imgX = (canvas.width - img.width * scale) / 2;
+              imgY = (canvas.height - img.height * scale) / 2;
 
-        draw();
-        calcularEstambre();
-        // Mostrar el panel derecho y resultado
-        document.querySelector('.lateral').style.display = 'flex';
-        document.getElementById("resultado").style.display = "block";
-        document.getElementById("añadirCarrito").style.display = "flex";
+              draw();
+              calcularEstambre();
+              // Mostrar el panel derecho y resultado
+              document.querySelector('.lateral').style.display = 'flex';
+              document.getElementById("resultado").style.display = "block";
+              document.getElementById("añadirCarrito").style.display = "flex";
 
-        // ✅ Cargar imagen recortada en ambas vistas
-        const recorteSrc = imagenRecortada.src;
-        document.getElementById("vistaAlfombra").src = recorteSrc;
-        document.getElementById("vistaAlfombra").style.display = "block";
-      // Mostrar vista automáticamente también en móviles
-      if (window.innerWidth < 1000) {
-        const vista = document.getElementById("vistaAlfombra");
-        const contenedor = document.querySelector(".zoom-container");
-        const anchoRealPx = contenedor.offsetWidth;
-        const altoRealPx = contenedor.offsetHeight;
-        const cuartoCm = 300;
+              // ✅ Cargar imagen recortada en ambas vistas
+              const recorteSrc = imagenRecortada.src;
+              document.getElementById("vistaAlfombra").src = recorteSrc;
+              document.getElementById("vistaAlfombra").style.display = "block";
+              // Mostrar vista automáticamente también en móviles
+              if (window.innerWidth < 1000) {
+                const vista = document.getElementById("vistaAlfombra");
+                const contenedor = document.querySelector(".zoom-container");
+                const anchoRealPx = contenedor.offsetWidth;
+                const altoRealPx = contenedor.offsetHeight;
+                const cuartoCm = 300;
 
-        const pxPorCmCuarto = anchoRealPx / cuartoCm;
+                const pxPorCmCuarto = anchoRealPx / cuartoCm;
 
-        const anchoCmReal = (img.width * scale) / pxPorCm;
-        const altoCmReal = (img.height * scale) / pxPorCm;
+                const anchoCmReal = (img.width * scale) / pxPorCm;
+                const altoCmReal = (img.height * scale) / pxPorCm;
 
-        vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
-        vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
-        vista.style.position = "absolute";
-        vista.style.top = "78%";
-        vista.style.left = "25%";
-        vista.style.transform = "translate(-50%, -50%)";
-      }
+                vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
+                vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
+                vista.style.position = "absolute";
+                vista.style.top = "78%";
+                vista.style.left = "25%";
+                vista.style.transform = "translate(-50%, -50%)";
+              }
 
-        document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
-        document.getElementById("modalImagenAlfombra").src = recorteSrc; // ✅ para vista modal
+              document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
+              document.getElementById("modalImagenAlfombra").src = recorteSrc; // ✅ para vista modal
 
-        // ✅ Actualizar vista previa de botón
-        const previewImg = document.querySelector(".btn-preview-cuarto img");
-        if (previewImg && window.innerWidth >= 1000) {
-            previewImg.src = recorteSrc;
-        }
+              // ✅ Actualizar vista previa de botón
+              const previewImg = document.querySelector(".btn-preview-cuarto img");
+              if (previewImg && window.innerWidth >= 1000) {
+                  previewImg.src = recorteSrc;
+              }
+            });
+          };
+          imagenOriginal.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
       });
-    };
-    imagenOriginal.src = evt.target.result;
-  };
-  reader.readAsDataURL(file);
-});
 
-function recortarTransparencias(imagen, callback) {
-  const canvasTmp = document.createElement('canvas');
-  canvasTmp.width = imagen.width;
-  canvasTmp.height = imagen.height;
-  const ctxTmp = canvasTmp.getContext('2d');
-  ctxTmp.drawImage(imagen, 0, 0);
+      function recortarTransparencias(imagen, callback) {
+        const canvasTmp = document.createElement('canvas');
+        canvasTmp.width = imagen.width;
+        canvasTmp.height = imagen.height;
+        const ctxTmp = canvasTmp.getContext('2d');
+        ctxTmp.drawImage(imagen, 0, 0);
 
-  const imgData = ctxTmp.getImageData(0, 0, canvasTmp.width, canvasTmp.height).data;
-  let top = canvasTmp.height, left = canvasTmp.width, right = 0, bottom = 0;
+        const imgData = ctxTmp.getImageData(0, 0, canvasTmp.width, canvasTmp.height).data;
+        let top = canvasTmp.height, left = canvasTmp.width, right = 0, bottom = 0;
 
-  for (let y = 0; y < canvasTmp.height; y++) {
-    for (let x = 0; x < canvasTmp.width; x++) {
-      const i = (y * canvasTmp.width + x) * 4;
-      const alpha = imgData[i + 3];
-      if (alpha > 10) {
-        if (x < left) left = x;
-        if (x > right) right = x;
-        if (y < top) top = y;
-        if (y > bottom) bottom = y;
+        for (let y = 0; y < canvasTmp.height; y++) {
+          for (let x = 0; x < canvasTmp.width; x++) {
+            const i = (y * canvasTmp.width + x) * 4;
+            const alpha = imgData[i + 3];
+            if (alpha > 10) {
+              if (x < left) left = x;
+              if (x > right) right = x;
+              if (y < top) top = y;
+              if (y > bottom) bottom = y;
+            }
+          }
+        }
+
+        const ancho = right - left + 1;
+        const alto = bottom - top + 1;
+
+        const canvasRecorte = document.createElement('canvas');
+        canvasRecorte.width = ancho;
+        canvasRecorte.height = alto;
+        const ctxRecorte = canvasRecorte.getContext('2d');
+        ctxRecorte.drawImage(imagen, left, top, ancho, alto, 0, 0, ancho, alto);
+
+        const imgRecortada = new Image();
+        imgRecortada.onload = () => callback(imgRecortada);
+        imgRecortada.src = canvasRecorte.toDataURL();
       }
-    }
-  }
-
-  const ancho = right - left + 1;
-  const alto = bottom - top + 1;
-
-  const canvasRecorte = document.createElement('canvas');
-  canvasRecorte.width = ancho;
-  canvasRecorte.height = alto;
-  const ctxRecorte = canvasRecorte.getContext('2d');
-  ctxRecorte.drawImage(imagen, left, top, ancho, alto, 0, 0, ancho, alto);
-
-  const imgRecortada = new Image();
-  imgRecortada.onload = () => callback(imgRecortada);
-  imgRecortada.src = canvasRecorte.toDataURL();
-}
 
       canvas.addEventListener('mousedown', e => {
         dragging = true;
