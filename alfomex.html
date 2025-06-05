@@ -368,6 +368,21 @@
         const recorteSrc = imagenRecortada.src;
         document.getElementById("vistaAlfombra").src = recorteSrc;
         document.getElementById("vistaAlfombra").style.display = "block";
+      // Mostrar vista automáticamente también en móviles
+      if (window.innerWidth < 1000) {
+        const vista = document.getElementById("vistaAlfombra");
+        const anchoCmReal = (img.width * scale) / pxPorCm;
+        const altoCmReal = (img.height * scale) / pxPorCm;
+        const pxPorCmCuarto = 800 / 300;
+
+        vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
+        vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
+        vista.style.position = "absolute";
+        vista.style.top = "50%";
+        vista.style.left = "50%";
+        vista.style.transform = "translate(-50%, -50%)";
+      }
+
         document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
         document.getElementById("modalImagenAlfombra").src = recorteSrc; // ✅ para vista modal
 
