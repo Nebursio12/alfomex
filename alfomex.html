@@ -17,17 +17,13 @@
         <button id="menuBtn" onclick="openNav()">☰</button>
         <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil" style="position: relative;">
           <i class="fas fa-shopping-cart"></i>
-          <span id="contadorCarrito"
-              style="position:absolute; top:-6px; right:-6px; background:red; color:white;
-                   font-size:10px; padding:2px 6px; border-radius:50%; display:none;">
-          </span>
+          <span id="contadorCarrito" style="position:absolute; top:-6px; right:-6px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none;"></span>
         </button>
         <div id="carritoLista" class="carrito-lista oculto">
           <div id="mensajeCarritoVacio" style="display: none; color: #666; font-size: 0.95rem; text-align: center; padding: 20px;">
-             🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
+            🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
           </div>
         </div>
-      </div>
       </div>
       <div class="logo">ALFOMEX</div>
       <nav class="header-right" id="navOptions">
@@ -74,8 +70,6 @@
           nav.innerHTML = `
             <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
               <i class="fas fa-user-circle"></i>
-
-
             </button>
             <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
               <i class="fas fa-sign-out-alt"></i>
@@ -125,9 +119,6 @@
         localStorage.removeItem("carrito");
         actualizarVistaCarrito();
       };
-      
-      
-      
     </script>
     <h2>PERSONALIZA TU ALFOMBRA</h2>
     <div class="plantilla-btn-container">
@@ -154,12 +145,10 @@
               <img src="cuarto.png" alt="Vista previa" />
             </button>
           </div>
-
           <div id="vistaCuarto" class="zoom-container">
             <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
             <img id="vistaAlfombra" src="" class="zoom-img" alt="Vista previa" style="display: none;" />
           </div>
-
         </div>
       </div>
       <div>
@@ -169,7 +158,6 @@
           <button id="zoomMas" title="Zoom +"><i class="fas fa-search-plus"></i></button>
           <button id="centrar" onclick="centrarImagen()" title="Centrar"><i class="fas fa-compress-arrows-alt"></i></button>
           <button id="zoomMenos" title="Zoom -"><i class="fas fa-search-minus"></i></button>
-
         </div>
       </div>
       <!-- Lateral derecho para presupuesto -->
@@ -258,7 +246,6 @@
             vistaAlfombra.style.left = "50%";
             vistaAlfombra.style.transform = "translate(-50%, -50%)";
           }
-
       }
       function agruparColor(r, g, b, mapa, tolerancia = 50) {
         for (let [key, _] of mapa.entries()) {
@@ -341,47 +328,83 @@
         } else {
           panelEstambre.style.display = "none";
         }
-
       }
       imgInput.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          img = new Image();
-        img.onload = function () {
-          // 🔧 Siempre forzamos que el lado más largo mida como máximo 100 cm (500 px)
-         const maxCm = 100;
-         const pxPorCm = canvas.width / maxCm;
+  const file = e.target.files[0];
+  if (!file) return;
 
-         const escalaAncho = canvas.width / img.width;
-         const escalaAlto = canvas.height / img.height;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const imagenOriginal = new Image();
+    imagenOriginal.onload = function () {
+      recortarTransparencias(imagenOriginal, function(imagenRecortada) {
+        img = imagenRecortada;
 
-         // ⚖️ Escalamos para que encaje dentro del lienzo (max 100 cm de lado)
-         scale = Math.min(escalaAncho, escalaAlto);
+        const factorX = canvas.width / img.width;
+        const factorY = canvas.height / img.height;
+        scale = Math.min(factorX, factorY, 1);
 
-         imgX = (canvas.width - img.width * scale) / 2;
-         imgY = (canvas.height - img.height * scale) / 2;
+        imgX = (canvas.width - img.width * scale) / 2;
+        imgY = (canvas.height - img.height * scale) / 2;
 
-         draw();
-         calcularEstambre();
-         document.querySelector('.lateral').style.display = 'flex';
-         document.getElementById("resultado").style.display = "block";
-         document.getElementById("añadirCarrito").style.display = "flex";
-        };
+        draw();
+        calcularEstambre();
+        document.querySelector('.lateral').style.display = 'flex';
+        document.getElementById("resultado").style.display = "block";
+        document.getElementById("añadirCarrito").style.display = "flex";
 
-          img.src = evt.target.result;
-          document.getElementById("vistaAlfombra").src = evt.target.result;
-          document.getElementById("vistaAlfombra").style.display = "block";
-          document.getElementById("vistaAlfombra").setAttribute("data-src-real", evt.target.result);
+        document.getElementById("vistaAlfombra").src = evt.target.result;
+        document.getElementById("vistaAlfombra").style.display = "block";
+        document.getElementById("vistaAlfombra").setAttribute("data-src-real", evt.target.result);
 
-          const previewImg = document.querySelector(".btn-preview-cuarto img");
-          if (previewImg && window.innerWidth >= 1000) {
-            previewImg.src = evt.target.result;
-          }
-        };
-        reader.readAsDataURL(file);
+        const previewImg = document.querySelector(".btn-preview-cuarto img");
+        if (previewImg && window.innerWidth >= 1000) {
+          previewImg.src = evt.target.result;
+        }
       });
+    };
+    imagenOriginal.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+function recortarTransparencias(imagen, callback) {
+  const canvasTmp = document.createElement('canvas');
+  canvasTmp.width = imagen.width;
+  canvasTmp.height = imagen.height;
+  const ctxTmp = canvasTmp.getContext('2d');
+  ctxTmp.drawImage(imagen, 0, 0);
+
+  const imgData = ctxTmp.getImageData(0, 0, canvasTmp.width, canvasTmp.height).data;
+  let top = canvasTmp.height, left = canvasTmp.width, right = 0, bottom = 0;
+
+  for (let y = 0; y < canvasTmp.height; y++) {
+    for (let x = 0; x < canvasTmp.width; x++) {
+      const i = (y * canvasTmp.width + x) * 4;
+      const alpha = imgData[i + 3];
+      if (alpha > 10) {
+        if (x < left) left = x;
+        if (x > right) right = x;
+        if (y < top) top = y;
+        if (y > bottom) bottom = y;
+      }
+    }
+  }
+
+  const ancho = right - left + 1;
+  const alto = bottom - top + 1;
+
+  const canvasRecorte = document.createElement('canvas');
+  canvasRecorte.width = ancho;
+  canvasRecorte.height = alto;
+  const ctxRecorte = canvasRecorte.getContext('2d');
+  ctxRecorte.drawImage(imagen, left, top, ancho, alto, 0, 0, ancho, alto);
+
+  const imgRecortada = new Image();
+  imgRecortada.onload = () => callback(imgRecortada);
+  imgRecortada.src = canvasRecorte.toDataURL();
+}
+
       canvas.addEventListener('mousedown', e => {
         dragging = true;
         offsetX = e.offsetX - imgX;
@@ -449,7 +472,6 @@
           toast.classList.remove("mostrar");
         }, 3000);
       }
-
 
       function iniciarZoom(delta) {
         aplicarZoom(delta);
@@ -706,16 +728,15 @@
       }
     }
     </script>
-   
     <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
       <div class="modal-contenido" onclick="event.stopPropagation()">
-         <div class="contenedor-superpuesto">
-           <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
-           <img id="modalImagenAlfombra" src="" alt="Alfombra" />
-          </div>
-          <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
+        <div class="contenedor-superpuesto">
+          <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
+          <img id="modalImagenAlfombra" src="" alt="Alfombra" />
         </div>
+        <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
+      </div>
     </div>
-  <div id="toastNotificacion" class="toast-notificacion"></div>
+    <div id="toastNotificacion" class="toast-notificacion"></div>
   </body>
 </html>
