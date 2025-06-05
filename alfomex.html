@@ -735,6 +735,11 @@
        const modal = document.getElementById("modalVistaCuarto");
        renderizarCarrito();
        actualizarContadorCarrito(); // ✅ Nuevo
+
+       // 🟩 Forzar dibujo inicial si no hay imagen
+       if (!img || !img.src) {
+        draw(); // esto dibuja el mensaje en el lienzo al cargar
+       }
        
 
        document.getElementById('añadirCarrito').addEventListener('click', () => {
