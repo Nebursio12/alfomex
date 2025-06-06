@@ -1771,8 +1771,8 @@ body.con-aviso header {
 }
 
 .boton-central-imagen {
-  position: relative; /* ✅ Esto permite que se mueva junto con el contenido */
-  top: 60%;
+  position: absolute;
+  top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #000000;
