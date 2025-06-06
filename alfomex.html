@@ -542,6 +542,27 @@
         draw();
         calcularEstambre();
       }
+
+      let ultimaAdvertenciaZoom = 0;
+      function mostrarCambioDimensiones(ancho, alto) {
+       const ahora = Date.now();
+       if (ahora - ultimaAdvertenciaZoom < 1000) return; // espera al menos 1 segundo
+       ultimaAdvertenciaZoom = ahora;
+
+       const toast = document.getElementById("toastNotificacion");
+       if (!toast) return;
+
+       toast.innerHTML = `📏 <strong>Las dimensiones han cambiado:</strong><br>Anchura: ${ancho.toFixed(2)} cm<br>Altura: ${alto.toFixed(2)} cm`;
+       toast.classList.remove("toast-advertencia");
+       toast.classList.remove("toast-dimensiones");
+       toast.classList.add("toast-dimensiones");
+       toast.classList.add("mostrar");
+
+       setTimeout(() => {
+         toast.classList.remove("mostrar");
+       }, 3000);
+      }
+
       let zoomInterval;
       function aplicarZoom(delta) {
         const nuevoScale = scale + delta;
@@ -565,6 +586,9 @@
         centrarImagen();
         draw();
         calcularEstambre();
+        const ancho = (img.width * scale) / pxPorCm;
+        const alto = (img.height * scale) / pxPorCm;
+        mostrarCambioDimensiones(ancho, alto);
         imgX = Math.min(Math.max(imgX, 0), canvas.width - img.width * scale);
         imgY = Math.min(Math.max(imgY, 0), canvas.height - img.height * scale);
       }
