@@ -825,9 +825,16 @@
     </div>
     <div id="toastNotificacion" class="toast-notificacion"></div>
     <script>
-      function cerrarAviso() {
-        document.getElementById("avisoEnvio").style.display = "none";
-      }
+       // Agrega la clase al cargar
+       window.addEventListener("DOMContentLoaded", () => {
+          document.body.classList.add("con-aviso");
+       });
+
+       function cerrarAviso() {
+         const aviso = document.getElementById("avisoEnvio");
+         aviso.style.display = "none";
+         document.body.classList.remove("con-aviso");
+       }
     </script>
 
   </body>
