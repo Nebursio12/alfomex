@@ -157,7 +157,6 @@
             <i class="fas fa-search-minus"></i>
           </button>
         </div>
-
         <div id="areaCubierta"></div>
       </div>
       <!-- Lateral derecho para presupuesto -->
@@ -911,56 +910,76 @@
 
    
   <script>
-    document.getElementById("añadirCarrito").addEventListener("click", enviarPorCorreo);
+    document.getElementById("añadirCarrito").addEventListener("click", () => {
+     document.getElementById("loaderOverlay").style.display = "flex"; // Mostrar loader
+     setTimeout(enviarPorCorreo, 50); // Pequeño delay para permitir que se vea
+    });
     function enviarPorCorreo() {
-      const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
-      const alto = ((img.height * scale) / pxPorCm).toFixed(2);
-      const base64 = img?.src || "";
-      const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
+    const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
+    const alto = ((img.height * scale) / pxPorCm).toFixed(2);
+    const base64 = img?.src || "";
+    const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
 
-      if (!window.auth) return alert("❌ Error: Auth no está disponible");
+    if (!window.auth) return alert("❌ Error: Auth no está disponible");
 
-      window.auth.onAuthStateChanged(function(user) {
-        if (!user) return alert("No estás autenticado");
+    document.getElementById("loaderOverlay").style.display = "flex"; // 🔵 Mostrar loader
 
-        const nombre = user.displayName || "Cliente sin nombre";
-        const correo = user.email;
-        const medidas = `${ancho} cm x ${alto} cm`;
+    window.auth.onAuthStateChanged(function(user) {
+      if (!user) {
+        document.getElementById("loaderOverlay").style.display = "none"; // 🟥 Ocultar si no hay user
+        return alert("No estás autenticado");
+      }
 
-        // 🔵 Subir a ImgBB
-        const formData = new FormData();
-        const imagenBase64 = base64.split(",")[1]; // quitamos encabezado "data:image/png;base64,"
-        formData.append("image", imagenBase64);
+      const nombre = user.displayName || "Cliente sin nombre";
+      const correo = user.email;
+      const medidas = `${ancho} cm x ${alto} cm`;
 
-        fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
-          method: "POST",
-          body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (!data.success) throw new Error("Error al subir imagen");
+      const formData = new FormData();
+      const imagenBase64 = base64.split(",")[1];
+      formData.append("image", imagenBase64);
 
-          const imagenURL = data.data.url;
+      fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success) throw new Error("Error al subir imagen");
 
-          const templateParams = {
-            cliente: nombre,
-            email: correo,
-            medidas: medidas,
-            costo: costo,
-            imagen: imagenURL // ✅ ya es un link y no pesa
-          };
+        const imagenURL = data.data.url;
 
-          return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
-        })
-       .then(() => {
-          alert("✅ Pedido enviado correctamente por correo");        
-        })
-        .catch(error => {
-          alert("❌ Error al enviar: " + error.message);
-        });
+        const templateParams = {
+          cliente: nombre,
+          email: correo,
+          medidas: medidas,
+          costo: costo,
+          imagen: imagenURL
+        };
+
+        return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
+      })
+      .then(() => {
+        alert("✅ Pedido enviado correctamente por correo");
+        document.getElementById("añadirCarrito").disabled = true;
+        document.getElementById("loaderOverlay").style.display = "none"; // ✅ Ocultar loader
+      })
+      .catch(error => {
+        alert("❌ Error al enviar: " + error.message);
+        document.getElementById("loaderOverlay").style.display = "none"; // 🟥 Ocultar en error
       });
-    }
+    });
+  }
 
  </script>
+  <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
+    <div style="width: 50px; height: 50px; border: 6px solid #ccc; border-top: 6px solid #000; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+  </div>
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
   </body>
 </html>
