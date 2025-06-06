@@ -1710,3 +1710,18 @@ body:not(.con-aviso) .contenedor-principal {
 body.con-aviso header {
   margin-top: 40px; /* Igual al alto del aviso para evitar huecos */
 }
+
+.aviso-movimiento {
+  white-space: nowrap;
+  overflow: hidden;
+  animation: moverTexto 10s linear infinite;
+}
+
+@keyframes moverTexto {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
