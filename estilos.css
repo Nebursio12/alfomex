@@ -1772,8 +1772,9 @@ body.con-aviso header {
 
 .boton-central-imagen {
   position: relative; /* ✅ Esto permite que se mueva junto con el contenido */
-  margin: 20px auto;
-  display: inline-block;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: #000000;
   color: white;
   font-weight: bold;
@@ -1785,9 +1786,6 @@ body.con-aviso header {
   z-index: 10;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transform: none;    /* ❌ Elimina el translate que lo centra manualmente */
-  top: auto;
-  left: auto;
 }
 .boton-central-imagen:hover {
   background-color: #3b3b3b;
