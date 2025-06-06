@@ -1460,7 +1460,7 @@ h2, .alerta, .plantilla-btn-container {
 
 .toast-notificacion {
   position: absolute;
-  top: 30px;
+  top: 60px;
   left: 50%;
   transform: translateX(-50%);
   background: #666; /* color por defecto */
