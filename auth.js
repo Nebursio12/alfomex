@@ -18,8 +18,7 @@ import {
   doc,
   setDoc,
   getDoc,
-  updateDoc,
-  serverTimestamp
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 // 🔧 CONFIGURACIÓN FIREBASE
