@@ -53,7 +53,7 @@ header {
   width: 100%;
   box-sizing: border-box;
   position: fixed;
-  top: 0;
+  top: 40;
   left: 0;
   z-index: 100;
 }
@@ -653,7 +653,7 @@ header {
   width: 100%;
   box-sizing: border-box;
   position: fixed;
-  top: 0;
+  top: 40;
   left: 0;
   z-index: 100;
 }
@@ -1670,4 +1670,32 @@ h2, .alerta, .plantilla-btn-container {
     display: none;
   }
 }
+
+#avisoEnvio {
+  background-color: #ffcc00;
+  color: black;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.cerrar-aviso {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+}
+
 
