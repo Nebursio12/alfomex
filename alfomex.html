@@ -855,20 +855,32 @@
     });
 
     const overlayDrag = document.getElementById("overlayDrag");
+    const mensajeDrag = document.getElementById("mensajeDrag");
 
-    document.addEventListener("dragenter", () => {
-      overlayDrag.classList.add("active");
+    document.addEventListener("dragenter", (e) => {
+     const dt = e.dataTransfer || e.originalEvent?.dataTransfer;
+     if (dt?.items?.length > 0) {
+       const tipo = dt.items[0].type;
+       if (!tipo.startsWith("image/")) {
+         mensajeDrag.textContent = "⚠️ Solo se permiten imágenes PNG o JPG";
+       } else {
+         mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
+       }
+     }
+     overlayDrag.classList.add("active");
     });
 
     document.addEventListener("dragleave", (e) => {
-      if (e.relatedTarget === null || e.target === document) {
-        overlayDrag.classList.remove("active");
-      }
-    });
+     if (e.relatedTarget === null || e.target === document) {
+       overlayDrag.classList.remove("active");
+       mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
+     }
+   });
 
-    document.addEventListener("drop", () => {
-      overlayDrag.classList.remove("active");
-    });
+   document.addEventListener("drop", () => {
+     overlayDrag.classList.remove("active");
+     mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
+   });
 
 
     function actualizarContadorCarrito() {
