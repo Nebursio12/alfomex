@@ -158,6 +158,9 @@
       </div>
       <div class="canvas-contenedor">
         <canvas id="lienzo"></canvas>
+        <div id="botonCentralImagen" class="boton-central-imagen" onclick="document.getElementById('imgInput').click()">
+         <i class="fas fa-image"></i> Seleccionar imagen
+        </div>
         <div id="toastNotificacion" class="toast-notificacion"></div>
         <div class="controls">
           <button id="zoomMas" class="zoom-btn" title="Zoom +">
@@ -264,6 +267,7 @@
 
         // ⛔️ SALIR si no hay imagen
         if (!img || !img.src) {
+          document.getElementById("botonCentralImagen").style.display = "block";
           // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
           ctx.fillStyle = '#666';
           ctx.font = '18px Segoe UI';
@@ -274,8 +278,9 @@
 
           document.getElementById("areaCubierta").innerHTML = "";
           return;
+        } else {
+          document.getElementById("botonCentralImagen").style.display = "none";
         }
-
         // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
