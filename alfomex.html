@@ -851,18 +851,20 @@
       }
     });
 
-    const canvasContenedor = document.querySelector(".canvas-contenedor");
+    const overlayDrag = document.getElementById("overlayDrag");
 
     document.addEventListener("dragenter", () => {
-      canvasContenedor?.classList.add("dragging");
+      overlayDrag.classList.add("active");
     });
+
     document.addEventListener("dragleave", (e) => {
       if (e.relatedTarget === null || e.target === document) {
-        canvasContenedor?.classList.remove("dragging");
+        overlayDrag.classList.remove("active");
       }
     });
+
     document.addEventListener("drop", () => {
-      canvasContenedor?.classList.remove("dragging");
+      overlayDrag.classList.remove("active");
     });
 
 
@@ -900,5 +902,8 @@
        }
     </script>
 
+    <div id="overlayDrag" class="drag-overlay">
+      <div class="drag-message">¡Suelta tu imagen aquí!</div>
+    </div>
   </body>
 </html>
