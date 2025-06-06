@@ -919,8 +919,13 @@
     const alto = ((img.height * scale) / pxPorCm).toFixed(2);
     const base64 = img?.src || "";
     const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
+    
 
-    if (!window.auth) return alert("❌ Error: Auth no está disponible");
+    if (!window.auth) {
+       mostrarNotificacion("❌ Error: Auth no está disponible", "error");
+       return;
+    }
+
 
     document.getElementById("loaderOverlay").style.display = "flex"; // 🔵 Mostrar loader
 
@@ -959,12 +964,12 @@
         return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
       })
       .then(() => {
-        alert("✅ Pedido enviado correctamente por correo");
+        mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
         document.getElementById("añadirCarrito").disabled = true;
         document.getElementById("loaderOverlay").style.display = "none"; // ✅ Ocultar loader
       })
       .catch(error => {
-        alert("❌ Error al enviar: " + error.message);
+        mostrarNotificacion("❌ Error al enviar: " + error.message, "error");
         document.getElementById("loaderOverlay").style.display = "none"; // 🟥 Ocultar en error
       });
     });
