@@ -14,12 +14,11 @@
   <body>
     <div id="avisoEnvio">
       <div class="aviso-movimiento">
-         Por el momento, solo hay envíos a México 
+        Por el momento, solo hay envíos a México
       </div>
       <button onclick="cerrarAviso()" class="cerrar-aviso">&times;</button>
     </div>
     <header>
-      
       <div class="header-left">
         <button id="menuBtn" onclick="openNav()">☰</button>
         <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil" style="position: relative;">
@@ -190,6 +189,52 @@
       const ctx = canvas.getContext('2d');
       let vistaModalAbierto = false;
       const imgInput = document.getElementById('imgInput');
+      // Drag & Drop
+      document.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+      });
+      document.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            const imagenOriginal = new Image();
+            imagenOriginal.onload = function () {
+              recortarTransparencias(imagenOriginal, function(imagenRecortada) {
+                img = imagenRecortada;
+                const factorX = canvas.width / img.width;
+                const factorY = canvas.height / img.height;
+                scale = Math.min(factorX, factorY, 1);
+                imgX = (canvas.width - img.width * scale) / 2;
+                imgY = (canvas.height - img.height * scale) / 2;
+                draw();
+                calcularEstambre();
+
+                // Mostrar resultados
+                document.querySelector('.lateral').style.display = 'flex';
+                document.getElementById("resultado").style.display = "block";
+                document.getElementById("añadirCarrito").style.display = "flex";
+
+                const recorteSrc = imagenRecortada.src;
+                document.getElementById("vistaAlfombra").src = recorteSrc;
+                document.getElementById("vistaAlfombra").style.display = "block";
+                document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
+                document.getElementById("modalImagenAlfombra").src = recorteSrc;
+
+                const previewImg = document.querySelector(".btn-preview-cuarto img");
+                if (previewImg && window.innerWidth >= 1000) {
+                  previewImg.src = recorteSrc;
+                }
+              });
+            };
+            imagenOriginal.src = evt.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
       const resultado = document.getElementById('resultado');
       const colorDetalle = document.getElementById('colorDetalle');
       const totalFinal = document.getElementById('totalFinal');
@@ -805,6 +850,20 @@
         });
       }
     });
+
+    // 🎯 Efecto visual al arrastrar archivos
+    document.addEventListener("dragenter", () => {
+      document.body.classList.add("dragging");
+    });
+    document.addEventListener("dragleave", (e) => {
+        if (e.relatedTarget === null || e.target === document) {
+          document.body.classList.remove("dragging");
+        }
+    });
+    document.addEventListener("drop", () => {
+       document.body.classList.remove("dragging");
+    });
+
 
     function actualizarContadorCarrito() {
       const contador = document.getElementById("contadorCarrito");
