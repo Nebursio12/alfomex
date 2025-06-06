@@ -1772,7 +1772,7 @@ body.con-aviso header {
 
 .boton-central-imagen {
   position: absolute;
-  top: 30%;
+  top: 90%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #000000;
