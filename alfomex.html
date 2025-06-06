@@ -264,12 +264,13 @@
         // ⛔️ SALIR si no hay imagen
         if (!img || !img.src) {
           // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
-          ctx.fillStyle = '#999';
-          ctx.font = '14px Segoe UI';
+          ctx.fillStyle = '#666';
+          ctx.font = '18px Segoe UI';
           ctx.textAlign = 'center';
-          ctx.fillText("Aquí puedes subir cualquier imagen para solicitar una aprobación de pedido", canvas.width / 2, canvas.height / 2 - 10);
-          ctx.fillText("Usa formato PNG de calidad para mejores resultados y posible aprobación", canvas.width / 2, canvas.height / 2 + 10);
-          ctx.fillText("Da clic en el botón de imagen y añade para comenzar.", canvas.width / 2, canvas.height / 2 + 30);
+          ctx.fillText("Arrastra una imagen o da clic en el botón para añadirla", canvas.width / 2, canvas.height / 2 - 20);
+          ctx.fillText("Puedes usar archivos en formato PNG o JPG de buena calidad", canvas.width / 2, canvas.height / 2 + 10);
+          ctx.fillText("Tu diseño será analizado automáticamente al cargar.", canvas.width / 2, canvas.height / 2 + 40);
+
           document.getElementById("areaCubierta").innerHTML = "";
           return;
         }
