@@ -1702,6 +1702,7 @@ body:not(.con-aviso) .contenedor-principal {
   background: none;
   border: none;
   font-size: 20px;
+  z-index: 1001; /* Mayor al aviso-movimiento */
   margin-left: auto;
   cursor: pointer;
   color: black;
@@ -1718,6 +1719,7 @@ body.con-aviso header {
   white-space: nowrap;
   overflow: hidden;
   animation: moverTexto 12s linear infinite;
+  pointer-events: none; /* Esto evita que bloquee clics al botón */
 }
 
 
