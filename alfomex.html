@@ -931,7 +931,7 @@
         if (!user) return alert("No estás autenticado");
 
       const userId = user.uid;
-      const db = getFirestore();
+      const db = window.db;
 
       const docRef = doc(db, "pedidos", userId);
       const docSnap = await getDoc(docRef);
