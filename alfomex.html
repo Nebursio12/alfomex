@@ -593,7 +593,7 @@
         toast.classList.remove("toast-dimensiones", "toast-advertencia");
 
         if (tipo === "success") {
-          toast.style.background = "green";
+          toast.style.background = "#81C784";
         } else {
           toast.classList.add("toast-advertencia"); // ✅ Añade la clase roja
         }
@@ -632,6 +632,7 @@
         zoomMenos.addEventListener(evt, detenerZoom);
       });
       
+
 
       function obtenerNombreDesdeURL(url) {
         try {
@@ -915,66 +916,81 @@
      document.getElementById("loaderOverlay").style.display = "flex"; // Mostrar loader
      setTimeout(enviarPorCorreo, 50); // Pequeño delay para permitir que se vea
     });
-    function enviarPorCorreo() {
-    const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
-    const alto = ((img.height * scale) / pxPorCm).toFixed(2);
-    const base64 = img?.src || "";
-    const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
-    
+    async function enviarPorCorreo() {
+  const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
+  const alto = ((img.height * scale) / pxPorCm).toFixed(2);
+  const base64 = img?.src || "";
+  const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
 
-    if (!window.auth) {
-       mostrarNotificacion("❌ Error: Auth no está disponible", "error");
-       return;
-    }
-
-
-    document.getElementById("loaderOverlay").style.display = "flex"; // 🔵 Mostrar loader
-
-    window.auth.onAuthStateChanged(function(user) {
-      if (!user) {
-        document.getElementById("loaderOverlay").style.display = "none"; // 🟥 Ocultar si no hay user
-        return alert("No estás autenticado");
-      }
-
-      const nombre = user.displayName || "Cliente sin nombre";
-      const correo = user.email;
-      const medidas = `${ancho} cm x ${alto} cm`;
-
-      const formData = new FormData();
-      const imagenBase64 = base64.split(",")[1];
-      formData.append("image", imagenBase64);
-
-      fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (!data.success) throw new Error("Error al subir imagen");
-
-        const imagenURL = data.data.url;
-
-        const templateParams = {
-          cliente: nombre,
-          email: correo,
-          medidas: medidas,
-          costo: costo,
-          imagen: imagenURL
-        };
-
-        return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
-      })
-      .then(() => {
-        mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
-        document.getElementById("añadirCarrito").disabled = true;
-        document.getElementById("loaderOverlay").style.display = "none"; // ✅ Ocultar loader
-      })
-      .catch(error => {
-        mostrarNotificacion("❌ Error al enviar: " + error.message, "error");
-        document.getElementById("loaderOverlay").style.display = "none"; // 🟥 Ocultar en error
-      });
-    });
+  if (!window.auth) {
+    mostrarNotificacion("❌ Error: Auth no está disponible", "error");
+    return;
   }
+
+  const user = window.auth.currentUser;
+  if (!user) return alert("No estás autenticado");
+
+  const userId = user.uid;
+  const db = getFirestore();
+
+  const docRef = doc(db, "pedidos", userId);
+  const docSnap = await getDoc(docRef);
+
+  const ahora = new Date().getTime();
+
+  if (docSnap.exists()) {
+    const ultimo = docSnap.data().timestamp?.toMillis?.() || 0;
+    const diferencia = ahora - ultimo;
+
+    if (diferencia < 5 * 60 * 1000) {
+      const minutosRestantes = Math.ceil((5 * 60 * 1000 - diferencia) / 60000);
+      mostrarNotificacion(`⚠️ Solo puedes pedir cada 5 minutos. Espera ${minutosRestantes} min`, "error");
+      document.getElementById("loaderOverlay").style.display = "none";
+      return;
+    }
+  }
+
+  // ✅ Guardar timestamp actual
+  await setDoc(docRef, { timestamp: serverTimestamp() });
+
+  // 🔁 Continúa el envío del correo como ya tienes
+  const nombre = user.displayName || "Cliente sin nombre";
+  const correo = user.email;
+  const medidas = `${ancho} cm x ${alto} cm`;
+  const formData = new FormData();
+  const imagenBase64 = base64.split(",")[1];
+  formData.append("image", imagenBase64);
+
+  fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) throw new Error("Error al subir imagen");
+
+    const imagenURL = data.data.url;
+
+    const templateParams = {
+      cliente: nombre,
+      email: correo,
+      medidas: medidas,
+      costo: costo,
+      imagen: imagenURL
+    };
+
+    return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
+  })
+  .then(() => {
+    mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
+    document.getElementById("añadirCarrito").disabled = true;
+    document.getElementById("loaderOverlay").style.display = "none";
+  })
+  .catch(error => {
+    mostrarNotificacion("❌ Error al enviar: " + error.message, "error");
+    document.getElementById("loaderOverlay").style.display = "none";
+  });
+}
 
  </script>
   <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
