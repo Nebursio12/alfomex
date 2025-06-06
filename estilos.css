@@ -1759,3 +1759,9 @@ body.con-aviso header {
   border: 3px dashed #fff;
   border-radius: 10px;
 }
+
+.toast-dimensiones {
+  background: #555 !important;  /* Gris oscuro */
+  color: #fff;
+}
+
