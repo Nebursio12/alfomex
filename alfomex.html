@@ -369,7 +369,7 @@
         const costoTela = areaM2 * COSTOS.telaBase;
         const costoFieltro = areaM2 * COSTOS.fieltro;
         const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
-        resultado.innerHTML = `<strong>Área cubierta:</strong> ${areaCm2.toFixed(2)} cm² (${(img.width * scale / pxPorCm).toFixed(2)} x ${(img.height * scale / pxPorCm).toFixed(2)} cm)<br>` +
+        resultado.innerHTML = `<strong>Área cubierta:</strong> ${areaCm2.toFixed(2)} cm² <span style="font-size: 0.85em; color: #666;">(${anchoCm.toFixed(2)} x ${altoCm.toFixed(2)} cm)</span><br>` +
                               `<strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>` +
                               `<strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>` +
                               `<strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>` +
