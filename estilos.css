@@ -1760,8 +1760,15 @@ body.con-aviso header {
   border-radius: 10px;
 }
 
+/* Color para advertencias */
+.toast-advertencia {
+  background: crimson !important;
+  color: white;
+}
+
+/* Color para mensaje de dimensiones */
 .toast-dimensiones {
-  background: #555 !important;  /* Gris oscuro */
-  color: #fff;
+  background: #555 !important;
+  color: white;
 }
 
