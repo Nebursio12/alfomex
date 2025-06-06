@@ -1782,6 +1782,9 @@ body.con-aviso header {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   display: inline-block;
   margin-top: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 .boton-central-imagen:hover {
   background-color: #3b3b3b;
