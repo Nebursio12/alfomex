@@ -164,7 +164,7 @@
           </div>
         </div>
         <div id="toastNotificacion" class="toast-notificacion"></div>
-        <div class="controls">
+        <div class="controls" id="zoomControles">
           <button id="zoomMas" class="zoom-btn" title="Zoom +">
             <i class="fas fa-search-plus"></i>
           </button>
@@ -172,6 +172,7 @@
             <i class="fas fa-search-minus"></i>
           </button>
         </div>
+
         <div id="areaCubierta"></div>
       </div>
       <!-- Lateral derecho para presupuesto -->
@@ -267,6 +268,8 @@
         // ⛔️ SALIR si no hay imagen
         if (!img || !img.src) {
           document.getElementById("botonCentralImagen").style.display = "block";
+          const zoom = document.getElementById("zoomControles");
+          if (zoom) zoom.style.display = "none"; // Ocultar controles si existen
           
           // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
           ctx.fillStyle = '#666';
@@ -280,6 +283,8 @@
           return;
         } else {
           document.getElementById("botonCentralImagen").style.display = "none";
+          const zoom = document.getElementById("zoomControles");
+           if (zoom) zoom.style.display = "flex";
         }
         // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
         for (let i = 0; i <= 100; i++) {
