@@ -909,52 +909,9 @@
        }
     </script>
 
-    <div id="modalPedido" class="modal-pedido">
-      <div class="modal-contenido">
-        <span class="cerrar" onclick="cerrarModal()">&times;</span>
-        <h3>¿Cómo deseas enviar tu pedido?</h3>
-        <div class="opciones-envio">
-         <button onclick="enviarPorMessenger()">Messenger</button>
-         <button onclick="enviarPorInstagram()">Instagram</button>
-         <button onclick="enviarPorCorreo()">Correo</button>
-        </div>
-      </div>
-    </div>
+   
   <script>
-    document.getElementById("añadirCarrito").addEventListener("click", function () {
-       document.getElementById("modalPedido").style.display = "flex";
-    });
-
-    function cerrarModal() {
-      document.getElementById("modalPedido").style.display = "none";
-    }
-
-    function enviarPorMessenger() {
-      const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
-      const alto = ((img.height * scale) / pxPorCm).toFixed(2);
-      const imagen = img?.src || "No disponible";
-      const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
-
-      const mensaje = encodeURIComponent(
-       `¡Hola! Estoy interesado en una alfombra personalizada. Aquí están los detalles de mi pedido:\n\n` +
-       `📏 Medidas aproximadas: ${ancho} cm x ${alto} cm\n` +
-       `💰 Costo estimado:\n${costo}\n` +
-       `🖼 Imagen cargada: ${imagen}\n\n` +
-       `¿Podrían ayudarme a completar el pedido?`
-      );
-
-      // 🔁 Reemplaza "alfomexgo" con tu nombre de usuario real de Facebook
-      const url = `https://www.facebook.com/alfomexgo`;
-      window.open(`${url}?message=${mensaje}`, "_blank");
-
-      cerrarModal();
-    }
-
-    function enviarPorInstagram() {
-      alert("Aquí se abriría un enlace o mensaje directo por Instagram.");
-      cerrarModal();
-    }
-
+    document.getElementById("añadirCarrito").addEventListener("click", enviarPorCorreo);
     function enviarPorCorreo() {
       const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
       const alto = ((img.height * scale) / pxPorCm).toFixed(2);
@@ -996,8 +953,7 @@
           return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
         })
        .then(() => {
-          alert("✅ Pedido enviado correctamente por correo");
-          cerrarModal();
+          alert("✅ Pedido enviado correctamente por correo");        
         })
         .catch(error => {
           alert("❌ Error al enviar: " + error.message);
