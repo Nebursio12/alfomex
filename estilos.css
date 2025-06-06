@@ -1459,19 +1459,19 @@ h2, .alerta, .plantilla-btn-container {
 }
 
 .toast-notificacion {
-  position: fixed;
-  bottom: 20px;
+  position: absolute;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  background: crimson;
+  background: #444;
   color: #fff;
-  padding: 12px 20px;
+  padding: 10px 18px;
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   opacity: 0;
   pointer-events: none;
-  z-index: 9999;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 99;
+  transition: opacity 0.4s ease;
 }
 
 .toast-notificacion.mostrar {
