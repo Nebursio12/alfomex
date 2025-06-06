@@ -1691,7 +1691,7 @@ body:not(.con-aviso) .contenedor-principal {
   background-color: #ffc800;
   color: black;
   font-weight: bold;
-  padding: 10px 30px 10px 10px;
+  padding: 10px 10px 10px 10px;
   display: flex;
   align-items: center;
   z-index: 9999;
