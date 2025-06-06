@@ -1729,7 +1729,6 @@ body.con-aviso header {
     transform: translateX(-100%);
   }
 }
-
 .drag-overlay {
   position: fixed;
   top: 0;
