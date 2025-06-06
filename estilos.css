@@ -133,7 +133,7 @@ h2 {
 }
 
 .controls button {
-  background-color: #003366 !important;
+  background-color: #000000 !important;
   color: white !important;
   font-size: 1.2rem;
   padding: 12px;
@@ -152,7 +152,7 @@ h2 {
 .controls button:hover,
 .controls button:focus,
 .controls button:focus-visible {
-  background-color: #003366 !important;
+  background-color: #000000 !important;
   color: white !important;
   outline: no
 }
@@ -733,7 +733,7 @@ h2 {
 }
 
 .controls button {
-  background-color: #003366 !important;
+  background-color: #000000 !important;
   color: white !important;
   font-size: 1.2rem;
   padding: 12px;
@@ -752,7 +752,7 @@ h2 {
 .controls button:hover,
 .controls button:focus,
 .controls button:focus-visible {
-  background-color: #003366 !important;
+  background-color: #000000 !important;
   color: white !important;
   outline: no
 }
