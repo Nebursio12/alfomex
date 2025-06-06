@@ -1729,3 +1729,12 @@ body.con-aviso header {
     transform: translateX(-100%);
   }
 }
+
+body.dragging {
+  outline: 4px dashed #ffc800;
+  outline-offset: -10px;
+}
+
+body.dragging * {
+  pointer-events: none;
+}
