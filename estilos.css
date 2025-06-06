@@ -1794,3 +1794,47 @@ body.con-aviso header {
   display: none;
 }
 
+.modal-pedido {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.modal-contenido h3 {
+  margin-bottom: 15px;
+}
+
+.opciones-envio button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cerrar {
+  position: absolute;
+  top: 15px; right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
