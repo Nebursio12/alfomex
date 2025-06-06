@@ -562,6 +562,7 @@
         }
 
         scale = nuevoScale;
+        centrarImagen();
         draw();
         calcularEstambre();
         imgX = Math.min(Math.max(imgX, 0), canvas.width - img.width * scale);
