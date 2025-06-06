@@ -1670,34 +1670,40 @@ h2, .alerta, .plantilla-btn-container {
     display: none;
   }
 }
+
+.contenedor-principal {
+  transition: margin-top 0.3s ease;
+}
+
+body.con-aviso .contenedor-principal {
+  margin-top: 120px; /* 80px normal + 40px del aviso */
+}
+
+body:not(.con-aviso) .contenedor-principal {
+  margin-top: 80px;
+}
+
 #avisoEnvio {
-  background-color: #ffcc00;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #ffc800;
   color: black;
   font-weight: bold;
   text-align: center;
-  padding: 10px 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10000;
+  padding: 10px;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  box-sizing: border-box;
 }
 
 #avisoEnvio .cerrar-aviso {
-  position: absolute;
-  right: 15px;
-  top: 8px;
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
+  margin-left: 10px;
   cursor: pointer;
-  color: black;
 }
 
 /* Mueve el header hacia abajo solo si el aviso está visible */
