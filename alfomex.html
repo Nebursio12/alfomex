@@ -267,7 +267,7 @@
         // ⛔️ SALIR si no hay imagen
         if (!img || !img.src) {
           document.getElementById("botonCentralImagen").style.display = "block";
-          document.getElementById("zoomControles").style.display = "none"; // 👈 Oculta botones de zoom
+          
           // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
           ctx.fillStyle = '#666';
           ctx.font = '18px Segoe UI';
@@ -280,7 +280,6 @@
           return;
         } else {
           document.getElementById("botonCentralImagen").style.display = "none";
-          document.getElementById("zoomControles").style.display = "flex"; // 👈 Muestra cuando hay imagen
         }
         // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
         for (let i = 0; i <= 100; i++) {
