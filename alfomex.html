@@ -915,6 +915,29 @@
         </div>
       </div>
     </div>
+  <script>
+    document.getElementById("añadirCarrito").addEventListener("click", function () {
+       document.getElementById("modalPedido").style.display = "flex";
+    });
 
+    function cerrarModal() {
+      document.getElementById("modalPedido").style.display = "none";
+    }
+
+    function enviarPorMessenger() {
+      alert("Aquí se integraría el envío por Messenger con la info del pedido.");
+      cerrarModal();
+    }
+
+    function enviarPorInstagram() {
+      alert("Aquí se abriría un enlace o mensaje directo por Instagram.");
+      cerrarModal();
+    }
+
+    function enviarPorCorreo() {
+      alert("Aquí se prepararía un correo o archivo PDF con los datos.");
+      cerrarModal();
+    }
+ </script>
   </body>
 </html>
