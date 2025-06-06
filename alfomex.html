@@ -158,10 +158,8 @@
       </div>
       <div class="canvas-contenedor">
         <canvas id="lienzo"></canvas>
-        <div id="btnSeleccionarImagen" class="btn-overlay">
-         <button onclick="document.getElementById('imgInput').click()">
-           <i class="fas fa-image"></i> Seleccionar imagen
-         </button>
+        <div id="botonCentralImagen" class="boton-central-imagen" onclick="document.getElementById('imgInput').click()">
+         <i class="fas fa-image"></i> Seleccionar imagen
         </div>
         <div id="toastNotificacion" class="toast-notificacion"></div>
         <div class="controls">
@@ -266,7 +264,7 @@
 
         // ⛔️ SALIR si no hay imagen
         if (!img || !img.src) {
-          if (boton) boton.style.display = "flex"; // Mostrar botón central
+          document.getElementById("botonCentralImagen").style.display = "block";
           // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
           ctx.fillStyle = '#666';
           ctx.font = '18px Segoe UI';
@@ -278,7 +276,7 @@
           document.getElementById("areaCubierta").innerHTML = "";
           return;
         } else {
-          if (boton) boton.style.display = "none"; // Ocultar botón si ya hay imagen
+          document.getElementById("botonCentralImagen").style.display = "none";
         }
         // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
         for (let i = 0; i <= 100; i++) {
