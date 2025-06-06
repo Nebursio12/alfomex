@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      emailjs.init("ULFx2NxxxxxTuClavePublica"); // reemplaza con tu User ID de EmailJS
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
     <title>Personaliza tu Alfombra - Alfomex</title>
@@ -951,8 +955,36 @@
     }
 
     function enviarPorCorreo() {
-      alert("Aquí se prepararía un correo o archivo PDF con los datos.");
-      cerrarModal();
+      const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
+      const alto = ((img.height * scale) / pxPorCm).toFixed(2);
+      const imagen = img?.src || "No disponible";
+      const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
+
+      onAuthStateChanged(auth, function (user) {
+        if (!user) return alert("No estás autenticado");
+
+        const nombre = user.displayName || "Cliente sin nombre";
+        const correo = user.email;
+
+        const medidas = `${ancho} cm x ${alto} cm`;
+
+        const templateParams = {
+         cliente: nombre,
+         email: correo,
+         medidas: medidas,
+         costo: costo,
+         imagen: imagen
+        };
+
+        emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams)
+         .then(function(response) {
+           alert("✅ Pedido enviado correctamente por correo");
+         }, function(error) {
+           alert("❌ Error al enviar: " + error.text);
+         });
+
+        cerrarModal();
+      });
     }
  </script>
   </body>
