@@ -958,35 +958,53 @@
     function enviarPorCorreo() {
       const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
       const alto = ((img.height * scale) / pxPorCm).toFixed(2);
-      const imagen = img?.src || "No disponible";
+      const base64 = img?.src || "";
       const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
 
       if (!window.auth) return alert("❌ Error: Auth no está disponible");
 
       window.auth.onAuthStateChanged(function(user) {
-       if (!user) return alert("No estás autenticado");
+        if (!user) return alert("No estás autenticado");
 
-       const nombre = user.displayName || "Cliente sin nombre";
-       const correo = user.email;
-       const medidas = `${ancho} cm x ${alto} cm`;
+        const nombre = user.displayName || "Cliente sin nombre";
+        const correo = user.email;
+        const medidas = `${ancho} cm x ${alto} cm`;
 
-       const templateParams = {
-         cliente: nombre,
-         email: correo,
-         medidas: medidas,
-         costo: costo,
-         imagen: imagen
-        };
+        // 🔵 Subir a ImgBB
+        const formData = new FormData();
+        const imagenBase64 = base64.split(",")[1]; // quitamos encabezado "data:image/png;base64,"
+        formData.append("image", imagenBase64);
 
-        emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams)
-         .then(function(response) {
-           alert("✅ Pedido enviado correctamente por correo");
-           cerrarModal();
-          }, function(error) {
-           alert("❌ Error al enviar: " + error.text);
-         });
+        fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
+          method: "POST",
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (!data.success) throw new Error("Error al subir imagen");
+
+          const imagenURL = data.data.url;
+
+          const templateParams = {
+            cliente: nombre,
+            email: correo,
+            medidas: medidas,
+            costo: costo,
+            imagen: imagenURL // ✅ ya es un link y no pesa
+          };
+
+          return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
+        })
+       .then(() => {
+          alert("✅ Pedido enviado correctamente por correo");
+          cerrarModal();
+        })
+        .catch(error => {
+          alert("❌ Error al enviar: " + error.message);
+        });
       });
     }
+
  </script>
   </body>
 </html>
