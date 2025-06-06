@@ -1686,24 +1686,26 @@ body:not(.con-aviso) .contenedor-principal {
 #avisoEnvio {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
-  background: #ffc800;
+  background-color: #ffc800;
   color: black;
   font-weight: bold;
-  text-align: center;
-  padding: 10px;
-  z-index: 1000;
+  padding: 10px 40px 10px 10px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  z-index: 9999;
+  box-sizing: border-box;
 }
 
-#avisoEnvio .cerrar-aviso {
-  background: transparent;
+.cerrar-aviso {
+  background: none;
   border: none;
   font-size: 20px;
-  margin-left: 10px;
+  margin-left: auto;
   cursor: pointer;
+  color: black;
+  padding-left: 20px;
 }
 
 /* Mueve el header hacia abajo solo si el aviso está visible */
@@ -1712,10 +1714,12 @@ body.con-aviso header {
 }
 
 .aviso-movimiento {
+  flex: 1;
   white-space: nowrap;
   overflow: hidden;
-  animation: moverTexto 10s linear infinite;
+  animation: moverTexto 12s linear infinite;
 }
+
 
 @keyframes moverTexto {
   0% {
