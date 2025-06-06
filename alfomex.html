@@ -5,15 +5,6 @@
     <script>
       emailjs.init("fkgS7HLSkfpC2ykiI"); // reemplaza con tu User ID de EmailJS
     </script>
-    <script type="module">
-       import { auth, db, doc, getDoc, setDoc, serverTimestamp } from './auth.js';
-       window.auth = auth;
-       window.db = db;
-       window.doc = doc;
-       window.getDoc = getDoc;
-       window.setDoc = setDoc;
-       window.serverTimestamp = serverTimestamp;
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
     <title>Personaliza tu Alfombra - Alfomex</title>
@@ -68,7 +59,8 @@
       import {
         getFirestore,
         collection,
-        getDocs
+        getDocs,
+        serverTimestamp
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
       const firebaseConfig = {
         apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -78,10 +70,13 @@
         messagingSenderId: "1090528818564",
         appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
       };
-    
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      window.auth = auth;
       // Espera a que el DOM esté cargado antes de acceder a elementos
       window.addEventListener("DOMContentLoaded", () => {
-        onAuthStateChanged(window.auth, (user) => {
+        onAuthStateChanged(auth, (user) => {
           if (!user) {
             window.location.href = "index.html";
             return;
@@ -97,7 +92,7 @@
           `;
         });
         window.cerrarSesion = async () => {
-          await signOut(window.auth);
+          await signOut(auth);
           window.location.href = "index.html";
         };
         window.openNav = () => {
@@ -937,7 +932,7 @@
         if (!user) return alert("No estás autenticado");
 
       const userId = user.uid;
-      const db = window.db;
+      const db = getFirestore();
 
       const docRef = doc(db, "pedidos", userId);
       const docSnap = await getDoc(docRef);
@@ -961,42 +956,42 @@
 
       // 🔁 Continúa el envío del correo como ya tienes
       const nombre = user.displayName || "Cliente sin nombre";
-      const correo = user.email;
-      const medidas = `${ancho} cm x ${alto} cm`;
-      const formData = new FormData();
-      const imagenBase64 = base64.split(",")[1];
-      formData.append("image", imagenBase64);
+  const correo = user.email;
+  const medidas = `${ancho} cm x ${alto} cm`;
+  const formData = new FormData();
+  const imagenBase64 = base64.split(",")[1];
+  formData.append("image", imagenBase64);
 
-      fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-         if (!data.success) throw new Error("Error al subir imagen");
+  fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) throw new Error("Error al subir imagen");
 
-         const imagenURL = data.data.url;
+    const imagenURL = data.data.url;
 
-         const templateParams = {
-           cliente: nombre,
-           email: correo,
-           medidas: medidas,
-           costo: costo,
-           imagen: imagenURL
-         };
+    const templateParams = {
+      cliente: nombre,
+      email: correo,
+      medidas: medidas,
+      costo: costo,
+      imagen: imagenURL
+    };
 
-         return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
-       })
-       .then(() => {
-         mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
-         document.getElementById("añadirCarrito").disabled = true;
-         document.getElementById("loaderOverlay").style.display = "none";
-       })
-       .catch(error => {
-         mostrarNotificacion("❌ Error al enviar: " + error.message, "error");
-         document.getElementById("loaderOverlay").style.display = "none";
-       });
-    }
+    return emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
+  })
+  .then(() => {
+    mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
+    document.getElementById("añadirCarrito").disabled = true;
+    document.getElementById("loaderOverlay").style.display = "none";
+  })
+  .catch(error => {
+    mostrarNotificacion("❌ Error al enviar: " + error.message, "error");
+    document.getElementById("loaderOverlay").style.display = "none";
+  });
+}
 
  </script>
   <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
