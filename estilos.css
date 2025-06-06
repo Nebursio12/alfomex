@@ -1770,3 +1770,23 @@ body.con-aviso header {
   background: #444 !important;
 }
 
+.boton-central-imagen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #4285f4;
+  color: white;
+  font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.boton-central-imagen:hover {
+  background-color: #3367d6;
+}
