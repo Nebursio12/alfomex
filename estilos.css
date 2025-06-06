@@ -1730,11 +1730,9 @@ body.con-aviso header {
   }
 }
 
-body.dragging {
-  outline: 4px dashed #ffc800;
+.canvas-contenedor.dragging {
+  outline: 4px dashed #ffcc00;
   outline-offset: -10px;
-}
-
-body.dragging * {
-  pointer-events: none;
+  border-radius: 10px;
+  transition: outline 0.3s ease;
 }
