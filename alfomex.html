@@ -170,7 +170,6 @@
             <i class="fas fa-search-minus"></i>
           </button>
         </div>
-        <div id="areaCubierta"></div>
       </div>
       <!-- Lateral derecho para presupuesto -->
       <div class="lateral">
@@ -313,9 +312,7 @@
         // Calcula y muestra dimensiones
         const anchoCm = (img.width * scale) / pxPorCm;
         const altoCm = (img.height * scale) / pxPorCm;
-        document.getElementById("areaCubierta").innerHTML =
-          `<strong>Anchura:</strong> ${anchoCm.toFixed(2)} cm<br>` +
-          `<strong>Altura:</strong> ${altoCm.toFixed(2)} cm`;
+        document.getElementById("areaCubierta").innerHTML = ""; // Oculta ese bloque
 
         // Ajusta la vista en el cuarto
         const vistaAlfombra = document.getElementById("vistaAlfombra");
