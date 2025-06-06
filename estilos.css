@@ -235,7 +235,7 @@ canvas {
   display: block;
   margin-top: 10px;
   font-size: 1.2rem;
-  color: var(--secondary);
+  color: black; /* antes estaba var(--secondary) */
 }
 
 #colorDetalle div {
@@ -549,7 +549,7 @@ h2, .alerta, .plantilla-btn-container {
   width: 100%;
   max-width: 500px;
   padding: 15px 25px;
-  background-color: #003366;
+  background-color: black;
   color: white;
   border: none;
   border-radius: 10px;
@@ -834,7 +834,7 @@ canvas {
   display: block;
   margin-top: 10px;
   font-size: 1.2rem;
-  color: var(--secondary);
+  color: black; /* antes estaba var(--secondary) */
 }
 
 #colorDetalle div {
@@ -1148,7 +1148,7 @@ h2, .alerta, .plantilla-btn-container {
   width: 100%;
   max-width: 500px;
   padding: 15px 25px;
-  background-color: #003366;
+  background-color: black;
   color: white;
   border: none;
   border-radius: 10px;
