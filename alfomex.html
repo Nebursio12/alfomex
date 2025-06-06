@@ -5,6 +5,15 @@
     <script>
       emailjs.init("fkgS7HLSkfpC2ykiI"); // reemplaza con tu User ID de EmailJS
     </script>
+    <script type="module">
+       import { auth, db, doc, getDoc, setDoc, serverTimestamp } from './auth.js';
+       window.auth = auth;
+       window.db = db;
+       window.doc = doc;
+       window.getDoc = getDoc;
+       window.setDoc = setDoc;
+       window.serverTimestamp = serverTimestamp;
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
     <title>Personaliza tu Alfombra - Alfomex</title>
