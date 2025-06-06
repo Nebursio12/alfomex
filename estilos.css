@@ -1684,20 +1684,23 @@ h2, .alerta, .plantilla-btn-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 40px;
+  box-sizing: border-box;
 }
 
 #avisoEnvio .cerrar-aviso {
   position: absolute;
-  right: 20px;
+  right: 15px;
   top: 8px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
   color: black;
 }
 
-/* Este margen desplaza el header hacia abajo si hay aviso */
+/* Mueve el header hacia abajo solo si el aviso está visible */
 body.con-aviso header {
-  margin-top: 50px; /* ajusta si el aviso es más alto */
+  margin-top: 40px; /* Igual al alto del aviso para evitar huecos */
 }
