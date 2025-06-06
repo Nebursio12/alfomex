@@ -112,6 +112,27 @@
         canvas.height = 500;
         draw();
       });
+      // Carrito
+      window.toggleCart = (show) => {
+        document.getElementById("cartPanel")?.classList.toggle("open", show);
+        document.getElementById("cartOverlay")?.classList.toggle("active", show);
+      };
+      document.getElementById("cartBtn").addEventListener("click", () => toggleCart(true));
+      window.agregarAlCarrito = (producto) => {
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        carrito.push(producto);
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+        actualizarVistaCarrito();
+      };
+      function actualizarVistaCarrito() {
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const lista = document.getElementById("cartItems");
+        if (lista) lista.innerHTML = carrito.map(p => <li>${p.nombre} - $${p.precio}</li>).join('');
+      }
+      window.vaciarCarrito = () => {
+        localStorage.removeItem("carrito");
+        actualizarVistaCarrito();
+      };
       
     </script>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
