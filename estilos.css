@@ -1786,3 +1786,8 @@ body.con-aviso header {
 .boton-central-imagen:hover {
   background-color: #3b3b3b;
 }
+
+#zoomControles {
+  display: none;
+}
+
