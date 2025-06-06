@@ -925,7 +925,23 @@
     }
 
     function enviarPorMessenger() {
-      alert("Aquí se integraría el envío por Messenger con la info del pedido.");
+      const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
+      const alto = ((img.height * scale) / pxPorCm).toFixed(2);
+      const imagen = img?.src || "No disponible";
+      const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
+
+      const mensaje = encodeURIComponent(
+       `¡Hola! Estoy interesado en una alfombra personalizada. Aquí están los detalles de mi pedido:\n\n` +
+       `📏 Medidas aproximadas: ${ancho} cm x ${alto} cm\n` +
+       `💰 Costo estimado:\n${costo}\n` +
+       `🖼 Imagen cargada: ${imagen}\n\n` +
+       `¿Podrían ayudarme a completar el pedido?`
+      );
+
+      // 🔁 Reemplaza "alfomexgo" con tu nombre de usuario real de Facebook
+      const url = `https://www.facebook.com/messages/t/282873574915771${mensaje}`;
+      window.open(url, "_blank");
+
       cerrarModal();
     }
 
