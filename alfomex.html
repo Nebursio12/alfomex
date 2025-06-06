@@ -552,10 +552,10 @@
        const toast = document.getElementById("toastNotificacion");
        if (!toast) return;
 
-       toast.innerHTML = `📏 <strong>Las dimensiones han cambiado:</strong><br>Anchura: ${ancho.toFixed(2)} cm<br>Altura: ${alto.toFixed(2)} cm`;
-       toast.classList.remove("toast-advertencia");
-       toast.classList.remove("toast-dimensiones");
-       toast.classList.add("toast-dimensiones");
+       toast.classList.remove("toast-dimensiones", "toast-advertencia"); // Limpia anteriores
+       toast.classList.add("toast-dimensiones"); // ✅ Añade gris
+
+       toast.innerHTML = `📏 <strong>:</strong><br>Anchura: ${ancho.toFixed(2)} cm<br>Altura: ${alto.toFixed(2)} cm`;
        toast.classList.add("mostrar");
 
        setTimeout(() => {
@@ -596,9 +596,15 @@
       function mostrarNotificacion(mensaje, tipo = "error") {
         const toast = document.getElementById("toastNotificacion");
         if (!toast) return;
-        toast.innerText = mensaje;
-        toast.style.background = tipo === "success" ? "green" : "crimson";
+        toast.classList.remove("toast-dimensiones", "toast-advertencia");
 
+        if (tipo === "success") {
+          toast.style.background = "green";
+        } else {
+          toast.classList.add("toast-advertencia"); // ✅ Añade la clase roja
+        }
+
+        toast.innerText = mensaje;
         toast.classList.add("mostrar");
 
         setTimeout(() => {
