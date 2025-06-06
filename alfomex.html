@@ -14,7 +14,7 @@
   <body>
     <div id="avisoEnvio">
       <div class="aviso-movimiento">
-        Por el momento, solo hay envíos a México
+        Por el momento, solo hay envíos en México
       </div>
       <button onclick="cerrarAviso()" class="cerrar-aviso">&times;</button>
     </div>
@@ -851,17 +851,18 @@
       }
     });
 
-    // 🎯 Efecto visual al arrastrar archivos
+    const canvasContenedor = document.querySelector(".canvas-contenedor");
+
     document.addEventListener("dragenter", () => {
-      document.body.classList.add("dragging");
+      canvasContenedor?.classList.add("dragging");
     });
     document.addEventListener("dragleave", (e) => {
-        if (e.relatedTarget === null || e.target === document) {
-          document.body.classList.remove("dragging");
-        }
+      if (e.relatedTarget === null || e.target === document) {
+        canvasContenedor?.classList.remove("dragging");
+      }
     });
     document.addEventListener("drop", () => {
-       document.body.classList.remove("dragging");
+      canvasContenedor?.classList.remove("dragging");
     });
 
 
