@@ -78,13 +78,10 @@
         messagingSenderId: "1090528818564",
         appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
       };
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      window.auth = auth;
+    
       // Espera a que el DOM esté cargado antes de acceder a elementos
       window.addEventListener("DOMContentLoaded", () => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(window.auth, (user) => {
           if (!user) {
             window.location.href = "index.html";
             return;
@@ -100,7 +97,7 @@
           `;
         });
         window.cerrarSesion = async () => {
-          await signOut(auth);
+          await signOut(window.auth);
           window.location.href = "index.html";
         };
         window.openNav = () => {
