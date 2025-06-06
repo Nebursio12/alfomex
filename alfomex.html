@@ -961,15 +961,16 @@
       const imagen = img?.src || "No disponible";
       const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
 
-      onAuthStateChanged(auth, function (user) {
-        if (!user) return alert("No estás autenticado");
+      if (!window.auth) return alert("❌ Error: Auth no está disponible");
 
-        const nombre = user.displayName || "Cliente sin nombre";
-        const correo = user.email;
+      window.auth.onAuthStateChanged(function(user) {
+       if (!user) return alert("No estás autenticado");
 
-        const medidas = `${ancho} cm x ${alto} cm`;
+       const nombre = user.displayName || "Cliente sin nombre";
+       const correo = user.email;
+       const medidas = `${ancho} cm x ${alto} cm`;
 
-        const templateParams = {
+       const templateParams = {
          cliente: nombre,
          email: correo,
          medidas: medidas,
@@ -980,11 +981,10 @@
         emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams)
          .then(function(response) {
            alert("✅ Pedido enviado correctamente por correo");
-         }, function(error) {
+           cerrarModal();
+          }, function(error) {
            alert("❌ Error al enviar: " + error.text);
          });
-
-        cerrarModal();
       });
     }
  </script>
