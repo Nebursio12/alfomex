@@ -414,6 +414,8 @@
         onAuthStateChanged,
         sendPasswordResetEmail,
         fetchSignInMethodsForEmail,
+        RecaptchaVerifier,
+        signInWithPhoneNumber  
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
       import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -624,7 +626,8 @@
           }
 
           try {
-            const { auth, db, doc, setDoc, createUserWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber } = await import("./auth.js");
+            const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
+
 
             // Inicializar reCAPTCHA invisible
             if (!window.recaptchaVerifier) {
