@@ -11,6 +11,10 @@
         transform: translateY(10px);
         transition: all 0.3s ease;
       }
+      
+      #modalSMS {
+        transition: opacity 0.3s ease;
+      }
 
       .fade-slide.show {
         opacity: 1;
@@ -287,6 +291,8 @@
         overflow: hidden;
         height: auto;
       }
+
+
 
       .form-slide {
         position: absolute;
@@ -698,21 +704,18 @@
       const overlay = document.getElementById("modalCodigo");
       const caja = document.getElementById("modalSMS");
 
-      // Quitamos clases activas
+      // Quitamos la clase 'active' que aplica display:flex y opacity:1
       overlay.classList.remove("active");
       caja.classList.remove("active");
-
-      // Restablece propiedades forzadas
-      overlay.style.opacity = "0";
-      overlay.style.pointerEvents = "none";
-      overlay.style.display = "none"; // Esto oculta el modal de manera segura
-
-      // ⚠️ ADICIONAL: ocultar overlay general si quedó abierto
-      document.getElementById("modalOverlay").classList.remove("active");
-
+  
       // Limpiar campos
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
+
+      // Esperamos a que termine la animación antes de ocultar el display
+      setTimeout(() => {
+         overlay.style.display = "none"; // ← Aquí sí funcionará
+      }, 300);
     }
 
 let yaVerificado = false; // fuera del event listener
