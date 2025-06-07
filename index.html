@@ -664,8 +664,12 @@
 
             window.confirmationResultGlobal = confirmationResult;
             window.datosUsuarioTemporal = { nombre, apellido, correo }; // ← guardamos temporalmente
-            document.getElementById("modalCodigo").classList.add("active");
-            document.getElementById("modalSMS").classList.add("active");
+            const modalCodigo = document.getElementById("modalCodigo");
+            const modalSMS = document.getElementById("modalSMS");
+
+            modalCodigo.style.display = "flex"; // ← esto garantiza visibilidad
+            modalCodigo.classList.add("active");
+            modalSMS.classList.add("active");
 
 
           } catch (e) {
