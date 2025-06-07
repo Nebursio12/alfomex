@@ -643,7 +643,7 @@
 
             window.confirmationResultGlobal = confirmationResult;
             window.datosUsuarioTemporal = { nombre, apellido, correo }; // ← guardamos temporalmente
-            document.getElementById("modalCodigo").style.display = "flex";
+            document.getElementById("modalCodigo").classList.add("active");
 
 
           } catch (e) {
@@ -669,9 +669,9 @@
       });
 
       function cerrarModalCodigo() {
-  document.getElementById("modalCodigo").style.display = "none";
-  document.getElementById("codigoSMS").value = "";
-  document.getElementById("errorSMS").textContent = "";
+      document.getElementById("modalCodigo").classList.remove("active");
+      document.getElementById("codigoSMS").value = "";
+      document.getElementById("errorSMS").textContent = "";
 }
 
 document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
@@ -704,7 +704,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     </script>
     <div id="recaptcha-container"></div>
     <!-- MODAL CÓDIGO SMS -->
-    <div id="modalCodigo" class="modal-overlay" style="display:none;">
+    <div id="modalCodigo" class="modal-overlay">
       <div class="modal" style="min-width:300px;">
         <h3>Verificación por SMS</h3>
         <p style="margin-bottom:8px;">Te enviamos un código. Escríbelo abajo:</p>
@@ -716,5 +716,6 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
         <div id="errorSMS" class="error red" style="margin-top:10px;"></div>
       </div>
     </div>
+
   </body>
 </html>
