@@ -698,12 +698,16 @@
       const overlay = document.getElementById("modalCodigo");
       const caja = document.getElementById("modalSMS");
 
+      // Quitamos clases activas
       overlay.classList.remove("active");
       caja.classList.remove("active");
 
-      // 🔧 Fuerza a ocultarlo del todo por si se quedó visible
-      overlay.style.display = "none";
+      // Restablece propiedades forzadas
+      overlay.style.opacity = "0";
+      overlay.style.pointerEvents = "none";
+      overlay.style.display = "none"; // Esto oculta el modal de manera segura
 
+      // Limpiar campos
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
     }
