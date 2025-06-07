@@ -962,7 +962,7 @@
       }
     }
 
-    const nombre = user.displayName || "Cliente sin nombre";
+    const nombre = user.displayName || `${user.phoneNumber}` || "Cliente sin nombre";
     const correo = user.email;
     const medidas = `${ancho} cm x ${alto} cm`;
     const formData = new FormData();
