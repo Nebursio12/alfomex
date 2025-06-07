@@ -714,6 +714,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     const result = await window.confirmationResultGlobal.confirm(codigo);
     const user = result.user;
     yaVerificado = true;
+
     await setDoc(doc(db, "usuarios", user.uid), {
       nombre: window.datosUsuarioTemporal.nombre,
       apellido: window.datosUsuarioTemporal.apellido,
@@ -725,6 +726,13 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     alert("Teléfono verificado y registro exitoso.");
     window.location.reload();
   } catch (e) {
+    // VERIFICAMOS SI YA ESTABA AUTENTICADO PARA EVITAR ERROR FALSO
+    if (auth.currentUser) {
+       console.warn("Error falso: ya estaba logueado");
+       cerrarModalCodigo();
+       window.location.reload();
+       return;
+    }
     console.error(e);
     errorSMS.textContent = "Código incorrecto o vencido.";
   }
@@ -734,7 +742,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     <div id="recaptcha-container"></div>
     <!-- MODAL CÓDIGO SMS -->
     <div id="modalCodigo" class="modal-overlay">
-      <div class="modal" style="min-width:300px; opacity:1; pointer-events:all;">
+        <div class="modal" style="min-width:300px;">
         <h3>Verificación por SMS</h3>
         <p style="margin-bottom:8px;">Te enviamos un código. Escríbelo abajo:</p>
         <input type="text" id="codigoSMS" placeholder="Ej. 123456" maxlength="6" style="text-align:center;" autofocus />
