@@ -172,7 +172,7 @@
         <div id="resultado"></div>
         <button id="añadirCarrito" class="boton-total">
           <i class="fas fa-paper-plane"></i>
-          <span id="totalFinal">Solicitar cotización</span>
+          <span id="totalFinal">Solicitar pedido</span>
         </button>
       </div>
     </div>
@@ -835,6 +835,12 @@
        renderizarCarrito();
        actualizarContadorCarrito(); // ✅ Nuevo
 
+       // ✅ INICIAR TEMPORIZADOR SI YA ESTÁ CORRIENDO
+       const bloqueo = localStorage.getItem("bloqueoPedidoHasta");
+       if (bloqueo && Date.now() < bloqueo) {
+         iniciarTemporizadorVisual();
+       }
+
        // 🟩 Forzar dibujo inicial si no hay imagen
        if (!img || !img.src) {
         draw(); // esto dibuja el mensaje en el lienzo al cargar
@@ -983,6 +989,7 @@
 
       mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
       document.getElementById("añadirCarrito").disabled = true;
+      iniciarTemporizadorVisual();
     } catch (err) {
       mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
     } finally {
@@ -991,6 +998,31 @@
   });
 }
 
+ function iniciarTemporizadorVisual() {
+  const boton = document.getElementById("añadirCarrito");
+  const texto = document.getElementById("totalFinal");
+  const fin = Date.now() + 5 * 60 * 1000; // 5 minutos
+
+  localStorage.setItem("bloqueoPedidoHasta", fin);
+
+  boton.disabled = true;
+
+  const intervalo = setInterval(() => {
+    const restante = Math.max(0, localStorage.getItem("bloqueoPedidoHasta") - Date.now());
+
+    const minutos = Math.floor(restante / 60000);
+    const segundos = Math.floor((restante % 60000) / 1000).toString().padStart(2, '0');
+
+    texto.textContent = `Espera ${minutos}:${segundos}`;
+
+    if (restante <= 0) {
+      clearInterval(intervalo);
+      texto.textContent = "Solicitar pedido";
+      boton.disabled = false;
+      localStorage.removeItem("bloqueoPedidoHasta");
+    }
+  }, 1000);
+}
 
  </script>
   <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
