@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Catálogo - Alfomex</title>
     <style>
+      #modalCodigo:not(.active) {
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      #modalCodigo.active {
+        pointer-events: all;
+        opacity: 1;
+      }
       .fade-slide {
         opacity: 0;
         transform: translateY(10px);
@@ -22,7 +32,6 @@
       }
       
       #modalCodigo {
-        display: none; /* Por defecto oculto */
         position: fixed;
         top: 0;
         left: 0;
@@ -32,9 +41,14 @@
         z-index: 10000;
         justify-content: center;
         align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
       }
 
       #modalCodigo.active {
+        opacity: 1;
+        pointer-events: all;
         display: flex;
       }
       .icon-btn {
@@ -703,7 +717,7 @@
 
       // Esperamos que termine la animación y luego ocultamos el modal con display: none
       setTimeout(() => {
-        modalCodigo.style.display = "none";
+        
       }, 300); // debe coincidir con el `transition` de CSS si hay uno
 
       // Limpieza de campos
