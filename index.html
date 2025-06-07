@@ -689,12 +689,13 @@
        this.value = this.value.replace(/\D/g, ""); // 🔒 solo números (elimina letras y espacios)
       });
 
-      function cerrarModalCodigo() {
+    function cerrarModalCodigo() {
       document.getElementById("modalCodigo").classList.remove("active");
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
 }
 
+let yaVerificado = false; // fuera del event listener
 document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
   const codigo = document.getElementById("codigoSMS").value.trim();
   const errorSMS = document.getElementById("errorSMS");
@@ -704,9 +705,15 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     return;
   }
 
+  if (yaVerificado) {
+    errorSMS.textContent = "Ya verificado, por favor recarga.";
+    return;
+  }
+
   try {
     const result = await window.confirmationResultGlobal.confirm(codigo);
     const user = result.user;
+    yaVerificado = true;
     await setDoc(doc(db, "usuarios", user.uid), {
       nombre: window.datosUsuarioTemporal.nombre,
       apellido: window.datosUsuarioTemporal.apellido,
@@ -718,6 +725,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     alert("Teléfono verificado y registro exitoso.");
     window.location.reload();
   } catch (e) {
+    console.error(e);
     errorSMS.textContent = "Código incorrecto o vencido.";
   }
 });
