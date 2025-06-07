@@ -357,17 +357,12 @@
         <span>Cargando...</span>
       </nav>
     </header>
-
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
       <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
       <a href="javascript:void(0)">Categorías</a>
     </div>
-
-    <!-- Fondo oscuro del modal -->
     <div class="modal-overlay" id="modalOverlay"></div>
-
-    <!-- Modal de inicio de sesión -->
     <div class="modal" id="loginModal">
       <h3 id="modalTitle">Entrar</h3>
       <div class="form-wrapper">
@@ -399,15 +394,12 @@
       </div>
       <div id="errorMsg" class="error"></div>
     </div>
-
     <section class="carrusel">
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.jpg" alt="Alfombra 1" />
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Alfombra 2" />
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Alfombra 3" />
     </section>
-
     <section class="catalogo" id="catalogo"></section>
-
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
       import {
@@ -614,9 +606,9 @@
         if (modoRegistro) {
           const nombre = document.getElementById("nombreRegistro").value.trim();
           const apellido = document.getElementById("apellidoRegistro").value.trim();
+          const telefono = document.getElementById("telefonoRegistro").value.trim();
           const correo = document.getElementById("registroEmail").value.trim();
           const password = document.getElementById("registroPassword").value;
-          const telefono = document.getElementById("telefonoRegistro").value.trim();
 
           if (!nombre || !apellido || !correo || !password || !telefono) {
             errorMsg.textContent = "Completa todos los campos.";
@@ -629,19 +621,39 @@
           }
 
           try {
-            const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
-            const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
-            const user = userCredential.user;
+            const { auth, db, doc, setDoc, createUserWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber } = await import("./auth.js");
+
+            // Inicializar reCAPTCHA invisible
+            if (!window.recaptchaVerifier) {
+              window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+                size: "invisible",
+                callback: () => console.log("reCAPTCHA resuelto")
+              });
+              await window.recaptchaVerifier.render();
+            }
+
+            const fullPhone = "+52" + telefono;
+            const confirmationResult = await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
+
+            const codigo = prompt("Te enviamos un código por SMS. Escríbelo aquí:");
+            const result = await confirmationResult.confirm(codigo);
+            const user = result.user;
+
             await setDoc(doc(db, "usuarios", user.uid), {
               nombre,
               apellido,
               correo,
-              telefono
+              telefono: user.phoneNumber
             });
+
+            alert("Número verificado y registro exitoso.");
             window.location.reload();
+
           } catch (e) {
-            errorMsg.textContent = e.message;
+            console.error(e);
+            errorMsg.textContent = "Error: " + (e.message || "Falló la verificación.");
           }
+
         } else {
           const email = document.getElementById("loginEmail").value;
           const password = document.getElementById("loginPassword").value;
@@ -654,10 +666,11 @@
           }
         }
       });
+
       document.getElementById("telefonoRegistro").addEventListener("input", function () {
        this.value = this.value.replace(/\D/g, ""); // 🔒 solo números (elimina letras y espacios)
       });
     </script>
-    
+    <div id="recaptcha-container"></div>
   </body>
 </html>
