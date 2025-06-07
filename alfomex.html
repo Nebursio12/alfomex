@@ -980,8 +980,8 @@
       const imagenURL = data.data.url;
 
       const templateParams = {
-        cliente: nombre,
-        email: correo,
+        cliente: usuarioFinal.displayName || usuarioFinal.phoneNumber || "Cliente desconocido",
+        email: usuarioFinal.email || "correo@sin-dato.com",
         telefono: telefono,
         medidas: medidas,
         costo: costo,
