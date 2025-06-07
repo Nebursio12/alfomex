@@ -22,25 +22,20 @@
       }
       
       #modalCodigo {
-        display: none; /* ← esto es lo que falta */
+        display: none; /* Por defecto oculto */
         position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
         width: 100vw;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 10000; /* más alto que el login */
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
       }
 
       #modalCodigo.active {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 1;
-        pointer-events: all;
       }
       .icon-btn {
         display: flex;
@@ -673,9 +668,8 @@
             const modalCodigo = document.getElementById("modalCodigo");
             const modalSMS = document.getElementById("modalSMS");
 
-            modalCodigo.style.display = "flex"; // ← esto garantiza visibilidad
-            modalCodigo.classList.add("active");
-            modalSMS.classList.add("active");
+            modalCodigo.classList.add("mostrar"); // NUEVA CLASE
+            modalSMS.classList.add("active");     // CAJA DEL MODAL
 
 
           } catch (e) {
@@ -701,21 +695,10 @@
       });
 
     function cerrarModalCodigo() {
-      const overlay = document.getElementById("modalCodigo");
-      const caja = document.getElementById("modalSMS");
-
-      // Quitamos la clase 'active' que aplica display:flex y opacity:1
-      overlay.classList.remove("active");
-      caja.classList.remove("active");
-  
-      // Limpiar campos
+      document.getElementById("modalCodigo").classList.remove("mostrar");
+      document.getElementById("modalSMS").classList.remove("active");
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
-
-      // Esperamos a que termine la animación antes de ocultar el display
-      setTimeout(() => {
-         overlay.style.display = "none"; // ← Aquí sí funcionará
-      }, 300);
     }
 
 let yaVerificado = false; // fuera del event listener
@@ -764,10 +747,10 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     </script>
     <div id="recaptcha-container"></div>
     <!-- MODAL CÓDIGO SMS -->
-    <div id="modalCodigo" class="modal-overlay">
-        <div class="modal" id="modalSMS" style="min-width:300px;">
+    <div id="modalCodigo">
+      <div class="modal" id="modalSMS" style="min-width:300px;">
         <h3>Verificación por SMS</h3>
-        <p style="margin-bottom:8px;">Te enviamos un código. Escríbelo abajo:</p>
+        <p>Te enviamos un código. Escríbelo abajo:</p>
         <input type="text" id="codigoSMS" placeholder="Ej. 123456" maxlength="6" style="text-align:center;" autofocus />
         <div style="display:flex; justify-content:space-between; margin-top:10px;">
           <button id="btnVerificarCodigo">Verificar</button>
@@ -776,6 +759,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
         <div id="errorSMS" class="error red" style="margin-top:10px;"></div>
       </div>
     </div>
+
 
 
   </body>
