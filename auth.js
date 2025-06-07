@@ -10,6 +10,8 @@ import {
   browserLocalPersistence,
   updatePassword,
   GoogleAuthProvider,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
   signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
@@ -74,4 +76,6 @@ export {
   setPersistence,
   browserLocalPersistence,
   updatePassword,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
 };
