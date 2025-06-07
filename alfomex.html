@@ -950,6 +950,9 @@
     const ref = window.doc(window.db, "pedidosUsuarios", user.uid);
     const snapshot = await window.getDoc(ref);
     const ahora = Date.now();
+    const usuarioSnap = await window.getDoc(window.doc(window.db, "usuarios", user.uid));
+    const telefono = usuarioSnap.exists() ? usuarioSnap.data().telefono || "No registrado" : "No encontrado";
+
 
     if (snapshot.exists()) {
       const ultimo = snapshot.data().ultimoPedido?.toMillis?.() || 0;
@@ -979,6 +982,7 @@
       const templateParams = {
         cliente: nombre,
         email: correo,
+        telefono: telefono,
         medidas: medidas,
         costo: costo,
         imagen: imagenURL
