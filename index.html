@@ -755,7 +755,9 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
 
     cerrarModalCodigo();
     alert("Teléfono verificado y registro exitoso.");
-    window.location.reload();
+    setTimeout(() => {
+       window.location.reload();
+    }, 1000);
   } catch (e) {
     // VERIFICAMOS SI YA ESTABA AUTENTICADO PARA EVITAR ERROR FALSO
     if (auth.currentUser) {
