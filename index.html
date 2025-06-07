@@ -378,6 +378,7 @@
         <div id="formRegister" class="form-slide">
           <input type="text" id="nombreRegistro" placeholder="Nombre" />
           <input type="text" id="apellidoRegistro" placeholder="Apellido" />
+          <input type="tel" id="telefonoRegistro" placeholder="Número telefónico" pattern="[0-9]{10}" maxlength="10" />
           <input type="email" id="registroEmail" placeholder="Correo electrónico" />
           <input type="password" id="registroPassword" placeholder="Contraseña" />
         </div>
@@ -615,9 +616,15 @@
           const apellido = document.getElementById("apellidoRegistro").value.trim();
           const correo = document.getElementById("registroEmail").value.trim();
           const password = document.getElementById("registroPassword").value;
+          const telefono = document.getElementById("telefonoRegistro").value.trim();
 
-          if (!nombre || !apellido || !correo || !password) {
+          if (!nombre || !apellido || !correo || !password || !telefono) {
             errorMsg.textContent = "Completa todos los campos.";
+            return;
+          }
+
+          if (!/^\d{10}$/.test(telefono)) {
+            errorMsg.textContent = "El número telefónico debe tener 10 dígitos.";
             return;
           }
 
@@ -628,7 +635,8 @@
             await setDoc(doc(db, "usuarios", user.uid), {
               nombre,
               apellido,
-              correo
+              correo,
+              telefono
             });
             window.location.reload();
           } catch (e) {
