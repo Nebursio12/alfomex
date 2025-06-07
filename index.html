@@ -772,6 +772,15 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     // VERIFICAMOS SI YA ESTABA AUTENTICADO PARA EVITAR ERROR FALSO
     if (auth.currentUser) {
        console.warn("Error falso: ya estaba logueado");
+       if (!yaVerificado) {
+         const currentUser = auth.currentUser;
+         await setDoc(doc(db, "usuarios", currentUser.uid), {
+           nombre: window.datosUsuarioTemporal.nombre,
+           apellido: window.datosUsuarioTemporal.apellido,
+           correo: currentUser.email || "sincorreo@alfomex.com",
+           telefono: currentUser.phoneNumber || "No registrado"
+         });
+       }
        cerrarModalCodigo();
        window.location.reload();
        return;
