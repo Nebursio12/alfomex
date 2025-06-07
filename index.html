@@ -695,8 +695,15 @@
       });
 
     function cerrarModalCodigo() {
-      document.getElementById("modalCodigo").classList.remove("active");
-      document.getElementById("modalSMS").classList.remove("active");
+      modalCodigo.classList.remove("active");
+      modalSMS.classList.remove("active");
+
+      // Esperamos que termine la animación y luego ocultamos el modal con display: none
+      setTimeout(() => {
+        modalCodigo.style.display = "none";
+      }, 300); // debe coincidir con el `transition` de CSS si hay uno
+
+      // Limpieza de campos
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
     }
