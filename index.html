@@ -691,8 +691,15 @@
       });
 
     function cerrarModalCodigo() {
-      document.getElementById("modalCodigo").classList.remove("active");
-      document.getElementById("modalSMS").classList.remove("active");
+      const overlay = document.getElementById("modalCodigo");
+      const caja = document.getElementById("modalSMS");
+
+      overlay.classList.remove("active");
+      caja.classList.remove("active");
+
+      // 🔧 Fuerza a ocultarlo del todo por si se quedó visible
+      overlay.style.display = "none";
+
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
     }
