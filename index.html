@@ -378,7 +378,7 @@
         <div id="formRegister" class="form-slide">
           <input type="text" id="nombreRegistro" placeholder="Nombre" />
           <input type="text" id="apellidoRegistro" placeholder="Apellido" />
-          <input type="tel" id="telefonoRegistro" placeholder="Número telefónico" pattern="[0-9]{10}" maxlength="10" />
+          <input type="tel" id="telefonoRegistro" placeholder="Número telefónico" maxlength="10" pattern="[0-9]{10}" inputmode="numeric" />
           <input type="email" id="registroEmail" placeholder="Correo electrónico" />
           <input type="password" id="registroPassword" placeholder="Contraseña" />
         </div>
@@ -654,6 +654,10 @@
           }
         }
       });
+      document.getElementById("telefonoRegistro").addEventListener("input", function () {
+       this.value = this.value.replace(/\D/g, ""); // 🔒 solo números (elimina letras y espacios)
+      });
     </script>
+    
   </body>
 </html>
