@@ -752,6 +752,8 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     await updateProfile(user, {
       displayName: `${window.datosUsuarioTemporal.nombre} ${window.datosUsuarioTemporal.apellido}`
     });
+    await user.reload();
+    const usuarioFinal = auth.currentUser;
 
 
     await setDoc(doc(db, "usuarios", user.uid), {
