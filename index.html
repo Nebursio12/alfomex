@@ -714,13 +714,8 @@
       const modalSMS = document.getElementById("modalSMS");
       modalCodigo.classList.remove("active");
       modalSMS.classList.remove("active");
-
-      // Esperamos que termine la animación y luego ocultamos el modal con display: none
-      setTimeout(() => {
-        
-      }, 300); // debe coincidir con el `transition` de CSS si hay uno
-
-      // Limpieza de campos
+      modalCodigo.style.display = "none";
+      
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
     }
