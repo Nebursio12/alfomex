@@ -452,7 +452,9 @@
         fetchSignInMethodsForEmail,
         RecaptchaVerifier,
         signInWithPhoneNumber,
-        updateProfile
+        updateProfile,
+        EmailAuthProvider,
+        linkWithCredential
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
       import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -674,12 +676,12 @@
               });
               await window.recaptchaVerifier.render();
             }
-
+            const credenciales = await createUserWithEmailAndPassword(auth, correo, password);
             const fullPhone = "+52" + telefono;
             const confirmationResult = await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
 
             window.confirmationResultGlobal = confirmationResult;
-            window.datosUsuarioTemporal = { nombre, apellido, correo }; // ← guardamos temporalmente
+            window.datosUsuarioTemporal = { nombre, apellido, correo, password }; // ← Agregamos password
             const modalCodigo = document.getElementById("modalCodigo");
             const modalSMS = document.getElementById("modalSMS");
 
@@ -739,6 +741,12 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
   try {
     const result = await window.confirmationResultGlobal.confirm(codigo);
     const user = result.user;
+    const credencial = EmailAuthProvider.credential(
+      window.datosUsuarioTemporal.correo,
+      window.datosUsuarioTemporal.password
+    );
+
+    await linkWithCredential(user, credencial);
     yaVerificado = true;
 
     await updateProfile(user, {
