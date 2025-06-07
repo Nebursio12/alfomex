@@ -451,7 +451,8 @@
         sendPasswordResetEmail,
         fetchSignInMethodsForEmail,
         RecaptchaVerifier,
-        signInWithPhoneNumber  
+        signInWithPhoneNumber,
+        updateProfile
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
       import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -739,6 +740,11 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     const result = await window.confirmationResultGlobal.confirm(codigo);
     const user = result.user;
     yaVerificado = true;
+
+    await updateProfile(user, {
+      displayName: `${window.datosUsuarioTemporal.nombre} ${window.datosUsuarioTemporal.apellido}`
+    });
+
 
     await setDoc(doc(db, "usuarios", user.uid), {
       nombre: window.datosUsuarioTemporal.nombre,
