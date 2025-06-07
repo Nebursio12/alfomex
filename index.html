@@ -707,6 +707,9 @@
       overlay.style.pointerEvents = "none";
       overlay.style.display = "none"; // Esto oculta el modal de manera segura
 
+      // ⚠️ ADICIONAL: ocultar overlay general si quedó abierto
+      document.getElementById("modalOverlay").classList.remove("active");
+
       // Limpiar campos
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
