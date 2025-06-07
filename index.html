@@ -726,7 +726,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     <div id="recaptcha-container"></div>
     <!-- MODAL CÓDIGO SMS -->
     <div id="modalCodigo" class="modal-overlay">
-      <div class="modal" style="min-width:300px;">
+      <div class="modal" style="min-width:300px; opacity:1; pointer-events:all;">
         <h3>Verificación por SMS</h3>
         <p style="margin-bottom:8px;">Te enviamos un código. Escríbelo abajo:</p>
         <input type="text" id="codigoSMS" placeholder="Ej. 123456" maxlength="6" style="text-align:center;" autofocus />
@@ -737,6 +737,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
         <div id="errorSMS" class="error red" style="margin-top:10px;"></div>
       </div>
     </div>
+
 
   </body>
 </html>
