@@ -988,6 +988,10 @@
         imagen: imagenURL
       };
 
+      // ✅ LOGS PARA VERIFICAR
+      console.log("🔍 templateParams:", templateParams);
+      console.log("📧 usuario actual:", user);
+
       await emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
       await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
 
