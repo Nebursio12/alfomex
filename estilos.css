@@ -193,20 +193,7 @@ canvas {
   color: white
 }
 
-#añadirCarrito {
-  width: 100%;
-  max-width: 500px;
-  margin: 20px auto;
-  padding: 15px;
-  font-size: 1rem;
-  background-color: black !important;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  text-align: center;
-  display: block;
-}
+
 
 #resultado strong {
   display: block;
