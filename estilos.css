@@ -105,12 +105,7 @@ h2 {
 
 
 
-.botones-superiores button:hover,
-.plantilla-btn-container button:hover {
-  background: #ffcc00;
-  color: black;
-  animation: bounceHover 0.4s ease;
-}
+
 
 .controls {
   display: flex;
