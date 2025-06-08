@@ -526,6 +526,10 @@
         modal.classList.remove("active");
         overlay.classList.remove("active");
 
+        // 🔥 Limpia recuperación
+        document.getElementById("recuperacion").style.display = "none";
+        document.getElementById("emailRecuperar").value = "";
+
         setTimeout(() => {
           document.getElementById("errorMsg").textContent = "";
           document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
@@ -650,6 +654,9 @@
        } else {
          modoRegistro = !modoRegistro;
        }
+        // 🔥 Limpia recuperación al cambiar de formulario
+        document.getElementById("recuperacion").style.display = "none";
+        document.getElementById("emailRecuperar").value = "";
 
         document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
         document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
