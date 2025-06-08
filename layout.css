@@ -1,0 +1,146 @@
+/* =====================
+   LAYOUT STYLES
+   ===================== */
+header {
+  background: #000000;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  flex: 1;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#menuBtn {
+  font-size: 1.5rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.sidenav {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #000000;
+  padding-top: 60px;
+  padding-left: 15px;
+  transition: left 0.3s ease;
+  z-index: 9999;
+  box-sizing: border-box;
+}
+
+.sidenav.open {
+  left: 0;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 22px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #ddd;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.contenedor-principal {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 30px auto;
+  max-width: 1200px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  transition: margin-top 0.3s ease;
+}
+
+body.con-aviso .contenedor-principal {
+  margin-top: 120px; /* 80px normal + 40px del aviso */
+}
+
+body:not(.con-aviso) .contenedor-principal {
+  margin-top: 80px;
+}
+
+@media (max-width: 999px) {
+  .lateral-izquierda,
+  .lateral {
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .lateral-izquierda { order: 2; }
+  .lateral { order: 3; margin-top: 0 !important; padding: 10px !important; justify-content: flex-start !important; height: auto !important; gap: 10px; }
+  canvas { order: 1; margin: 0 auto; }
+  #resultado { margin: 0 auto 10px auto !important; padding: 15px !important; }
+  #añadirCarrito { margin: 0 auto 10px auto !important; padding: 12px !important; font-size: 0.95rem !important; }
+  .controls { flex-direction: row; flex-wrap: nowrap; }
+  .controls button { width: 40px; height: 40px; font-size: 1rem; }
+  h2 { font-size: 1.2rem; }
+  .alerta { font-size: 0.95rem; padding: 12px; }
+  .controls button, #añadirCarrito, .upload-btn { width: 90%; margin: 8px auto; }
+  .social-links { margin-top: 20px !important; margin-bottom: 10px !important; }
+  .vista-cuarto-toggle { display: none !important; }
+  #vistaCuarto, #vistaAlfombra { display: block !important; }
+}
+
+@media (min-width: 1000px) {
+  .contenedor-principal { flex-direction: row; align-items: flex-start; flex-wrap: nowrap; }
+  .canvas-contenedor { display: flex; flex-direction: column; align-items: center; margin-top: 0px; gap: 10px; }
+  .canvas-contenedor .controls { margin-top: 10px; }
+  #areaCubierta { margin-top: 4px; font-weight: bold; text-align: center; }
+  .lateral-izquierda { order: -1; margin-right: 30px; }
+  .lateral { margin-left: 30px; max-width: 400px; }
+  #resultado, #totalFinal, #añadirCarrito { margin-left: 0; margin-right: 0; }
+  canvas { width: 500px; height: 500px; }
+  .vista-cuarto-toggle { display: flex !important; justify-content: center; margin-top: 10px; }
+  #vistaCuarto, #vistaAlfombra { display: none; }
+}
