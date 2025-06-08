@@ -103,17 +103,7 @@ h2 {
   margin-bottom: 10px;
 }
 
-.botones-superiores button,
-.plantilla-btn-container button {
-  padding: 12px 25px;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: #003366;
-  color: white;
-  transition: background 0.3s ease;
-}
+
 
 .botones-superiores button:hover,
 .plantilla-btn-container button:hover {
