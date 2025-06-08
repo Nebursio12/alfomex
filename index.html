@@ -654,6 +654,9 @@
           const telefono = document.getElementById("telefonoRegistro").value.trim();
           const correo = document.getElementById("registroEmail").value.trim();
           const password = document.getElementById("registroPassword").value;
+          const errorMsg = document.getElementById("errorMsg");
+
+          errorMsg.textContent = "";
 
           if (!nombre || !apellido || !correo || !password || !telefono) {
             errorMsg.textContent = "Completa todos los campos.";
@@ -665,30 +668,49 @@
             return;
           }
 
+         const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+         if (!correoValido) {
+           errorMsg.textContent = "Ingresa un correo electrónico válido.";
+           return;
+          }
+
           try {
-            const { auth, db, doc, setDoc, createUserWithEmailAndPassword } = await import("./auth.js");
+           // Verificar si el correo ya está en uso
+           const metodosCorreo = await fetchSignInMethodsForEmail(auth, correo);
+           if (metodosCorreo.length > 0) {
+             errorMsg.textContent = "Este correo ya está registrado.";
+             return;
+            }
 
+            // Verificar si el número ya está en uso buscando en Firestore
+            const querySnapshot = await getDocs(collection(db, "usuarios"));
+            const telefonoYaExiste = querySnapshot.docs.some(doc => doc.data().telefono === "+52" + telefono);
+            if (telefonoYaExiste) {
+             errorMsg.textContent = "Este número de teléfono ya está registrado.";
+             return;
+            }
 
-            // Inicializar reCAPTCHA invisible
+            // Si todo está bien, se puede continuar con el reCAPTCHA y SMS
             if (!window.recaptchaVerifier) {
               window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-                size: "invisible",
-                callback: () => console.log("reCAPTCHA resuelto")
+               size: "invisible",
+               callback: () => console.log("reCAPTCHA resuelto")
               });
               await window.recaptchaVerifier.render();
             }
+
             const fullPhone = "+52" + telefono;
             const confirmationResult = await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
 
             window.confirmationResultGlobal = confirmationResult;
-            window.datosUsuarioTemporal = { nombre, apellido, correo, password }; // ← Agregamos password
+            window.datosUsuarioTemporal = { nombre, apellido, correo, password };
+
             const modalCodigo = document.getElementById("modalCodigo");
             const modalSMS = document.getElementById("modalSMS");
 
             modalCodigo.style.display = "flex";
             modalCodigo.classList.add("active");
-            modalSMS.classList.add("active");     // CAJA DEL MODAL
-
+            modalSMS.classList.add("active");
 
           } catch (e) {
             console.error(e);
