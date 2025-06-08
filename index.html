@@ -6,6 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Catálogo - Alfomex</title>
     <style>
+      .toast-bienvenida {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #00c853;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-size: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease, transform 0.4s ease;
+        z-index: 9999;
+      }
+
+      .toast-bienvenida.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-10px);
+      }
+
       #modalCodigo:not(.active) {
         pointer-events: none;
         opacity: 0;
@@ -801,10 +823,16 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     });
 
     cerrarModalCodigo();
-    alert("Teléfono verificado y registro exitoso.");
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    function mostrarBienvenida(nombreCompleto) {
+      const toast = document.getElementById("toastBienvenida");
+      toast.textContent = `Bienvenido ${nombreCompleto}`;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 4000); // 4 segundos
+    }
+
 
   } catch (e) {
     if (auth.currentUser) {
