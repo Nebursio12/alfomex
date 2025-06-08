@@ -579,9 +579,7 @@ h2, .alerta, .plantilla-btn-container {
 }
 
 
-.boton-total:hover {
-  background-color: #0055cc;
-}
+
 
 .boton-total i {
   font-size: 1.4rem;
@@ -1187,6 +1185,7 @@ h2, .alerta, .plantilla-btn-container {
 
 .boton-total:hover {
   background-color: #3b3b3b;
+  animation: bounceHover 0.4s ease;
 }
 
 .boton-total i {
@@ -1203,6 +1202,7 @@ h2, .alerta, .plantilla-btn-container {
 
 .boton-total:hover #totalFinal {
   background-color: #3b3b3b;
+  animation: bounceHover 0.4s ease;
 }
 
 @keyframes bounceHover {
@@ -1255,6 +1255,7 @@ h2, .alerta, .plantilla-btn-container {
 
 .boton-total:hover #totalFinal {
   background-color: #3b3b3b;
+  animation: bounceHover 0.4s ease;
 }
 
 @keyframes bounceHover {
