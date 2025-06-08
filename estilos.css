@@ -676,13 +676,10 @@ canvas {
 
 .lateral {
 
-  width: 100%;
+
   max-width: 500px;
   height: 500px;
   justify-content: space-between;
-
-
-
 
 }
 
