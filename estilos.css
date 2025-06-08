@@ -1112,21 +1112,7 @@ h2, .alerta, .plantilla-btn-container {
 }
 
 
-  .lateral {
-    display: none;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-self: flex-start;
-    margin-left: 40px;
-    margin-top: 0;
-    max-width: 400px;
-    height: auto;
-    background: #fafafa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-
-  }
+  
 
   #resultado,
   #totalFinal,
