@@ -1789,6 +1789,7 @@ body.con-aviso header {
 }
 .boton-central-imagen:hover {
   background-color: #3b3b3b;
+  animation: bounceHover 0.4s ease;
 }
 
 #zoomControles {
