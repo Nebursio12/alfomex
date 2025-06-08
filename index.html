@@ -654,9 +654,9 @@
           const telefono = document.getElementById("telefonoRegistro").value.trim();
           const correo = document.getElementById("registroEmail").value.trim();
           const password = document.getElementById("registroPassword").value;
-          const errorMsg = document.getElementById("errorMsg");
+          
 
-          errorMsg.textContent = "";
+          
 
           if (!nombre || !apellido || !correo || !password || !telefono) {
             errorMsg.textContent = "Completa todos los campos.";
@@ -682,12 +682,18 @@
              return;
             }
 
-            // Verificar si el número ya está en uso buscando en Firestore
             const querySnapshot = await getDocs(collection(db, "usuarios"));
+
             const telefonoYaExiste = querySnapshot.docs.some(doc => doc.data().telefono === "+52" + telefono);
             if (telefonoYaExiste) {
-             errorMsg.textContent = "Este número de teléfono ya está registrado.";
-             return;
+              errorMsg.textContent = "Este número de teléfono ya está registrado.";
+              return;
+            }
+
+            const correoYaExisteEnFirestore = querySnapshot.docs.some(doc => doc.data().correo === correo);
+            if (correoYaExisteEnFirestore) {
+              errorMsg.textContent = "Este correo ya está registrado.";
+              return;
             }
 
             // Si todo está bien, se puede continuar con el reCAPTCHA y SMS
