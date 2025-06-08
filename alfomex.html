@@ -964,8 +964,11 @@
     }
   }
 
-  const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
-  const correo = user.email || "correo@sin-dato.com";
+  const refUsuario = window.doc(window.db, "usuarios", user.uid);
+  const usuarioSnap = await window.getDoc(refUsuario);
+  const nombre = usuarioSnap.exists() ? usuarioSnap.data().nombre + " " + usuarioSnap.data().apellido : user.displayName || "Cliente sin nombre";
+  const correo = usuarioSnap.exists() ? usuarioSnap.data().correo : user.email || "correo@sin-dato.com";
+  const telefono = usuarioSnap.exists() ? usuarioSnap.data().telefono : user.phoneNumber || "No registrado";
   const medidas = `${ancho} cm x ${alto} cm`;
   const formData = new FormData();
   const imagenBase64 = base64.split(",")[1];
