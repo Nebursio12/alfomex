@@ -676,7 +676,7 @@ canvas {
 
 .lateral {
 
-
+  
   max-width: 500px;
   height: 500px;
   justify-content: space-between;
@@ -684,6 +684,7 @@ canvas {
 }
 
 .lateral {
+    width: 100%;
     display: none;
     flex-direction: column;
     justify-content: flex-start;
