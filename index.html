@@ -743,56 +743,58 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
   try {
     const result = await window.confirmationResultGlobal.confirm(codigo);
     const user = result.user;
-    const credenciales = await createUserWithEmailAndPassword(auth, window.datosUsuarioTemporal.correo, window.datosUsuarioTemporal.password);
 
-    // Luego la vinculamos con el teléfono ya verificado
+    // Ya está autenticado con número → ahora solo vinculamos el correo
     const credencial = EmailAuthProvider.credential(
       window.datosUsuarioTemporal.correo,
       window.datosUsuarioTemporal.password
     );
 
-    await linkWithCredential(user, credencial);
+    await linkWithCredential(user, credencial); // ← Aquí se vinculan correctamente
+
     yaVerificado = true;
 
     await updateProfile(user, {
       displayName: `${window.datosUsuarioTemporal.nombre} ${window.datosUsuarioTemporal.apellido}`
     });
-    await user.reload();
-    const usuarioFinal = await getAuth().currentUser;
-
 
     await setDoc(doc(db, "usuarios", user.uid), {
-       nombre: window.datosUsuarioTemporal.nombre,
-       apellido: window.datosUsuarioTemporal.apellido,
-       correo: user.email || "sincorreo@alfomex.com",
-       telefono: user.phoneNumber || "No registrado"
-   });
+      nombre: window.datosUsuarioTemporal.nombre,
+      apellido: window.datosUsuarioTemporal.apellido,
+      correo: user.email || "sincorreo@alfomex.com",
+      telefono: user.phoneNumber || "No registrado"
+    });
+
     cerrarModalCodigo();
     alert("Teléfono verificado y registro exitoso.");
     setTimeout(() => {
-       window.location.reload();
+      window.location.reload();
     }, 1000);
+
   } catch (e) {
-    // VERIFICAMOS SI YA ESTABA AUTENTICADO PARA EVITAR ERROR FALSO
     if (auth.currentUser) {
-       console.warn("Error falso: ya estaba logueado");
-       if (!yaVerificado) {
-         const currentUser = auth.currentUser;
-         await setDoc(doc(db, "usuarios", currentUser.uid), {
-           nombre: window.datosUsuarioTemporal.nombre,
-           apellido: window.datosUsuarioTemporal.apellido,
-           correo: currentUser.email || "sincorreo@alfomex.com",
-           telefono: currentUser.phoneNumber || "No registrado"
-         });
-       }
-       cerrarModalCodigo();
-       window.location.reload();
-       return;
+      console.warn("Error falso: ya estaba logueado");
+
+      if (!yaVerificado) {
+        const currentUser = auth.currentUser;
+        await setDoc(doc(db, "usuarios", currentUser.uid), {
+          nombre: window.datosUsuarioTemporal.nombre,
+          apellido: window.datosUsuarioTemporal.apellido,
+          correo: currentUser.email || "sincorreo@alfomex.com",
+          telefono: currentUser.phoneNumber || "No registrado"
+        });
+      }
+
+      cerrarModalCodigo();
+      window.location.reload();
+      return;
     }
+
     console.error(e);
     errorSMS.textContent = "Código incorrecto o vencido.";
   }
 });
+
 
     </script>
     <div id="recaptcha-container"></div>
