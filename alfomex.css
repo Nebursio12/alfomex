@@ -1,0 +1,482 @@
+/* =====================
+   ALFOMEX (EXCLUSIVO DE alfomex.html)
+   ===================== */
+#panelEstambre {
+  display: none;
+  flex-direction: column;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+.lateral-izquierda {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lateral {
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-self: flex-start;
+  margin-left: 40px;
+  margin-top: 0;
+  max-width: 500px;
+  height: auto;
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#resultado {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+#totalFinal {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+#resultado strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.2rem;
+  color: black;
+}
+
+#colorDetalle div {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+#colorDetalle div div {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #000;
+  margin-right: 10px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+
+.controls button {
+  background-color: #000000 !important;
+  color: white !important;
+  font-size: 1.2rem;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.controls button:active {
+  background-color: var(--primary);
+  color: black;
+}
+
+canvas {
+  width: 500px;
+  height: 500px;
+  border: 1px solid #999;
+}
+
+#areaCubierta {
+  margin-top: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#vistaCuarto {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  display: none;
+}
+
+#vistaAlfombra[src=""] {
+  display: none !important;
+}
+
+.vista-cuarto-toggle {
+  display: flex !important;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.modal-vista-cuarto {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-vista-cuarto.activo {
+  display: flex;
+}
+
+.modal-contenido {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.modal-contenido img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cerrar-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: crimson;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.contenedor-superpuesto {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#modalFondoCuarto {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+#modalImagenAlfombra {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: center center;
+  left: 50%;
+  top: 65%;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.btn-preview-cuarto {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-preview-cuarto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.btn-preview-cuarto::before,
+.btn-preview-cuarto::after {
+  content: none !important;
+}
+
+@keyframes vistaZoomIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vistaZoomOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.85); }
+}
+
+.modal-vista-cuarto.animarEntrada {
+  animation: vistaZoomIn 0.3s ease forwards;
+}
+
+.modal-vista-cuarto.animarSalida {
+  animation: vistaZoomOut 0.2s ease forwards;
+}
+
+.toast-notificacion {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #666;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.toast-notificacion.mostrar {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast-advertencia {
+  background: crimson !important;
+}
+
+.toast-dimensiones {
+  background: #444 !important;
+}
+
+.boton-central-imagen {
+  background-color: #000000;
+  color: white;
+  font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  display: inline-block;
+  margin-top: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.boton-central-imagen:hover {
+  background-color: #3b3b3b;
+  animation: bounceHover 0.4s ease;
+}
+
+#zoomControles {
+  display: none;
+}
+
+.boton-total {
+  width: 100%;
+  max-width: 500px;
+  padding: 15px 25px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.boton-total i {
+  font-size: 1.4rem;
+  transition: transform 0.3s ease;
+}
+
+.boton-total span {
+  font-size: 1.1rem;
+}
+
+.boton-total:hover {
+  background-color: #3b3b3b;
+  animation: bounceHover 0.4s ease;
+}
+
+.boton-total:hover i {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.boton-total:disabled {
+  background-color: #ccc !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
+
+.drag-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.drag-overlay.active {
+  display: flex;
+}
+
+.drag-message {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px 40px;
+  border: 3px dashed #fff;
+  border-radius: 10px;
+}
+
+#avisoEnvio {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffc800;
+  color: black;
+  font-weight: bold;
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  align-items: center;
+  z-index: 9999;
+  box-sizing: border-box;
+}
+
+.cerrar-aviso {
+  background: none;
+  border: none;
+  font-size: 20px;
+  z-index: 1001;
+  margin-left: auto;
+  cursor: pointer;
+  color: black;
+  padding-left: 20px;
+}
+
+body.con-aviso header {
+  margin-top: 40px;
+}
+
+.aviso-movimiento {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: moverTexto 12s linear infinite;
+  pointer-events: none;
+}
+
+.carrito-lista {
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #333;
+}
+
+.carrito-lista:not(.oculto) {
+  display: block;
+}
+
+.item-carrito {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.item-carrito strong {
+  color: #003366;
+}
+
+.item-carrito div {
+  font-size: 14px;
+}
+
+#contadorCarrito {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none;
+}
