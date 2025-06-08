@@ -508,8 +508,9 @@
       };
 
       window.abrirModal = () => {
-        // Cierra el menú si está abierto
         closeNav();
+        modoRegistro = false; // 🔥 Forzamos modo login
+        toggleFormulario();   // 🔁 Actualiza interfaz con el modo correcto
         document.getElementById("loginModal").classList.add("active");
         document.getElementById("modalOverlay").classList.add("active");
       };
