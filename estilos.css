@@ -132,7 +132,6 @@ h2 {
 }
 
 
-
 .controls button:active {
   background-color: var(--primary);
   color: black;
@@ -224,12 +223,7 @@ canvas {
   margin-right: 10px;
 }
 
-.total-final {
-  font-size: 1.3rem;
-  color: #0055cc;
-  font-weight: bold;
-  text-align: center;
-}
+
 
 .social-links {
   margin: 40px auto;
@@ -392,40 +386,14 @@ canvas {
   border-color: #000;
 }
 
-.plantillas-modal {
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  opacity: 1;
-  transform: scale(1);
-}
 
-.plantillas-modal.show {
-  opacity: 1;
-  transform: scale(1);
-  pointer-events: all;
-}
 
-.plantillas-modal h3 {
-  margin-top: 0;
-  text-align: center;
-  color: var(--secondary);
-}
 
-.plantillas-modal .categoria {
-  margin-bottom: 20px;
-}
 
-.plantillas-modal .categoria h4 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #333;
-}
+
+
+
+
 
 @keyframes fadeModalIn {
   from {
@@ -449,75 +417,24 @@ canvas {
   }
 }
 
-.plantillas-modal .categoria img {
-  width: 100px;
-  height: auto;
-  margin: 5px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: 0.2s;
-}
 
-.plantillas-modal .categoria img:hover {
-  border-color: var(--secondary);
-}
 
-.modal-overlay-plantillas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9998;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
 
-.modal-overlay-plantillas:not(.active) {
-  pointer-events: none;
-}
 
-.modal-overlay-plantillas.active {
-  display: flex;
-}
+
+
+
+
 
 h2, .alerta, .plantilla-btn-container {
   text-align: center;
   width: 100%;
 }
 
-.plantilla-btn-container {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0 5px;
-}
 
-.plantilla-btn-container button {
-  background: #003366;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
 
-.modal-overlay-plantillas {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
 
-.modal-overlay-plantillas.active {
-  display: block;
-  opacity: 1;
-}
-.plantilla-btn-container button:hover {
-  background: #ffcc00;
-  color: black;
-}
+
 .boton-total {
   width: 100%;
   max-width: 500px;
