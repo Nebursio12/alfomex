@@ -993,3 +993,45 @@ body.con-aviso header {
   display: none;
 }
 
+.boton-total {
+  width: 100%;
+  max-width: 500px;
+  padding: 15px 25px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.boton-total i {
+  font-size: 1.4rem;
+  transition: transform 0.3s ease;
+}
+
+.boton-total span {
+  font-size: 1.1rem;
+}
+
+.boton-total:hover {
+  background-color: #3b3b3b;
+  animation: bounceHover 0.4s ease;
+}
+
+.boton-total:hover i {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.boton-total:disabled {
+  background-color: #ccc !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
