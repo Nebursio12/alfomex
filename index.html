@@ -833,10 +833,9 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
 
     cerrarModalCodigo();
     const nombreCompleto = `${window.datosUsuarioTemporal.nombre} ${window.datosUsuarioTemporal.apellido}`;
-    mostrarBienvenida(nombreCompleto);
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    localStorage.setItem("bienvenida", nombreCompleto);
+    window.location.reload();
+
 
   } catch (e) {
     if (auth.currentUser) {
@@ -862,6 +861,13 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
   }
 });
 
+    window.addEventListener("DOMContentLoaded", () => {
+     const nombreGuardado = localStorage.getItem("bienvenida");
+     if (nombreGuardado) {
+       mostrarBienvenida(nombreGuardado);
+       localStorage.removeItem("bienvenida");
+      }
+    });
 
     </script>
     <div id="recaptcha-container"></div>
