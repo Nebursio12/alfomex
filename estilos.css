@@ -440,24 +440,7 @@ h2, .alerta, .plantilla-btn-container {
 
 
 
-.boton-total {
-  width: 100%;
-  max-width: 500px;
-  padding: 15px 25px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  box-shadow: none;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
+
 
 .lateral-izquierda {
   width: 100%;
@@ -684,13 +667,7 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-.plantillas-modal.animarEntrada {
-  animation: modalFadeIn 0.3s ease forwards;
-}
 
-.plantillas-modal.animarSalida {
-  animation: modalFadeOut 0.2s ease forwards;
-}
 
 .toast-notificacion {
   position: absolute;
