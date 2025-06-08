@@ -640,8 +640,12 @@
 
       let modoRegistro = false;
 
-      window.toggleFormulario = () => {
-        modoRegistro = !modoRegistro;
+      window.toggleFormulario = (forzarModo = null) => {
+       if (forzarModo !== null) {
+         modoRegistro = forzarModo;
+       } else {
+         modoRegistro = !modoRegistro;
+       }
 
         document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
         document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
@@ -869,8 +873,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
        localStorage.removeItem("bienvenida");
       }
     });
-    modoRegistro = false;
-    toggleFormulario(); // Fuerza modo login desde el arranque
+    toggleFormulario(false); // 🔥 Fuerza modo login desde el inicio correctamente
 
     </script>
     <div id="recaptcha-container"></div>
