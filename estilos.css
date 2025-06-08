@@ -674,7 +674,18 @@ canvas {
   height: 500px;
 }
 
-
+.lateral {
+  display: none;
+  width: 100%;
+  max-width: 500px;
+  height: 500px;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fafafa;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
 
 #resultado {
   width: 100%;
