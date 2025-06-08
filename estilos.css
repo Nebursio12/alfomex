@@ -1186,7 +1186,7 @@ h2, .alerta, .plantilla-btn-container {
 
 
 .boton-total:hover {
-  background-color: #0055cc;
+  background-color: #3b3b3b;
 }
 
 .boton-total i {
@@ -1202,7 +1202,7 @@ h2, .alerta, .plantilla-btn-container {
 
 
 .boton-total:hover #totalFinal {
-  color: black;
+  background-color: #3b3b3b;
 }
 
 @keyframes bounceHover {
