@@ -158,13 +158,14 @@ canvas {
 }
 
 .lateral {
+    width: 100%;
     display: none;
     flex-direction: column;
     justify-content: flex-start;
     align-self: flex-start;
     margin-left: 40px;
     margin-top: 0;
-    max-width: 400px;
+    max-width: 500px;
     height: auto;
     background: #fafafa;
     padding: 20px;
@@ -674,30 +675,9 @@ canvas {
   height: 500px;
 }
 
-.lateral {
 
-  
-  max-width: 500px;
-  height: 500px;
-  justify-content: space-between;
 
-}
 
-.lateral {
-    width: 100%;
-    display: none;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-self: flex-start;
-    margin-left: 40px;
-    margin-top: 0;
-    max-width: 500px;
-    height: auto;
-    background: #fafafa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
 #resultado {
   width: 100%;
   max-width: 500px;
