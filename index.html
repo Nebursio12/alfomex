@@ -772,7 +772,14 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
       window.datosUsuarioTemporal.password
     );
 
-    await linkWithCredential(user, credencial); // ← Aquí se vinculan correctamente
+    try {
+      await linkWithCredential(user, credencial);
+    } catch (err) {
+      await user.delete(); // elimina el usuario si el correo ya está usado
+      cerrarModalCodigo();
+      errorSMS.textContent = "Este correo ya está en uso. Intenta con otro.";
+      return;
+    }   
 
     yaVerificado = true;
 
