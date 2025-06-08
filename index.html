@@ -668,7 +668,7 @@
             return;
           }
 
-         const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+         const correoValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo);
          if (!correoValido) {
            errorMsg.textContent = "Ingresa un correo electrónico válido.";
            return;
