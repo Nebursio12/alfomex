@@ -754,14 +754,15 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
       displayName: `${window.datosUsuarioTemporal.nombre} ${window.datosUsuarioTemporal.apellido}`
     });
     await user.reload();
-    const usuarioFinal = await getAuth().currentUser;
+    const usuarioFinal = getAuth().currentUser;
 
 
-    await setDoc(doc(db, "usuarios", user.uid), {
-       nombre: window.datosUsuarioTemporal.nombre,
-       apellido: window.datosUsuarioTemporal.apellido,
-       correo: user.email || "sincorreo@alfomex.com",
-       telefono: user.phoneNumber || "No registrado"
+    
+    await setDoc(doc(db, "usuarios", usuarioFinal.uid), {
+      nombre: window.datosUsuarioTemporal.nombre,
+      apellido: window.datosUsuarioTemporal.apellido,
+      correo: usuarioFinal.email || "sincorreo@alfomex.com",
+      telefono: usuarioFinal.phoneNumber || "No registrado"
    });
     cerrarModalCodigo();
     alert("Teléfono verificado y registro exitoso.");
