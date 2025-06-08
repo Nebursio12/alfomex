@@ -869,7 +869,8 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
        localStorage.removeItem("bienvenida");
       }
     });
-    toggleFormulario(); // 🔥 Establece el texto correcto desde el inicio
+    modoRegistro = false;
+    toggleFormulario(); // Fuerza modo login desde el arranque
 
     </script>
     <div id="recaptcha-container"></div>
