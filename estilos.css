@@ -104,9 +104,6 @@ h2 {
 }
 
 
-
-
-
 .controls {
   display: flex;
   justify-content: center;
@@ -134,23 +131,14 @@ h2 {
   user-select: none;
 }
 
-.controls button:hover,
-.controls button:focus,
-.controls button:focus-visible {
-  background-color: #000000 !important;
-  color: white !important;
-  outline: no
-}
+
 
 .controls button:active {
   background-color: var(--primary);
   color: black;
 }
 
-.upload-btn:hover, .controls button:hover, #añadirCarrito:hover {
-  background: var(--primary);
-  color: black;
-}
+
 
 .contenedor-principal {
   display: flex;
