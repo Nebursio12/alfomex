@@ -677,7 +677,6 @@
               });
               await window.recaptchaVerifier.render();
             }
-            const credenciales = await createUserWithEmailAndPassword(auth, correo, password);
             const fullPhone = "+52" + telefono;
             const confirmationResult = await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
 
@@ -744,6 +743,9 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
   try {
     const result = await window.confirmationResultGlobal.confirm(codigo);
     const user = result.user;
+    const credenciales = await createUserWithEmailAndPassword(auth, window.datosUsuarioTemporal.correo, window.datosUsuarioTemporal.password);
+
+    // Luego la vinculamos con el teléfono ya verificado
     const credencial = EmailAuthProvider.credential(
       window.datosUsuarioTemporal.correo,
       window.datosUsuarioTemporal.password
