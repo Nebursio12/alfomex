@@ -723,6 +723,8 @@
       document.getElementById("codigoSMS").value = "";
       document.getElementById("errorSMS").textContent = "";
     }
+    
+    window.cerrarModalCodigo = cerrarModalCodigo; // ← 🔥 Añade esta línea justo aquí
 
 let yaVerificado = false; // fuera del event listener
 document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
