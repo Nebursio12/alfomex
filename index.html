@@ -1214,6 +1214,19 @@ function mostrarToastCarrito(mensaje) {
   }, 3000); // Mostrar durante 3 segundos
 }
 
+function comprarAhora() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    abrirModal(); // 👈 Abre el panel de login
+    mostrarToastCarrito("🔒 Debes iniciar sesión para comprar");
+    return;
+  }
+
+  // Aquí va tu lógica de compra si está logueado
+  alert("🛒 Procesando compra...");
+}
+
 
     </script>
     <div id="recaptcha-container"></div>
