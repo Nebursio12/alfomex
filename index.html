@@ -522,6 +522,42 @@
 .btn-añadir:hover {
   background-color: #333;
 }
+.carrito-lista {
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  z-index: 9999;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.carrito-lista.oculto {
+  display: none;
+}
+
+.item-carrito {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.carrito-lista {
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.carrito-lista:not(.oculto) {
+  transform: translateY(0);
+  opacity: 1;
+}
 
     </style>
   </head>
@@ -535,6 +571,11 @@
         <button onclick="abrirModal()">Entrar</button>
       </nav>
     </header>
+    <div id="carritoLista" class="carrito-lista oculto">
+      <div id="mensajeCarritoVacio" style="text-align:center; color:#666;">
+        🛒 El carrito está vacío
+      </div>
+    </div>
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
       <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
@@ -1063,6 +1104,63 @@ window.scrollToCategoria = (id) => {
 window.abrirCarrito = () => {
   alert("Aquí iría el carrito o modal de compras 🛒");
 };
+
+function renderizarCarrito() {
+  const contenedor = document.getElementById("carritoLista");
+  const mensajeVacio = document.getElementById("mensajeCarritoVacio");
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  // Limpia todos los elementos excepto el mensaje
+  const itemsActuales = contenedor.querySelectorAll(".item-carrito");
+  itemsActuales.forEach(item => item.remove());
+
+  if (carrito.length === 0) {
+    mensajeVacio.style.display = "block";
+    contenedor.classList.add("oculto");
+    return;
+  }
+  mensajeVacio.style.display = "none";
+
+  carrito.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.classList.add("item-carrito");
+    div.innerHTML = `
+      <img src="${item.imagen}" alt="${item.nombre}" style="width:50px;height:50px;border-radius:8px;">
+      <div style="flex:1">
+        <strong>${item.nombre}</strong><br>
+        Precio: $${item.precio}
+      </div>
+      <button onclick="eliminarDelCarrito(${index})" style="color:red;">&times;</button>
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+function eliminarDelCarrito(index) {
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  carrito.splice(index, 1);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+  renderizarCarrito();
+}
+
+// Mostrar/Ocultar
+window.abrirCarrito = () => {
+  const carrito = document.getElementById("carritoLista");
+  carrito.classList.toggle("oculto");
+};
+
+document.addEventListener("DOMContentLoaded", renderizarCarrito);
+
+function actualizarContadorCarrito() {
+  const contador = document.getElementById("contadorCarrito");
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  contador.textContent = carrito.length;
+  contador.style.display = carrito.length ? "block" : "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderizarCarrito();
+  actualizarContadorCarrito();
+});
 
     </script>
     <div id="recaptcha-container"></div>
