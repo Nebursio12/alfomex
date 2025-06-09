@@ -575,6 +575,13 @@
       <div id="mensajeCarritoVacio" style="text-align:center; color:#666;">
         🛒 El carrito está vacío
       </div>
+      <div id="resumenCarrito" style="margin-top: 15px; display: none;">
+        <hr style="margin: 10px 0;">
+        <div style="font-weight: bold; font-size: 1rem; margin-bottom: 10px;">Total: $<span id="totalCarrito">0</span></div>
+        <button onclick="comprarAhora()" style="width: 100%; padding: 10px; background: black; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+          Comprar Ahora
+        </button>
+      </div>
     </div>
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
@@ -1110,17 +1117,26 @@ window.abrirCarrito = () => {
 function renderizarCarrito() {
   const contenedor = document.getElementById("carritoLista");
   const mensajeVacio = document.getElementById("mensajeCarritoVacio");
+  const resumen = document.getElementById("resumenCarrito");
+  const totalTexto = document.getElementById("totalCarrito");
+
   const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-  // Limpia todos los elementos excepto el mensaje
-  const itemsActuales = contenedor.querySelectorAll(".item-carrito");
-  itemsActuales.forEach(item => item.remove());
+
+  // Limpiar items anteriores
+  contenedor.querySelectorAll(".item-carrito").forEach(item => item.remove());
 
   if (carrito.length === 0) {
     mensajeVacio.style.display = "block";
+    resumen.style.display = "none";
     contenedor.classList.add("oculto");
     return;
   }
+
   mensajeVacio.style.display = "none";
+  resumen.style.display = "block";
+  contenedor.classList.remove("oculto");
+
+  let total = 0;
 
   carrito.forEach((item, index) => {
     const div = document.createElement("div");
@@ -1131,14 +1147,19 @@ function renderizarCarrito() {
         <strong>${item.nombre}</strong><br>
         Precio: $${item.precio}
       </div>
-      <button class="btnEliminar" style="color:red;">&times;</button>
+      <button onclick="eliminarDelCarrito(${index})" style="color:red;">&times;</button>
     `;
-    div.querySelector(".btnEliminar").addEventListener("click", () => {
-      eliminarDelCarrito(index);
-    });
-    contenedor.appendChild(div);
+    contenedor.insertBefore(div, resumen); // 👈 antes del total
+    total += Number(item.precio);
   });
+
+  totalTexto.innerText = total.toFixed(2);
 }
+function comprarAhora() {
+  alert("🛒 Procesando compra... (puedes implementar aquí la lógica real)");
+}
+
+
 
 function eliminarDelCarrito(index) {
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
