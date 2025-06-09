@@ -740,6 +740,8 @@ window.añadirAlCarrito = (producto) => {
   renderizarCarrito();
 
   mostrarToastCarrito(`🛒 ${producto.nombre} añadido al carrito`);
+  actualizarContadorCarrito();
+
 };
 
 
@@ -1178,6 +1180,8 @@ function eliminarDelCarrito(index) {
   carrito.splice(index, 1);
   localStorage.setItem("carrito", JSON.stringify(carrito));
   renderizarCarrito();
+  actualizarContadorCarrito();
+
   
 }
 window.eliminarDelCarrito = eliminarDelCarrito;
