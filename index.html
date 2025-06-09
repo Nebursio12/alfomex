@@ -639,13 +639,27 @@ async function mostrarMenu() {
         <img src="${data.imagen}" alt="${data.nombre}" />
         <h4>${data.nombre}</h4>
         <p>$${data.precio}</p>
+        <button onclick='añadirAlCarrito(${JSON.stringify({
+          nombre: data.nombre,
+          precio: data.precio,
+          imagen: data.imagen
+        })})'>🛒 Añadir</button>
       `;
+
       contenedor.appendChild(tarjeta);
     });
   }
 }
 
 mostrarMenu(); // 👈 LLAMADA FINAL
+window.añadirAlCarrito = (producto) => {
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  carrito.push(producto);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+
+  alert(`${producto.nombre} añadido al carrito 🛒`);
+};
+
 
 
 
