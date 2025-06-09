@@ -1164,7 +1164,7 @@ function renderizarCarrito() {
       </div>
       <button onclick="eliminarDelCarrito(${index})" style="color:red;">&times;</button>
     `;
-    contenedor.insertBefore(div, resumen); // 👈 antes del total
+    contenedor.insertBefore(div, resumen); 
     total += Number(item.precio);
   });
 
