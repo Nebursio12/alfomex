@@ -482,7 +482,7 @@
 .btn-carrito {
   background: white;
   color: black;
-  position: relative;
+
 }
 
 .btn-carrito i {
@@ -507,14 +507,12 @@
   </head>
   <body>
     <header>
-      <button id="menuBtn" onclick="openNav()">☰</button>
+      <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
+        <i class="fas fa-shopping-cart"></i>
+      </button>
       <div class="logo">FAST BURGUER</div>
       <nav id="navOptions">
-        <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
-          <i class="fas fa-shopping-cart"></i>
-        </button>
         <button onclick="abrirModal()">Entrar</button>
-      </nav>
       </nav>
     </header>
     <div id="mySidenav" class="sidenav">
