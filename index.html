@@ -500,6 +500,33 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
+      const categoria = ["hamburguesas", "bebidas", "snacks", "postres"];
+
+async function mostrarMenu() {
+  for (const categoria of categoria) {
+    const snapshot = await getDocs(
+      query(collection(db, "menu"), where("categoria", "==", categoria))
+    );
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+
+      const contenedor = document.getElementById(`${categoria}s`); 
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "tarjeta-menu";
+      tarjeta.innerHTML = `
+        <img src="${data.imagen}" alt="${data.nombre}" />
+        <h4>${data.nombre}</h4>
+      `;
+      contenedor.appendChild(tarjeta);
+    });
+  }
+}
+
+mostrarMenu();
+
+
       window.openNav = () => {
         // Cierra el modal si está abierto
         cerrarModal();
