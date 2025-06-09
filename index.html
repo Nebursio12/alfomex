@@ -418,26 +418,26 @@
 .botones-categorias {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
-  padding: 10px 10px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px;
 }
 
 .botones-categorias button {
-  flex: 1;
-  white-space: nowrap;
   background: black;
   color: white;
   border: none;
-  padding: 10px 5px;
+  padding: 10px;
   border-radius: 10px;
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  flex: 1;
   min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
-
-
 
 .botones-categorias button:hover {
   background-color: #333;
