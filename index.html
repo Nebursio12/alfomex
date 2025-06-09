@@ -964,6 +964,12 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
       }
     });
  
+window.scrollToCategoria = (id) => {
+  const section = document.getElementById(id);
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth" });
+  }
+};
 
     </script>
     <div id="recaptcha-container"></div>
