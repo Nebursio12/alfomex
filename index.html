@@ -421,53 +421,47 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 10px auto;
-  max-width: 100%;
+  margin: 20px auto;
+  max-width: 400px;
 }
 
 .botones-categorias button {
   background: black;
   color: white;
   border: none;
-  padding: 10px 16px;
+  padding: 10px;
   border-radius: 10px;
   font-weight: bold;
   font-size: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-  transition: background 0.3s;
+  justify-content: center;
+  width: 45%;
+  min-width: 100px;
+  max-width: 120px;
 }
 
-.botones-categorias button:hover {
-  background: #333;
+.botones-categorias .texto {
+  display: inline;
+  margin-left: 6px;
 }
 
-.botones-categorias .emoji {
-  font-size: 1.2rem;
-}
-
-/* 🔥 En móviles: los 4 en fila y ocultar texto */
 @media (max-width: 480px) {
   .botones-categorias {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    overflow-x: auto;
-    padding: 0 10px;
+    justify-content: space-around;
   }
 
   .botones-categorias button {
-    flex: 1;
-    min-width: auto;
-    padding: 10px;
-    justify-content: center;
+    width: 45%;
+    font-size: 1.4rem;
+    padding: 16px 0;
   }
 
   .botones-categorias .texto {
     display: none;
   }
 }
+
 
 @media (max-width: 480px) {
   .botones-categorias {
@@ -541,10 +535,18 @@
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Alfombra 3" />
     </section>
     <div class="botones-categorias">
-     <button onclick="scrollToCategoria('hamburguesass')"><span class="emoji">🍔</span> <span class="texto">Hamburguesas</span></button>
-     <button onclick="scrollToCategoria('bebidass')"><span class="emoji">🥤</span> <span class="texto">Bebidas</span></button>
-     <button onclick="scrollToCategoria('snackss')"><span class="emoji">🍟</span> <span class="texto">Snacks</span></button>
-     <button onclick="scrollToCategoria('postress')"><span class="emoji">🍨</span> <span class="texto">Postres</span></button>
+     <button onclick="scrollToCategoria('hamburguesass')">
+    <span class="emoji">🍔</span><span class="texto"> Hamburguesas</span>
+  </button>
+  <button onclick="scrollToCategoria('bebidass')">
+    <span class="emoji">🥤</span><span class="texto"> Bebidas</span>
+  </button>
+  <button onclick="scrollToCategoria('snackss')">
+    <span class="emoji">🍟</span><span class="texto"> Snacks</span>
+  </button>
+  <button onclick="scrollToCategoria('postress')">
+    <span class="emoji">🍨</span><span class="texto"> Postres</span>
+  </button>
     </div>
 
     <main style="padding: 20px;">
