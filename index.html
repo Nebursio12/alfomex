@@ -417,26 +417,26 @@
 }
 .botones-categorias {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px auto;
-  padding: 0 10px;
-  max-width: 100%;
-  box-sizing: border-box;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .botones-categorias button {
-  flex: 1 1 23%;
+  flex: 1;
+  white-space: nowrap;
   background: black;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 10px 5px;
   border-radius: 10px;
   font-weight: bold;
-  font-size: 0.9rem;
-  white-space: nowrap;
+  font-size: 0.8rem;
+  min-width: 80px;
 }
+
 
 
 .botones-categorias button:hover {
