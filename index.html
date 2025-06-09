@@ -442,7 +442,18 @@
 .botones-categorias button:hover {
   background-color: #333;
 }
+@media (max-width: 480px) {
+  .botones-categorias {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
 
+  .botones-categorias button {
+    flex: 1 0 auto;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+}
 @media (max-width: 480px) {
   .botones-categorias {
     flex-direction: column;
