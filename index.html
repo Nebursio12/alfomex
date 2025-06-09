@@ -421,19 +421,23 @@
   justify-content: center;
   gap: 10px;
   margin: 20px auto;
-  padding: 10px;
+  padding: 0 10px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .botones-categorias button {
-  background-color: #000;
+  flex: 1 1 23%;
+  background: black;
   color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
   font-weight: bold;
-  transition: background 0.3s ease;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
+
 
 .botones-categorias button:hover {
   background-color: #333;
