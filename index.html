@@ -558,6 +558,17 @@
   transform: translateY(0);
   opacity: 1;
 }
+.contador-carrito {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: crimson;
+  color: white;
+  font-size: 0.7rem;
+  padding: 3px 6px;
+  border-radius: 50%;
+  display: none;
+}
 
     </style>
   </head>
@@ -565,6 +576,7 @@
     <header>
       <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
         <i class="fas fa-shopping-cart"></i>
+        <span id="contadorCarrito" class="contador-carrito">0</span>
       </button>
       <div class="logo">FAST BURGUER</div>
       <nav id="navOptions">
