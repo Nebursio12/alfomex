@@ -1,0 +1,63 @@
+/* =====================
+   ESTILOS EXCLUSIVOS DE index.html (FAST BURGUER)
+   ===================== */
+.toast-bienvenida {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #00c853;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 9999;
+}
+.toast-bienvenida.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}
+#modalCodigo:not(.active) {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+#modalCodigo.active {
+  pointer-events: all;
+  opacity: 1;
+}
+#modalCodigo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#modalCodigo.active {
+  opacity: 1;
+  pointer-events: all;
+  display: flex;
+}
+#modalSMS {
+  transition: opacity 0.3s ease;
+}
+.fade-slide {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+.fade-slide.show {
+  opacity: 1;
+  transform: translateY(0);
+}
