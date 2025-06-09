@@ -1170,7 +1170,16 @@ function renderizarCarrito() {
   totalTexto.innerText = total.toFixed(2);
 }
 function comprarAhora() {
-  alert("🛒 Procesando compra... (puedes implementar aquí la lógica real)");
+  const user = auth.currentUser;
+
+  if (!user) {
+    abrirModal(); // 👈 Abre el panel de login
+    mostrarToastCarrito("🔒 Debes iniciar sesión para comprar");
+    return;
+  }
+
+  // Aquí va tu lógica de compra si está logueado
+  alert("🛒 Procesando compra...");
 }
 
 
