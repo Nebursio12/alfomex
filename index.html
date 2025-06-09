@@ -417,47 +417,58 @@
 }
 .botones-categorias {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 10px;
+  margin: 10px auto;
+  max-width: 100%;
 }
 
 .botones-categorias button {
   background: black;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 10px 16px;
   border-radius: 10px;
   font-weight: bold;
-  font-size: 1rem;
-  flex: 1;
-  min-width: 80px;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 5px;
+  white-space: nowrap;
+  transition: background 0.3s;
 }
 
 .botones-categorias button:hover {
-  background-color: #333;
+  background: #333;
 }
+
+.botones-categorias .emoji {
+  font-size: 1.2rem;
+}
+
+/* 🔥 En móviles: los 4 en fila y ocultar texto */
 @media (max-width: 480px) {
   .botones-categorias {
     flex-wrap: nowrap;
+    justify-content: space-between;
     overflow-x: auto;
+    padding: 0 10px;
   }
 
   .botones-categorias button {
-    flex: 1 0 auto;
-    padding: 10px 5px;
-    font-size: 1.2rem;
+    flex: 1;
+    min-width: auto;
+    padding: 10px;
+    justify-content: center;
   }
 
   .botones-categorias .texto {
     display: none;
   }
 }
+
 @media (max-width: 480px) {
   .botones-categorias {
     flex-direction: column;
