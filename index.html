@@ -718,6 +718,8 @@ window.añadirAlCarrito = (producto) => {
   carrito.push(producto);
   localStorage.setItem("carrito", JSON.stringify(carrito));
 
+  renderizarCarrito();
+
   alert(`${producto.nombre} añadido al carrito 🛒`);
 };
 
