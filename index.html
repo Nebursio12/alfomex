@@ -1129,8 +1129,11 @@ function renderizarCarrito() {
         <strong>${item.nombre}</strong><br>
         Precio: $${item.precio}
       </div>
-      <button onclick="eliminarDelCarrito(${index})" style="color:red;">&times;</button>
+      <button class="btnEliminar" style="color:red;">&times;</button>
     `;
+    div.querySelector(".btnEliminar").addEventListener("click", () => {
+      eliminarDelCarrito(index);
+    });
     contenedor.appendChild(div);
   });
 }
