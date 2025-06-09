@@ -465,7 +465,20 @@
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Alfombra 2" />
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Alfombra 3" />
     </section>
-    <section class="catalogo" id="catalogo"></section>
+    <main style="padding: 20px;">
+     <h2>Hamburguesas</h2>
+     <div id="hamburguesass" class="catalogo"></div>
+
+     <h2>Bebidas</h2>
+     <div id="bebidass" class="catalogo"></div>
+
+     <h2>Snacks</h2>
+     <div id="snackss" class="catalogo"></div>
+
+     <h2>Postres</h2>
+     <div id="postress" class="catalogo"></div>
+    </main>
+
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
       import {
@@ -514,7 +527,7 @@ async function mostrarMenu() {
 
       const contenedor = document.getElementById(`${categoria}s`); 
       const tarjeta = document.createElement("div");
-      tarjeta.className = "tarjeta-menu";
+      tarjeta.className = "alfombra";
       tarjeta.innerHTML = `
         <img src="${data.imagen}" alt="${data.nombre}" />
         <h4>${data.nombre}</h4>
@@ -647,23 +660,7 @@ mostrarMenu();
       };
       
 
-      async function cargarAlfombras() {
-        const contenedor = document.getElementById("catalogo");
-        const querySnapshot = await getDocs(collection(db, "menu"));
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const div = document.createElement("div");
-          div.className = "alfombra";
-          div.innerHTML = `
-            <img src="${data.imagen}" alt="${data.nombre}" />
-            <h4>${data.nombre}</h4>
-            <p>${data.precio}</p>
-          `;
-          contenedor.appendChild(div);
-        });
-      }
-
-      cargarAlfombras();
+     
 
       
       document.addEventListener("keydown", (e) => {
