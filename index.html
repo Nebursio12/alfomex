@@ -659,7 +659,7 @@ async function mostrarMenu() {
         <img src="${data.imagen}" alt="${data.nombre}" />
         <h4>${data.nombre}</h4>
         <p>$${data.precio}</p>
-        <button onclick='añadirAlCarrito(${JSON.stringify({
+        <button class="btn-añadir" onclick='añadirAlCarrito(${JSON.stringify({
           nombre: data.nombre,
           precio: data.precio,
           imagen: data.imagen
