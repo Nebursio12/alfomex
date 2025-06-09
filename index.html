@@ -1170,17 +1170,42 @@ function renderizarCarrito() {
 
   totalTexto.innerText = total.toFixed(2);
 }
-function comprarAhora() {
+async function comprarAhora() {
   const user = auth.currentUser;
 
   if (!user) {
-    abrirModal(); // 👈 Abre el panel de login
+    abrirModal();
     mostrarToastCarrito("🔒 Debes iniciar sesión para comprar");
     return;
   }
 
-  // Aquí va tu lógica de compra si está logueado
-  alert("🛒 Procesando compra...");
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+  if (carrito.length === 0) {
+    mostrarToastCarrito("🛒 Tu carrito está vacío");
+    return;
+  }
+
+  const pedido = {
+    uid: user.uid,
+    correo: user.email || "Sin correo",
+    productos: carrito,
+    total: carrito.reduce((sum, item) => sum + Number(item.precio), 0),
+    fecha: new Date().toISOString(),
+    estado: "pendiente"
+  };
+
+  try {
+    await addDoc(collection(db, "pedidosUsuarios"), pedido);
+
+    mostrarToastCarrito("✅ Pedido enviado correctamente");
+    localStorage.removeItem("carrito");
+    renderizarCarrito();
+    actualizarContadorCarrito();
+  } catch (error) {
+    console.error("❌ Error al guardar pedido:", error);
+    mostrarToastCarrito("❌ Error al guardar el pedido");
+  }
 }
 
 window.comprarAhora = comprarAhora;
