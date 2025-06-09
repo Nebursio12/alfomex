@@ -415,6 +415,41 @@
     height: auto;
   }
 }
+.botones-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.botones-categorias button {
+  background-color: #000;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.botones-categorias button:hover {
+  background-color: #333;
+}
+
+@media (max-width: 480px) {
+  .botones-categorias {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .botones-categorias button {
+    width: 80%;
+  }
+}
+
     </style>
   </head>
   <body>
@@ -475,6 +510,13 @@
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Alfombra 2" />
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Alfombra 3" />
     </section>
+    <div class="botones-categorias">
+     <button onclick="scrollToCategoria('hamburguesass')">🍔 Hamburguesas</button>
+     <button onclick="scrollToCategoria('bebidass')">🥤 Bebidas</button>
+     <button onclick="scrollToCategoria('snackss')">🍟 Snacks</button>
+     <button onclick="scrollToCategoria('postress')">🍨 Postres</button>
+    </div>
+
     <main style="padding: 20px;">
      <h2>Hamburguesas</h2>
      <div id="hamburguesass" class="catalogo"></div>
