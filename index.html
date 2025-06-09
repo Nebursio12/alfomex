@@ -513,31 +513,34 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      const categoria = ["hamburguesas", "bebidas", "snacks", "postres"];
 
-const categorias = ["hamburguesas", "bebidas", "snacks", "postres"];
 
-for (const cat of categorias) {
-  const snapshot = await getDocs(
-    query(collection(db, "menu"), where("categoria", "==", cat))
-  );
+async function mostrarMenu() {
+  const categorias = ["hamburguesas", "bebidas", "snacks", "postres"];
 
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    const contenedor = document.getElementById(`${cat}s`);
-    const tarjeta = document.createElement("div");
-    tarjeta.className = "alfombra";
-    tarjeta.innerHTML = `
-      <img src="${data.imagen}" alt="${data.nombre}" />
-      <h4>${data.nombre}</h4>
-      <p>$${data.precio}</p>
-    `;
-    contenedor.appendChild(tarjeta);
-  });
+  for (const cat of categorias) {
+    const snapshot = await getDocs(
+      query(collection(db, "menu"), where("categoria", "==", cat))
+    );
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const contenedor = document.getElementById(`${cat}s`);
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "alfombra";
+      tarjeta.innerHTML = `
+        <img src="${data.imagen}" alt="${data.nombre}" />
+        <h4>${data.nombre}</h4>
+        <p>$${data.precio}</p>
+      `;
+      contenedor.appendChild(tarjeta);
+    });
+  }
 }
 
+mostrarMenu(); // 👈 LLAMADA FINAL
 
-mostrarMenu();
+
 
 
       window.openNav = () => {
