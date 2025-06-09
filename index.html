@@ -479,6 +479,29 @@
     width: 80%;
   }
 }
+.btn-carrito {
+  background: white;
+  color: black;
+  position: relative;
+}
+
+.btn-carrito i {
+  font-size: 1.2rem;
+}
+
+/* Puedes agregar contador de ítems encima del ícono si lo deseas: */
+.btn-carrito::after {
+  content: attr(data-count);
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: crimson;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 5px;
+  border-radius: 50%;
+  display: none; /* Pon "inline-block" para activarlo dinámicamente */
+}
 
     </style>
   </head>
@@ -487,7 +510,11 @@
       <button id="menuBtn" onclick="openNav()">☰</button>
       <div class="logo">FAST BURGUER</div>
       <nav id="navOptions">
-        <span>Cargando...</span>
+        <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
+          <i class="fas fa-shopping-cart"></i>
+        </button>
+        <button onclick="abrirModal()">Entrar</button>
+      </nav>
       </nav>
     </header>
     <div id="mySidenav" class="sidenav">
@@ -999,6 +1026,10 @@ window.scrollToCategoria = (id) => {
   if (section) {
     section.scrollIntoView({ behavior: "smooth" });
   }
+};
+
+window.abrirCarrito = () => {
+  alert("Aquí iría el carrito o modal de compras 🛒");
 };
 
     </script>
