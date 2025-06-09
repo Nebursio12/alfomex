@@ -1166,9 +1166,9 @@ function eliminarDelCarrito(index) {
   carrito.splice(index, 1);
   localStorage.setItem("carrito", JSON.stringify(carrito));
   renderizarCarrito();
-  window.eliminarDelCarrito = eliminarDelCarrito;
-
+  
 }
+window.eliminarDelCarrito = eliminarDelCarrito;
 
 // Mostrar/Ocultar
 window.abrirCarrito = () => {
