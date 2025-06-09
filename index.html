@@ -720,7 +720,7 @@ window.añadirAlCarrito = (producto) => {
 
   renderizarCarrito();
 
-  alert(`${producto.nombre} añadido al carrito 🛒`);
+  mostrarToastCarrito(`🛒 ${producto.nombre} añadido al carrito`);
 };
 
 
@@ -1166,6 +1166,19 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarCarrito();
   actualizarContadorCarrito();
 });
+
+function mostrarToastCarrito(mensaje) {
+  const toast = document.getElementById("toastCarrito");
+  if (!toast) return;
+
+  toast.textContent = mensaje;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000); // Mostrar durante 3 segundos
+}
+
 
     </script>
     <div id="recaptcha-container"></div>
