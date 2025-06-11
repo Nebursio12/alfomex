@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      emailjs.init("fkgS7HLSkfpC2ykiI"); // reemplaza con tu User ID de EmailJS
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+    <title>Personaliza tu Alfombra - Alfomex</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+    <style>
+      /* El CSS ha sido movido a estilos.css */
+    </style>
+  </head>
+  <body>
+    <div id="overlayDrag" class="drag-overlay">
+      <div class="drag-message" id="mensajeDrag">¡Suelta tu imagen aquí!</div>
+    </div>
+    <div id="avisoEnvio">
+      <div class="aviso-movimiento">
+        Por el momento, solo hay envíos en México
+      </div>
+      <button onclick="cerrarAviso()" class="cerrar-aviso">&times;</button>
+    </div>
+    <header>
+      <div class="header-left">
+        <button id="menuBtn" onclick="openNav()">☰</button>
+        <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil" style="position: relative;">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="contadorCarrito" style="position:absolute; top:-6px; right:-6px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none;"></span>
+        </button>
+        <div id="carritoLista" class="carrito-lista oculto">
+          <div id="mensajeCarritoVacio" style="display: none; color: #666; font-size: 0.95rem; text-align: center; padding: 20px;">
+            🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
+          </div>
+        </div>
+      </div>
+      <div class="logo">ALFOMEX</div>
+      <nav class="header-right" id="navOptions">
+        <span style="color: white;">Cargando...</span>
+      </nav>
+    </header>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
+      <a href="#">Categorías</a>
+    </div>
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <!-- Firebase App, Auth y Firestore -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        getDoc,
+        setDoc,
+        serverTimestamp
+      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+        authDomain: "alfomex-f4efa.firebaseapp.com",
+        projectId: "alfomex-f4efa",
+        storageBucket: "alfomex-f4efa.appspot.com",
+        messagingSenderId: "1090528818564",
+        appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
+      };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      window.auth = auth;
+      window.db = db;
+      window.doc = doc;
+      window.getDoc = getDoc;
+      window.setDoc = setDoc;
+      window.serverTimestamp = serverTimestamp;
+      // Espera a que el DOM esté cargado antes de acceder a elementos
+      window.addEventListener("DOMContentLoaded", () => {
+        onAuthStateChanged(auth, (user) => {
+          if (!user) {
+            window.location.href = "index.html";
+            return;
+          }
+          const nav = document.getElementById("navOptions");
+          nav.innerHTML = `
+            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          `;
+        });
+        window.cerrarSesion = async () => {
+          await signOut(auth);
+          window.location.href = "index.html";
+        };
+        window.openNav = () => {
+          document.getElementById("mySidenav").classList.add("open");
+          document.getElementById("modalOverlay").classList.add("active");
+        };
+        window.closeNav = () => {
+          document.getElementById("mySidenav").classList.remove("open");
+          document.getElementById("modalOverlay").classList.remove("active");
+        };
+        document.getElementById("modalOverlay").addEventListener("click", closeNav);
+        document.getElementById("fondoPlantillas").addEventListener("click", function (e) {
+          if (e.target.id === "fondoPlantillas") {
+            cerrarPlantillas();
+          }
+        });
+        canvas.width = 500;
+        canvas.height = 500;
+        draw();
+      });
+    </script>
+    <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
+    <div class="contenedor-principal con-aviso-margin">
+      <!-- Lateral izquierdo para descripción del estambre -->
+      <div class="lateral-izquierda" id="panelEstambre">
+        <div id="descripcionContenido">
+          <h3 style="color: black; margin-top: 0;">Descripción del Material</h3>
+          <p>
+            Nuestras alfombras están elaboradas con hilo de estambre 100% acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
+          </p>
+          <p>
+            <strong>Cuidados:</strong><br>
+            - Lavar a mano con agua fría y jabón neutro.<br>
+            - No usar cloro ni exprimir.<br>
+            - Secar colgada a la sombra.<br>
+            - Evitar el uso de lavadora o secadora para prolongar su vida útil.
+          </p>
+          <div class="vista-cuarto-toggle">
+            <button class="btn-preview-cuarto" title="Vista previa en cuarto">
+              <img src="cuarto.png" alt="Vista previa" />
+            </button>
+          </div>
+          <div id="vistaCuarto" class="zoom-container">
+            <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
+            <img id="vistaAlfombra" src="" class="zoom-img" alt="Vista previa" style="display: none;" />
+          </div>
+        </div>
+      </div>
+      <div class="canvas-contenedor">
+        <canvas id="lienzo"></canvas>
+        <div id="contenedorBotonImagen" style="text-align: center; margin-top: 10px;">
+          <div id="botonCentralImagen" class="boton-central-imagen" onclick="document.getElementById('imgInput').click()">
+            <i class="fas fa-image"></i> Seleccionar imagen
+          </div>
+        </div>
+        <div id="toastNotificacion" class="toast-notificacion"></div>
+        <div class="controls" id="zoomControles">
+          <button id="zoomMas" class="zoom-btn" title="Zoom +">
+            <i class="fas fa-search-plus"></i>
+          </button>
+          <button id="zoomMenos" class="zoom-btn" title="Zoom -">
+            <i class="fas fa-search-minus"></i>
+          </button>
+        </div>
+        <div id="areaCubierta"></div>
+      </div>
+      <!-- Lateral derecho para presupuesto -->
+      <div class="lateral">
+        <div id="resultado"></div>
+        <button id="añadirCarrito" class="boton-total">
+          <i class="fas fa-paper-plane"></i>
+          <span id="totalFinal">Solicitar pedido</span>
+        </button>
+      </div>
+    </div>
+    <div class="social-links">
+      <p>Sígueme en redes sociales:</p>
+      <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/_alfomex/" target="_blank"><i class="fab fa-instagram"></i></a>
+    </div>
+    <script>
+      const canvas = document.getElementById('lienzo');
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientWidth;
+      const ctx = canvas.getContext('2d');
+      let vistaModalAbierto = false;
+      const imgInput = document.getElementById('imgInput');
+      // Drag & Drop
+      document.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+      });
+      document.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            const imagenOriginal = new Image();
+            imagenOriginal.onload = function () {
+              recortarTransparencias(imagenOriginal, function(imagenRecortada) {
+                img = imagenRecortada;
+                const factorX = canvas.width / img.width;
+                const factorY = canvas.height / img.height;
+                scale = Math.min(factorX, factorY, 1);
+                imgX = (canvas.width - img.width * scale) / 2;
+                imgY = (canvas.height - img.height * scale) / 2;
+                draw();
+                calcularEstambre();
+
+                // Mostrar resultados
+                document.querySelector('.lateral').style.display = 'flex';
+                document.getElementById("resultado").style.display = "block";
+                document.getElementById("añadirCarrito").style.display = "flex";
+
+                const recorteSrc = imagenRecortada.src;
+                document.getElementById("vistaAlfombra").src = recorteSrc;
+                document.getElementById("vistaAlfombra").style.display = "block";
+                document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
+                document.getElementById("modalImagenAlfombra").src = recorteSrc;
+
+                const previewImg = document.querySelector(".btn-preview-cuarto img");
+                if (previewImg && window.innerWidth >= 1000) {
+                  previewImg.src = recorteSrc;
+                }
+              });
+            };
+            imagenOriginal.src = evt.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      const resultado = document.getElementById('resultado');
+      const colorDetalle = document.getElementById('colorDetalle');
+      const totalFinal = document.getElementById('totalFinal');
+      const pxPorCm = canvas.width / 100;
+      let img = new Image();
+      let fondoCuarto = new Image();
+      let mostrarFondoCuarto = false;
+      let dragging = false;
+      let offsetX = 0, offsetY = 0;
+      let imgX = 0, imgY = 0;
+      let scale = 1;
+      const COSTOS = {
+        bolaEstambre: 35 * 3,
+        metrosBola: 200,
+        telaBase: 50 * 3,
+        fieltro: 30 * 3,
+        personalizacion: 299,
+        tejidoCm: 10,
+        distanciaPuntada: 0.3
+      };
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // ⛔️ SALIR si no hay imagen
+        if (!img || !img.src) {
+          document.getElementById("botonCentralImagen").style.display = "block";
+          const zoom = document.getElementById("zoomControles");
+          if (zoom) zoom.style.display = "none"; // Ocultar controles si existen
+          
+          // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
+          ctx.fillStyle = '#666';
+          ctx.font = '18px Segoe UI';
+          ctx.textAlign = 'center';
+          ctx.fillText("Arrastra una imagen o da clic en el botón para añadirla", canvas.width / 2, canvas.height / 2 - 20);
+          ctx.fillText("Puedes usar archivos en formato PNG o JPG de buena calidad", canvas.width / 2, canvas.height / 2 + 10);
+          ctx.fillText("Tu diseño será analizado automáticamente al cargar.", canvas.width / 2, canvas.height / 2 + 40);
+
+          document.getElementById("areaCubierta").innerHTML = "";
+          return;
+        } else {
+          document.getElementById("botonCentralImagen").style.display = "none";
+          const zoom = document.getElementById("zoomControles");
+           if (zoom) zoom.style.display = "flex";
+        }
+        // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
+        for (let i = 0; i <= 100; i++) {
+          const px = i * pxPorCm;
+          ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
+          ctx.fillRect(px, 0, 1, canvas.height);
+          ctx.fillRect(0, px, canvas.width, 1);
+        }
+
+        ctx.strokeStyle = '#999';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top"; // asegura que se dibuje desde la esquina
+        for (let i = 0; i <= 100; i += 10) {
+          const px = i * pxPorCm;
+          ctx.beginPath();
+          ctx.moveTo(px, 0);
+          ctx.lineTo(px, canvas.height);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, px);
+          ctx.lineTo(canvas.width, px);
+          ctx.stroke();
+          ctx.fillStyle = '#000';
+          ctx.font = '10px Arial';
+          if (i !== 0) {
+            ctx.fillText(`${i}cm`, px + 4, 4);        // arriba (X)
+            ctx.fillText(`${i}cm`, 4, px + 4);        // izquierda (Y)
+          } else {
+            ctx.fillText(`0cm`, 4, 4); // esquina superior izquierda
+          }
+        }
+
+        // 🖼 Dibuja la imagen
+        ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+
+        // Calcula y muestra dimensiones
+        const anchoCm = (img.width * scale) / pxPorCm;
+        const altoCm = (img.height * scale) / pxPorCm;
+        document.getElementById("areaCubierta").innerHTML = ""; // Oculta ese bloque
+
+        // Ajusta la vista en el cuarto
+        const vistaAlfombra = document.getElementById("vistaAlfombra");
+        if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
+          const pxPorCmCuarto = 496 / 300;
+          vistaAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
+          vistaAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
+          vistaAlfombra.style.position = "absolute";
+          vistaAlfombra.style.top = "78%";
+          vistaAlfombra.style.left = "25%";
+          vistaAlfombra.style.transform = "translate(-50%, -50%)";
+        }
+      }
+
+      function agruparColor(r, g, b, mapa, tolerancia = 50) {
+        for (let [key, _] of mapa.entries()) {
+          const [r2, g2, b2] = key.split(',').map(Number);
+          const distancia = Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
+          if (distancia <= tolerancia) return key;
+        }
+        return `${r},${g},${b}`;
+      }
+      function calcularEstambre() {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        const imageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+        let pixelCount = 0;
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          if (imageData.data[i + 3] > 10) pixelCount++;
+        }
+        const totalPixels = canvas.width * canvas.height;
+        const porcentaje = pixelCount / totalPixels;
+        const areaCm2 = 10000 * porcentaje;
+        const areaM2 = areaCm2 / 10000;
+        const altoTejido = Math.sqrt(areaCm2);
+        const lineas = altoTejido / COSTOS.distanciaPuntada;
+        const estambreTotal = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+        const bolas = estambreTotal / COSTOS.metrosBola;
+        const costoEstambre = bolas * COSTOS.bolaEstambre;
+        const costoTela = areaM2 * COSTOS.telaBase;
+        const costoFieltro = areaM2 * COSTOS.fieltro;
+        const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
+        resultado.innerHTML = `<strong>Área cubierta:</strong> ${areaCm2.toFixed(2)} cm² (${(img.width * scale / pxPorCm).toFixed(2)} x ${(img.height * scale / pxPorCm).toFixed(2)})<br>` +
+                              `<strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>` +
+                              `<strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>` +
+                              `<strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>` +
+                              `<strong>Costo aproximado:</strong> $${costoFinal.toFixed(2)} MXN`;
+        calcularPorColor(imageData, totalPixels, costoFinal);
+      }
+      function calcularPorColor(imageData, totalPixels, total) {
+        const mapa = new Map();
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          if (imageData.data[i + 3] < 10) continue;
+          const r = imageData.data[i];
+          const g = imageData.data[i + 1];
+          const b = imageData.data[i + 2];
+          const key = agruparColor(r, g, b, mapa, 50);
+          mapa.set(key, (mapa.get(key) || 0) + 1);
+        }
+        const coloresUsados = [...mapa.entries()].filter(([_, count]) => count / totalPixels > 0.01);
+        let detalle = '<strong>Estambre por color:</strong><br>';
+        if (coloresUsados.length > 50) {
+          detalle += `<span style="color:red;font-weight:bold">Demasiados colores detectados (${coloresUsados.length}). Contacta para personalización avanzada.</span>`;
+          document.getElementById('añadirCarrito').disabled = true;
+        } else {
+          document.getElementById('añadirCarrito').disabled = false;
+        }
+        coloresUsados.forEach(([key, count]) => {
+          const porcentaje = count / totalPixels;
+          const areaCm2 = 10000 * porcentaje;
+          const altoTejido = Math.sqrt(areaCm2);
+          const lineas = altoTejido / COSTOS.distanciaPuntada;
+          const estambre = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+          const bolas = estambre / COSTOS.metrosBola;
+          const costo = bolas * COSTOS.bolaEstambre;
+          const [r, g, b] = key.split(',');
+          detalle += `<div><div style="background:rgb(${r},${g},${b})"></div>${estambre.toFixed(2)} m - $${costo.toFixed(2)} MXN</div>`;
+        });
+        document.getElementById("totalFinal").innerText = "Solicitar pedido";
+        // ✅ Mostrar y llenar la descripción
+        // ✅ Mostrar el panel izquierdo y rellenar descripción
+        const panelEstambre = document.getElementById("panelEstambre");
+        const descContenido = document.getElementById("descripcionContenido");
+        // Solo mostrar el panel si hay colores detectados
+        if (img.src && img.width > 0 && img.height > 0) {
+          panelEstambre.style.display = "flex";
+          panelEstambre.style.visibility = "visible";
+          panelEstambre.style.opacity = "1";
+          panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+        } else {
+          panelEstambre.style.display = "none";
+        }
+      }
+      imgInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const imagenOriginal = new Image();
+          imagenOriginal.onload = function () {
+            recortarTransparencias(imagenOriginal, function(imagenRecortada) {
+              img = imagenRecortada;
+
+              const factorX = canvas.width / img.width;
+              const factorY = canvas.height / img.height;
+              scale = Math.min(factorX, factorY, 1);
+
+              imgX = (canvas.width - img.width * scale) / 2;
+              imgY = (canvas.height - img.height * scale) / 2;
+
+              draw();
+              calcularEstambre();
+              // Mostrar el panel derecho y resultado
+              document.querySelector('.lateral').style.display = 'flex';
+              document.getElementById("resultado").style.display = "block";
+              document.getElementById("añadirCarrito").style.display = "flex";
+
+              // ✅ Cargar imagen recortada en ambas vistas
+              const recorteSrc = imagenRecortada.src;
+              document.getElementById("vistaAlfombra").src = recorteSrc;
+              document.getElementById("vistaAlfombra").style.display = "block";
+              // Mostrar vista automáticamente también en móviles
+              if (window.innerWidth < 1000) {
+                const vista = document.getElementById("vistaAlfombra");
+                const contenedor = document.querySelector(".zoom-container");
+                const anchoRealPx = contenedor.offsetWidth;
+                const altoRealPx = contenedor.offsetHeight;
+                const cuartoCm = 300;
+
+                const pxPorCmCuarto = anchoRealPx / cuartoCm;
+
+                const anchoCmReal = (img.width * scale) / pxPorCm;
+                const altoCmReal = (img.height * scale) / pxPorCm;
+
+                vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
+                vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
+                vista.style.position = "absolute";
+                vista.style.top = "78%";
+                vista.style.left = "25%";
+                vista.style.transform = "translate(-50%, -50%)";
+              }
+
+              document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
+              document.getElementById("modalImagenAlfombra").src = recorteSrc; // ✅ para vista modal
+
+              // ✅ Actualizar vista previa de botón
+              const previewImg = document.querySelector(".btn-preview-cuarto img");
+              if (previewImg && window.innerWidth >= 1000) {
+                  previewImg.src = recorteSrc;
+              }
+            });
+          };
+          imagenOriginal.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      function recortarTransparencias(imagen, callback) {
+        const canvasTmp = document.createElement('canvas');
+        canvasTmp.width = imagen.width;
+        canvasTmp.height = imagen.height;
+        const ctxTmp = canvasTmp.getContext('2d');
+        ctxTmp.drawImage(imagen, 0, 0);
+
+        const imgData = ctxTmp.getImageData(0, 0, canvasTmp.width, canvasTmp.height).data;
+        let top = canvasTmp.height, left = canvasTmp.width, right = 0, bottom = 0;
+
+        for (let y = 0; y < canvasTmp.height; y++) {
+          for (let x = 0; x < canvasTmp.width; x++) {
+            const i = (y * canvasTmp.width + x) * 4;
+            const alpha = imgData[i + 3];
+            if (alpha > 10) {
+              if (x < left) left = x;
+              if (x > right) right = x;
+              if (y < top) top = y;
+              if (y > bottom) bottom = y;
+            }
+          }
+        }
+
+        const ancho = right - left + 1;
+        const alto = bottom - top + 1;
+
+        const canvasRecorte = document.createElement('canvas');
+        canvasRecorte.width = ancho;
+        canvasRecorte.height = alto;
+        const ctxRecorte = canvasRecorte.getContext('2d');
+        ctxRecorte.drawImage(imagen, left, top, ancho, alto, 0, 0, ancho, alto);
+
+        const imgRecortada = new Image();
+        imgRecortada.onload = () => callback(imgRecortada);
+        imgRecortada.src = canvasRecorte.toDataURL();
+      }
+
+      canvas.addEventListener('mousedown', e => {
+        dragging = true;
+        offsetX = e.offsetX - imgX;
+        offsetY = e.offsetY - imgY;
+      });
+      canvas.addEventListener('mousemove', e => {
+        if (dragging) {
+          imgX = Math.min(Math.max(e.offsetX - offsetX, 0), canvas.width - img.width * scale);
+          imgY = Math.min(Math.max(e.offsetY - offsetY, 0), canvas.height - img.height * scale);
+          draw();
+          calcularEstambre();
+          const panelEstambre = document.getElementById("panelEstambre");
+          const descripcionContenido = document.getElementById("descripcionContenido");
+          if (img && img.src && descripcionContenido.innerHTML.trim() !== "") {
+             panelEstambre.style.display = 'flex';
+             panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          }
+        }
+      });
+      canvas.addEventListener('mouseup', () => dragging = false);
+      canvas.addEventListener('mouseleave', () => dragging = false);
+
+      function centrarImagen() {
+        if (!img.src) return;
+        imgX = (canvas.width - img.width * scale) / 2;
+        imgY = (canvas.height - img.height * scale) / 2;
+        draw();
+        calcularEstambre();
+      }
+
+      let ultimaAdvertenciaZoom = 0;
+      function mostrarCambioDimensiones(ancho, alto) {
+       const ahora = Date.now();
+       if (ahora - ultimaAdvertenciaZoom < 1000) return; // espera al menos 1 segundo
+       ultimaAdvertenciaZoom = ahora;
+
+       const toast = document.getElementById("toastNotificacion");
+       if (!toast) return;
+
+       toast.classList.remove("toast-dimensiones", "toast-advertencia"); // Limpia anteriores
+       toast.classList.add("toast-dimensiones"); // ✅ Añade gris
+
+       toast.innerHTML = `Anchura: ${ancho.toFixed(2)} cm<br>Altura: ${alto.toFixed(2)} cm`;
+       toast.classList.add("mostrar");
+
+       setTimeout(() => {
+         toast.classList.remove("mostrar");
+       }, 3000);
+      }
+
+      let zoomInterval;
+      function aplicarZoom(delta) {
+        const nuevoScale = scale + delta;
+        if (nuevoScale < 0.1) return; // Mínimo permitido
+
+        const nuevaAnchuraCm = (img.width * nuevoScale) / pxPorCm;
+        const nuevaAlturaCm = (img.height * nuevoScale) / pxPorCm;
+
+        // Si alguno excede 100 cm, no aplicar el zoom
+        if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) {
+            mostrarNotificacion("⚠️ Tamaño máximo alcanzado (100 cm)");
+            return;
+        }
+
+        if (nuevaAnchuraCm < 25 || nuevaAlturaCm < 25) {
+           mostrarNotificacion("⚠️ Tamaño mínimo alcanzado (25 cm)");
+           return;
+        }
+
+        scale = nuevoScale;
+        centrarImagen();
+        draw();
+        calcularEstambre();
+        const ancho = (img.width * scale) / pxPorCm;
+        const alto = (img.height * scale) / pxPorCm;
+        mostrarCambioDimensiones(ancho, alto);
+        imgX = Math.min(Math.max(imgX, 0), canvas.width - img.width * scale);
+        imgY = Math.min(Math.max(imgY, 0), canvas.height - img.height * scale);
+      }
+
+      function mostrarNotificacion(mensaje, tipo = "error") {
+        const toast = document.getElementById("toastNotificacion");
+        if (!toast) return;
+        toast.classList.remove("toast-dimensiones", "toast-advertencia");
+
+        if (tipo === "success") {
+          toast.style.background = "#81C784";
+        } else {
+          toast.classList.add("toast-advertencia"); // ✅ Añade la clase roja
+        }
+
+        toast.innerText = mensaje;
+        toast.classList.add("mostrar");
+
+        setTimeout(() => {
+          toast.classList.remove("mostrar");
+        }, 3000);
+      }
+
+      function iniciarZoom(delta) {
+        aplicarZoom(delta);
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
+      }
+      function detenerZoom() {
+        clearInterval(zoomInterval);
+      }
+      const zoomMas = document.getElementById("zoomMas");
+      const zoomMenos = document.getElementById("zoomMenos");
+
+      function iniciarZoomSeguro(delta) {
+        detenerZoom(); // por si estaba uno activo
+        aplicarZoom(delta);
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100);
+      }
+
+      zoomMas.addEventListener("mousedown", () => iniciarZoomSeguro(0.01));
+      zoomMenos.addEventListener("mousedown", () => iniciarZoomSeguro(-0.01));
+      zoomMas.addEventListener("touchstart", () => iniciarZoomSeguro(0.01));
+      zoomMenos.addEventListener("touchstart", () => iniciarZoomSeguro(-0.01));
+
+      ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach(evt => {
+        zoomMas.addEventListener(evt, detenerZoom);
+        zoomMenos.addEventListener(evt, detenerZoom);
+      });
+      
+
+      function obtenerNombreDesdeURL(url) {
+        try {
+          const path = decodeURIComponent(url);
+          const partes = path.split("/");
+          if (!partes.length) return "Alfombra personalizada";
+          const nombreConExtension = partes[partes.length - 1].split("?")[0];
+          const nombre = nombreConExtension.split(".")[0];
+          return nombre || "Alfombra personalizada";
+        } catch (e) {
+          return "Alfombra personalizada";
+        }
+      }
+
+      function renderizarCarrito() {
+        const contenedor = document.getElementById("carritoLista");
+        const mensajeVacio = document.getElementById("mensajeCarritoVacio");
+        const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+        // Limpia todos los elementos excepto el mensaje
+        const itemsActuales = contenedor.querySelectorAll(".item-carrito");
+        itemsActuales.forEach(item => item.remove());
+        if (carrito.length === 0) {
+          mensajeVacio.style.display = "block";
+          contenedor.classList.add("oculto");
+          return;
+        }
+        mensajeVacio.style.display = "none";
+       
+
+        carrito.forEach(item => {
+          const div = document.createElement("div");
+          div.classList.add("item-carrito");
+          div.innerHTML = `
+            <img src="${item.imagen}" alt="${item.nombre}" style="width:50px;height:50px;border-radius:8px;">
+            <div style="flex:1">
+              <strong>${item.nombre}</strong><br>
+              Tamaño: ${item.ancho} x ${item.alto} cm<br>
+              Precio: ${item.costo}
+            </div>
+            <button onclick="eliminarDelCarrito(${item.id})" style="color:red;">✖</button>
+          `;
+          contenedor.appendChild(div);
+        });
+      }
+
+      function eliminarDelCarrito(id) {
+       let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+       carrito = carrito.filter(item => item.id !== id);
+       localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
+       renderizarCarrito();
+       actualizarContadorCarrito();
+      }
+
+      document.getElementById("cartBtn").addEventListener("click", () => {
+       const carrito = document.getElementById("carritoLista");
+       carrito.classList.toggle("oculto");
+      });
+
+      document.addEventListener("DOMContentLoaded", renderizarCarrito);
+      
+
+      window.cargarImagenAlLienzo = function(src, fondoSrc = null) {
+        let tempImg = new Image();
+        tempImg.crossOrigin = "anonymous";
+
+        tempImg.onload = () => {
+          img = tempImg;
+          const factorX = canvas.width / img.width;
+          const factorY = canvas.height / img.height;
+          scale = Math.min(factorX, factorY, 1);
+          imgX = (canvas.width - img.width * scale) / 2;
+          imgY = (canvas.height - img.height * scale) / 2;
+          
+          
+          // Forzar siempre el cálculo
+          draw();
+          calcularEstambre();
+
+          // Mostrar panel derecho y botón
+          document.querySelector('.lateral').style.display = 'flex';
+          document.getElementById("resultado").style.display = "block";
+          document.getElementById("añadirCarrito").style.display = "flex";
+
+          // Mostrar vista previa en cuarto
+          const vista = document.getElementById("vistaAlfombra");
+          const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
+
+          if (fondoSrc && vista) {
+            vista.src = fondoSrc;
+            vista.style.display = "block";
+        
+            const anchoCmReal = (img.width * scale) / pxPorCm;
+            const altoCmReal = (img.height * scale) / pxPorCm;
+
+            const pxPorCmCuarto = 496 / 300;
+ 
+            vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
+            vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
+
+            vista.style.position = "absolute";
+            vista.style.top = "78%";
+            vista.style.left = "25%";
+            vista.style.transform = "translate(-50%, -50%)";
+
+
+            if (btnPreviewImg && window.innerWidth >= 1000) {
+               btnPreviewImg.src = fondoSrc;
+            }
+          }
+
+          document.getElementById("vistaAlfombra").setAttribute("data-src-real", fondoSrc || src);
+
+
+          // Mostrar el panel izquierdo
+          const panelEstambre = document.getElementById("panelEstambre");
+          if (panelEstambre) {
+            panelEstambre.style.display = "flex";
+            panelEstambre.style.visibility = "visible";
+            panelEstambre.style.opacity = "1";
+            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+          }
+
+          cerrarPlantillas(); // ✅ cerrar modal al terminar
+        };
+
+        // 🔥 Este onerror detecta si la imagen falla
+        tempImg.onerror = () => {
+          mostrarNotificacion("❌ No se pudo cargar la imagen. Verifica el enlace.");
+        };
+
+        tempImg.src = src;
+      };
+      function toggleVistaCuarto() {
+        const modal = document.getElementById("modalVistaCuarto");
+        const imgAlfombra = document.getElementById("modalImagenAlfombra");
+
+        console.log("Modal:", modal);
+        console.log("imgAlfombra:", imgAlfombra);
+        console.log("vistaAlfombra.src:", vistaAlfombra.src);
+        console.log("vistaModalAbierto:", vistaModalAbierto);
+        if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return; 
+        vistaModalAbierto = true;
+        imgAlfombra.src = vistaAlfombra.src;
+
+        const anchoCm = (img.width * scale) / pxPorCm;
+        const altoCm = (img.height * scale) / pxPorCm;
+
+        const pxPorCmCuarto = 496 / 300;
+
+        imgAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
+        imgAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
+        imgAlfombra.style.position = "absolute";
+        imgAlfombra.style.top = "78%";
+        imgAlfombra.style.left = "25%";
+        imgAlfombra.style.transform = "translate(-50%, -50%)";
+
+        modal.classList.add("activo", "animarEntrada");
+        modal.classList.remove("animarSalida");
+
+      }
+
+      function cerrarVistaCuarto() {
+        const modal = document.getElementById("modalVistaCuarto");
+        if (!modal || !vistaModalAbierto) return;
+        vistaModalAbierto = false;
+        modal.classList.remove("animarEntrada");
+        modal.classList.add("animarSalida");
+        setTimeout(() => {
+          modal.classList.remove("activo", "animarSalida");
+        }, 200);
+      }
+      
+      function generarImagenZoom() {
+        const zoomCanvas = document.createElement("canvas");
+        zoomCanvas.width = canvas.width;
+        zoomCanvas.height = canvas.height;
+        const zoomCtx = zoomCanvas.getContext("2d");
+
+        // Fondo del cuarto
+        if (mostrarFondoCuarto && fondoCuarto.complete) {
+         zoomCtx.drawImage(fondoCuarto, 0, 0, zoomCanvas.width, zoomCanvas.height);
+        }
+
+        // Imagen de la alfombra
+        if (img && img.complete) {
+         zoomCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        }
+
+        return zoomCanvas.toDataURL("image/png");
+      }
+    document.addEventListener("DOMContentLoaded", () => {
+       const btnPreview = document.querySelector(".btn-preview-cuarto");
+       const modal = document.getElementById("modalVistaCuarto");
+       renderizarCarrito();
+       actualizarContadorCarrito(); // ✅ Nuevo
+
+       // ✅ INICIAR TEMPORIZADOR SI YA ESTÁ CORRIENDO
+       const bloqueo = localStorage.getItem("bloqueoPedidoHasta");
+       if (bloqueo && Date.now() < bloqueo) {
+         iniciarTemporizadorVisual();
+       }
+
+       // 🟩 Forzar dibujo inicial si no hay imagen
+       if (!img || !img.src) {
+        draw(); // esto dibuja el mensaje en el lienzo al cargar
+       }
+       
+
+      
+
+     if (btnPreview && modal && window.innerWidth >= 1000) {
+        btnPreview.addEventListener("mouseenter", () => {
+         if (!vistaModalAbierto) toggleVistaCuarto();
+        });
+
+        modal.addEventListener("mouseleave", () => {
+          if (vistaModalAbierto) cerrarVistaCuarto();
+        });
+      }
+    });
+
+    const overlayDrag = document.getElementById("overlayDrag");
+    const mensajeDrag = document.getElementById("mensajeDrag");
+
+    document.addEventListener("dragenter", (e) => {
+     const dt = e.dataTransfer || e.originalEvent?.dataTransfer;
+     if (dt?.items?.length > 0) {
+       const tipo = dt.items[0].type;
+       if (!tipo.startsWith("image/")) {
+         mensajeDrag.textContent = "⚠️ Solo se permiten imágenes PNG o JPG";
+       } else {
+         mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
+       }
+     }
+     overlayDrag.classList.add("active");
+    });
+
+    document.addEventListener("dragleave", (e) => {
+     if (e.relatedTarget === null || e.target === document) {
+       overlayDrag.classList.remove("active");
+       mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
+     }
+   });
+
+   document.addEventListener("drop", () => {
+     overlayDrag.classList.remove("active");
+     mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
+   });
+
+
+    function actualizarContadorCarrito() {
+      const contador = document.getElementById("contadorCarrito");
+      const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+      if (carrito.length > 0) {
+        contador.innerText = carrito.length;
+        contador.style.display = "block";
+      } else {
+        contador.style.display = "none";
+      }
+    }
+    </script>
+    <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
+      <div class="modal-contenido" onclick="event.stopPropagation()">
+        <div class="contenedor-superpuesto">
+          <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
+          <img id="modalImagenAlfombra" src="" alt="Alfombra" />
+        </div>
+        <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
+      </div>
+    </div>
+    <script>
+       // Agrega la clase al cargar
+       window.addEventListener("DOMContentLoaded", () => {
+          document.body.classList.add("con-aviso");
+       });
+
+       function cerrarAviso() {
+         const aviso = document.getElementById("avisoEnvio");
+         aviso.style.display = "none";
+         document.body.classList.remove("con-aviso");
+       }
+    </script>
+
+   
+  <script>
+    document.getElementById("añadirCarrito").addEventListener("click", () => {
+     document.getElementById("loaderOverlay").style.display = "flex"; // Mostrar loader
+     setTimeout(enviarPorCorreo, 50); // Pequeño delay para permitir que se vea
+    });
+   function enviarPorCorreo() {
+  const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
+  const alto = ((img.height * scale) / pxPorCm).toFixed(2);
+  const base64 = img?.src || "";
+  const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
+
+  if (!window.auth || !window.db) {
+    mostrarNotificacion("❌ Error: Firebase no está disponible", "error");
+    return;
+  }
+
+  document.getElementById("loaderOverlay").style.display = "flex";
+
+  window.auth.onAuthStateChanged(async function(user) {
+  if (!user) {
+    document.getElementById("loaderOverlay").style.display = "none";
+    return alert("No estás autenticado");
+  }
+
+  await user.reload(); // 👈 Recarga datos para asegurar email y phoneNumber actualizados
+
+  const ref = window.doc(window.db, "pedidosUsuarios", user.uid);
+  const snapshot = await window.getDoc(ref);
+  const ahora = Date.now();
+
+  const usuarioSnap = await window.getDoc(window.doc(window.db, "usuarios", user.uid));
+  const telefono = usuarioSnap.exists() ? usuarioSnap.data().telefono || "No registrado" : "No encontrado";
+
+  if (snapshot.exists()) {
+    const ultimo = snapshot.data().ultimoPedido?.toMillis?.() || 0;
+    if (ahora - ultimo < 5 * 60 * 1000) {
+      document.getElementById("loaderOverlay").style.display = "none";
+      return mostrarNotificacion("⚠️ Solo puedes hacer pedidos cada 5 minutos", "error");
+    }
+  }
+
+  const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
+  const correo = user.email || "correo@sin-dato.com";
+  const medidas = `${ancho} cm x ${alto} cm`;
+  const formData = new FormData();
+  const imagenBase64 = base64.split(",")[1];
+  formData.append("image", imagenBase64);
+
+  try {
+    const res = await fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
+      method: "POST",
+      body: formData
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error("Error al subir imagen");
+
+    const imagenURL = data.data.url;
+
+    const templateParams = {
+      cliente: nombre,
+      email: correo,
+      telefono: telefono,
+      medidas: medidas,
+      costo: costo,
+      imagen: imagenURL
+    };
+
+    console.log("🔍 templateParams:", templateParams);
+    console.log("📧 usuario actual:", user);
+
+    await emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
+    await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
+
+    mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
+    document.getElementById("añadirCarrito").disabled = true;
+    iniciarTemporizadorVisual();
+  } catch (err) {
+    mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
+  } finally {
+    document.getElementById("loaderOverlay").style.display = "none";
+  }
+});
+
+}
+
+ function iniciarTemporizadorVisual() {
+  const boton = document.getElementById("añadirCarrito");
+  const texto = document.getElementById("totalFinal");
+  const fin = Date.now() + 5 * 60 * 1000; // 5 minutos
+
+  localStorage.setItem("bloqueoPedidoHasta", fin);
+
+  boton.disabled = true;
+
+  const intervalo = setInterval(() => {
+    const restante = Math.max(0, localStorage.getItem("bloqueoPedidoHasta") - Date.now());
+
+    const minutos = Math.floor(restante / 60000);
+    const segundos = Math.floor((restante % 60000) / 1000).toString().padStart(2, '0');
+
+    texto.textContent = `Espera ${minutos}:${segundos}`;
+
+    if (restante <= 0) {
+      clearInterval(intervalo);
+      texto.textContent = "Solicitar pedido";
+      boton.disabled = false;
+      localStorage.removeItem("bloqueoPedidoHasta");
+    }
+  }, 1000);
+}
+
+ </script>
+  <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
+    <div style="width: 50px; height: 50px; border: 6px solid #ccc; border-top: 6px solid #000; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+  </div>
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  </body>
+</html>
