@@ -648,23 +648,23 @@
     </section>
     <div class="botones-categorias">
      <button onclick="scrollToCategoria('originaless')"><span class="emoji">🍔</span> <span class="texto">Originales</span></button>
-     <button onclick="scrollToCategoria('bebidass')"><span class="emoji">🥤</span> <span class="texto">Bebidas</span></button>
-     <button onclick="scrollToCategoria('snackss')"><span class="emoji">🍟</span> <span class="texto">Snacks</span></button>
-     <button onclick="scrollToCategoria('postress')"><span class="emoji">🍨</span> <span class="texto">Postres</span></button>
+     <button onclick="scrollToCategoria('animadass')"><span class="emoji">🥤</span> <span class="texto">Animadas</span></button>
+     <button onclick="scrollToCategoria('marcasss')"><span class="emoji">🍟</span> <span class="texto">Marcas</span></button>
+     <button onclick="scrollToCategoria('futbol')"><span class="emoji">🍨</span> <span class="texto">Futbol</span></button>
     </div>
 
     <main style="padding: 20px;">
      <h2>Originales</h2>
      <div id="originaless" class="catalogo"></div>
 
-     <h2>Bebidas</h2>
-     <div id="bebidass" class="catalogo"></div>
+     <h2>Animadas</h2>
+     <div id="animadas" class="catalogo"></div>
 
-     <h2>Snacks</h2>
-     <div id="snackss" class="catalogo"></div>
+     <h2>Marcas</h2>
+     <div id="marcass" class="catalogo"></div>
 
-     <h2>Postres</h2>
-     <div id="postress" class="catalogo"></div>
+     <h2>Futbol</h2>
+     <div id="futbol" class="catalogo"></div>
     </main>
 
     <script type="module">
@@ -704,7 +704,7 @@
 
 
 async function mostrarMenu() {
-  const categorias = ["originales", "bebidas", "snacks", "postres"];
+  const categorias = ["originales", "animadas", "marcas", "futbol"];
 
   for (const cat of categorias) {
     const snapshot = await getDocs(
