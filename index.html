@@ -647,15 +647,15 @@
       <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Alfombra 3" />
     </section>
     <div class="botones-categorias">
-     <button onclick="scrollToCategoria('hamburguesass')"><span class="emoji">🍔</span> <span class="texto">Hamburguesas</span></button>
+     <button onclick="scrollToCategoria('originaless')"><span class="emoji">🍔</span> <span class="texto">Originales</span></button>
      <button onclick="scrollToCategoria('bebidass')"><span class="emoji">🥤</span> <span class="texto">Bebidas</span></button>
      <button onclick="scrollToCategoria('snackss')"><span class="emoji">🍟</span> <span class="texto">Snacks</span></button>
      <button onclick="scrollToCategoria('postress')"><span class="emoji">🍨</span> <span class="texto">Postres</span></button>
     </div>
 
     <main style="padding: 20px;">
-     <h2>Hamburguesas</h2>
-     <div id="hamburguesass" class="catalogo"></div>
+     <h2>Originales</h2>
+     <div id="originaless" class="catalogo"></div>
 
      <h2>Bebidas</h2>
      <div id="bebidass" class="catalogo"></div>
@@ -704,7 +704,7 @@
 
 
 async function mostrarMenu() {
-  const categorias = ["hamburguesas", "bebidas", "snacks", "postres"];
+  const categorias = ["originales", "bebidas", "snacks", "postres"];
 
   for (const cat of categorias) {
     const snapshot = await getDocs(
