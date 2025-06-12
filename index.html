@@ -675,7 +675,7 @@
      <button onclick="scrollToCategoria('originaless')"><span class="emoji">🎨</span> <span class="texto">Originales</span></button>
      <button onclick="scrollToCategoria('personajess')"><span class="emoji">🎭</span> <span class="texto">Personajes</span></button>
      <button onclick="scrollToCategoria('marcass')"><span class="emoji">💼</span> <span class="texto">Marcas</span></button>
-     <button onclick="scrollToCategoria('futbols')"><span class="emoji">⚽</span> <span class="texto">Futbol</span></button>
+     <button onclick="scrollToCategoria('futboss')"><span class="emoji">⚽</span> <span class="texto">Futbol</span></button>
      <button onclick="location.href='alfomex.html'"><span class="emoji">🧶</span> <span class="texto">Pedido personalizado</span></button>
     </div>
 
@@ -690,7 +690,7 @@
      <div id="marcass" class="catalogo"></div>
 
      <h2>Futbol</h2>
-     <div id="futbols" class="catalogo"></div>
+     <div id="futboss" class="catalogo"></div>
     </main>
 
     <script type="module">
@@ -730,7 +730,7 @@
 
 
 async function mostrarMenu() {
-  const categorias = ["originales", "personajes", "marcas", "futbol"];
+  const categorias = ["originales", "personajes", "marcas", "futbos"];
 
   for (const cat of categorias) {
     const snapshot = await getDocs(
