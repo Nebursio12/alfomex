@@ -1037,4 +1037,22 @@ body.con-aviso header {
   cursor: not-allowed;
 }
 
+footer {
+  background: #000;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 0.95rem;
+}
+
+footer a {
+  color: white;
+  margin: 0 10px;
+  font-size: 1.2rem;
+}
+
+footer a:hover {
+  color: #ffcc00;
+}
+
 
