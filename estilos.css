@@ -1038,17 +1038,20 @@ body.con-aviso header {
 }
 
 footer {
-  background: #000;
+  width: 100vw;
+  margin: 0;
+  padding: 20px;
+  background-color: #000;
   color: white;
   text-align: center;
-  padding: 20px;
-  font-size: 0.95rem;
+  box-sizing: border-box;
 }
 
 footer a {
   color: white;
   margin: 0 10px;
   font-size: 1.2rem;
+  transition: color 0.3s;
 }
 
 footer a:hover {
