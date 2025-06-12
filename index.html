@@ -1200,9 +1200,14 @@ async function comprarAhora() {
   const user = auth.currentUser;
 
   if (!user) {
-    abrirModal();
-    mostrarToastCarrito("🔒 Debes iniciar sesión para comprar");
-    toast.classList.add("show", "toast-alerta");
+    const toast = document.getElementById("toastCarrito");
+    toast.textContent = "🔒 Debes iniciar sesión para comprar";
+    toast.classList.remove("toast-bienvenida", "toast-alerta", "toast-dimensiones"); // limpia estilos anteriores
+    toast.classList.add("toast-alerta", "show");
+
+    setTimeout(() => {
+    toast.classList.remove("toast-alerta", "show");
+      }, 3000);
     return;
   }
 
