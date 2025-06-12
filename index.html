@@ -1265,7 +1265,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("forzarLoginPedido") === "true") {
     localStorage.removeItem("forzarLoginPedido");
     abrirModal(); // Abre el panel de login
-    mostrarToastCarrito("🔒 Para hacer un pedido personalizado, necesitas tener una cuenta.");
+    const toast = document.getElementById("toastCarrito");
+    toast.textContent = "🔒 Para hacer un pedido personalizado, necesitas tener una cuenta.";
+    toast.classList.add("show", "toast-alerta");
+
+    setTimeout(() => {
+      toast.classList.remove("show", "toast-alerta");
+    }, 3000);
   }
 });
 
