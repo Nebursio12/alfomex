@@ -1261,6 +1261,12 @@ function actualizarContadorCarrito() {
 document.addEventListener("DOMContentLoaded", () => {
   renderizarCarrito();
   actualizarContadorCarrito();
+  // 🔐 Si venía de alfomex.html sin login, mostrar login y toast
+  if (localStorage.getItem("forzarLoginPedido") === "true") {
+    localStorage.removeItem("forzarLoginPedido");
+    abrirModal(); // Abre el panel de login
+    mostrarToastCarrito("🔒 Para hacer un pedido personalizado, necesitas tener una cuenta.");
+  }
 });
 
 function mostrarToastCarrito(mensaje) {
