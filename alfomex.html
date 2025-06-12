@@ -944,7 +944,10 @@
   window.auth.onAuthStateChanged(async function(user) {
   if (!user) {
     document.getElementById("loaderOverlay").style.display = "none";
-    return alert("No estás autenticado");
+    // Guardar señal para mostrar login automáticamente con mensaje
+    localStorage.setItem("forzarLoginPedido", "true");
+    window.location.href = "index.html";
+    return;
   }
 
   await user.reload(); // 👈 Recarga datos para asegurar email y phoneNumber actualizados
