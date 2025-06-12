@@ -85,20 +85,25 @@
       // Espera a que el DOM esté cargado antes de acceder a elementos
       window.addEventListener("DOMContentLoaded", () => {
         onAuthStateChanged(auth, (user) => {
-          if (!user) {
-            window.location.href = "index.html";
-            return;
-          }
-          const nav = document.getElementById("navOptions");
-          nav.innerHTML = `
-            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-              <i class="fas fa-user-circle"></i>
-            </button>
-            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-              <i class="fas fa-sign-out-alt"></i>
-            </button>
-          `;
-        });
+  const nav = document.getElementById("navOptions");
+  if (user) {
+    nav.innerHTML = `
+      <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+        <i class="fas fa-user-circle"></i>
+      </button>
+      <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    `;
+  } else {
+    nav.innerHTML = `
+      <button onclick="location.href='index.html'" title="Inicio" class="icon-btn btn-perfil">
+        <i class="fas fa-home"></i>
+      </button>
+    `;
+  }
+});
+
         window.cerrarSesion = async () => {
           await signOut(auth);
           window.location.href = "index.html";
