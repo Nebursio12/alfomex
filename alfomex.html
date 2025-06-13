@@ -618,7 +618,13 @@
       
 
 
-    
+      function eliminarDelCarrito(id) {
+       let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+       carrito = carrito.filter(item => item.id !== id);
+       localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
+       renderizarCarrito();
+       actualizarContadorCarrito();
+      }
 
       document.getElementById("cartBtn").addEventListener("click", () => {
        const carrito = document.getElementById("carritoLista");
@@ -703,7 +709,10 @@
         const modal = document.getElementById("modalVistaCuarto");
         const imgAlfombra = document.getElementById("modalImagenAlfombra");
 
-       
+        console.log("Modal:", modal);
+        console.log("imgAlfombra:", imgAlfombra);
+        console.log("vistaAlfombra.src:", vistaAlfombra.src);
+        console.log("vistaModalAbierto:", vistaModalAbierto);
         if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return; 
         vistaModalAbierto = true;
         imgAlfombra.src = vistaAlfombra.src;
@@ -814,7 +823,16 @@
    });
 
 
-   
+    function actualizarContadorCarrito() {
+      const contador = document.getElementById("contadorCarrito");
+      const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
+      if (carrito.length > 0) {
+        contador.innerText = carrito.length;
+        contador.style.display = "block";
+      } else {
+        contador.style.display = "none";
+      }
+    }
     </script>
     <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
       <div class="modal-contenido" onclick="event.stopPropagation()">
@@ -909,7 +927,8 @@
       imagen: imagenURL
     };
 
-
+    console.log("🔍 templateParams:", templateParams);
+    console.log("📧 usuario actual:", user);
 
     await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
       method: "POST",
@@ -925,17 +944,17 @@
         imagen: imagenURL
       })
     }).then(res => res.json()).then(data => {
-
+       console.log("📬 Respuesta del backend:", data);  // ⬅️ Agrega este
     }).catch(err => {
-
+       console.error("❌ Error al contactar backend:", err);
     });
     await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
 
-    mostrarNotificacion("✅ Pedido enviado", "success");
+    mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
     document.getElementById("añadirCarrito").disabled = true;
     iniciarTemporizadorVisual();
   } catch (err) {
-
+    console.error("❌ Error al enviar:", err);
     mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
   } finally {
     document.getElementById("loaderOverlay").style.display = "none";
