@@ -909,10 +909,11 @@
      document.getElementById("loaderOverlay").style.display = "flex"; // Mostrar loader
      setTimeout(enviarPorCorreo, 50); // Pequeño delay para permitir que se vea
     });
-   function enviarPorCorreo() {
+  async function enviarPorCorreo() {
   const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
   const alto = ((img.height * scale) / pxPorCm).toFixed(2);
   const base64 = img?.src || "";
+  const imagenBase64 = base64.split(",")[1];
   const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
 
   if (!window.auth || !window.db) {
@@ -951,48 +952,30 @@
   const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
   const correo = user.email || "correo@sin-dato.com";
   const medidas = `${ancho} cm x ${alto} cm`;
-  const formData = new FormData();
-  const imagenBase64 = base64.split(",")[1];
-  formData.append("image", imagenBase64);
+  
 
   try {
     const res = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ imagenBase64 })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imagenBase64 })
     });
     const data = await res.json();
-    if (!data.success) throw new Error("Error al subir imagen");
+    if (!data.url) throw new Error("No se pudo obtener la URL de la imagen");
 
     const imagenURL = data.url;
 
-    const templateParams = {
-      cliente: nombre,
-      email: correo,
-      telefono: telefono,
-      medidas: medidas,
-      costo: costo,
-      imagen: imagenURL
-    };
-
-    console.log("🔍 templateParams:", templateParams);
-    console.log("📧 usuario actual:", user);
-
     await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        cliente: nombre,
-        email: correo,
-        telefono: telefono,
-        medidas: medidas,
-        costo: costo,
-        imagen: imagenURL
-      })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cliente: nombre,
+          email: correo,
+          telefono: telefono,
+          medidas: medidas,
+          costo: costo,
+          imagen: imagenURL
+        })
     }).then(res => res.json()).then(data => {
        console.log("📬 Respuesta del backend:", data);  // ⬅️ Agrega este
     }).catch(err => {
