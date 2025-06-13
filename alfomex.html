@@ -339,24 +339,24 @@
       <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
       <strong>Costo aproximado:</strong> $${data.total} MXN
     `;
-    calcularPorColor(imageData, totalPixels, costoFinal);
-
-  // ✅ Mostrar el panel izquierdo
-  const panelEstambre = document.getElementById("panelEstambre");
-  if (img.src && img.width > 0 && img.height > 0) {
-    panelEstambre.style.display = "flex";
-    panelEstambre.style.visibility = "visible";
-    panelEstambre.style.opacity = "1";
-    panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-  }
 
     document.getElementById("totalFinal").innerText = "Solicitar pedido";
+
+    // ✅ Mostrar el panel izquierdo con descripción
+    const panelEstambre = document.getElementById("panelEstambre");
+    if (img.src && img.width > 0 && img.height > 0) {
+      panelEstambre.style.display = "flex";
+      panelEstambre.style.visibility = "visible";
+      panelEstambre.style.opacity = "1";
+      panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
+    }
 
   } catch (error) {
     console.error("❌ Error al calcular costo:", error);
     resultado.innerHTML = `<span style="color:red">⚠️ Error al calcular el costo</span>`;
   }
 }
+
 
       function calcularPorColor(imageData, totalPixels, total) {
         const mapa = new Map();
