@@ -319,35 +319,36 @@
         }
         return `${r},${g},${b}`;
       }
-      async function calcularEstambre() {
-  const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
-  const alto = ((img.height * scale) / pxPorCm).toFixed(2);
-
-  try {
-    const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ancho, alto })
-    });
-
-    const data = await res.json();
-
-    resultado.innerHTML = `
-      <strong>Área cubierta:</strong> ${data.area}<br>
-      <strong>Costo Tela:</strong> $${data.tela} MXN<br>
-      <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
-      <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
-      <strong>Costo aproximado:</strong> $${data.total} MXN
-    `;
-
-    document.getElementById("totalFinal").innerText = "Solicitar pedido";
-
-  } catch (error) {
-    console.error("❌ Error al calcular costo:", error);
-    resultado.innerHTML = `<span style="color:red">⚠️ Error al calcular el costo</span>`;
-  }
-}
-
+      function calcularEstambre() {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
+        const imageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+        let pixelCount = 0;
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          if (imageData.data[i + 3] > 10) pixelCount++;
+        }
+        const totalPixels = canvas.width * canvas.height;
+        const porcentaje = pixelCount / totalPixels;
+        const areaCm2 = 10000 * porcentaje;
+        const areaM2 = areaCm2 / 10000;
+        const altoTejido = Math.sqrt(areaCm2);
+        const lineas = altoTejido / COSTOS.distanciaPuntada;
+        const estambreTotal = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+        const bolas = estambreTotal / COSTOS.metrosBola;
+        const costoEstambre = bolas * COSTOS.bolaEstambre;
+        const costoTela = areaM2 * COSTOS.telaBase;
+        const costoFieltro = areaM2 * COSTOS.fieltro;
+        const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
+        resultado.innerHTML = `<strong>Área cubierta:</strong> ${areaCm2.toFixed(2)} cm² (${(img.width * scale / pxPorCm).toFixed(2)} x ${(img.height * scale / pxPorCm).toFixed(2)})<br>` +
+                              `<strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>` +
+                              `<strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>` +
+                              `<strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>` +
+                              `<strong>Costo aproximado:</strong> $${costoFinal.toFixed(2)} MXN`;
+        calcularPorColor(imageData, totalPixels, costoFinal);
+      }
       function calcularPorColor(imageData, totalPixels, total) {
         const mapa = new Map();
         for (let i = 0; i < imageData.data.length; i += 4) {
