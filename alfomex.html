@@ -996,7 +996,20 @@
     console.log("🔍 templateParams:", templateParams);
     console.log("📧 usuario actual:", user);
 
-    await emailjs.send("service_9m07dtf", "template_ooqfwss", templateParams);
+    await fetch("http://localhost:3000/enviar-pedido", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        cliente: nombre,
+        email: correo,
+        telefono: telefono,
+        medidas: medidas,
+        costo: costo,
+        imagen: imagenURL
+      })
+    });
     await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
 
     mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
