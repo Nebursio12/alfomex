@@ -58,11 +58,7 @@
         doc,
         getDoc,
         setDoc,
-        serverTimestamp,
-        getStorage,
-        ref,
-        uploadString,
-        getDownloadURL
+        serverTimestamp
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
       const firebaseConfig = {
         apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
@@ -75,11 +71,6 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
-      const storage = getStorage(app);
-      window.storage = storage;
-      window.ref = ref;
-      window.uploadString = uploadString;
-      window.getDownloadURL = getDownloadURL;
       window.auth = auth;
       window.db = db;
       window.doc = doc;
@@ -978,13 +969,15 @@
   
 
   try {
-    const nombreArchivo = `alfombra_${Date.now()}.png`;
-    const storageRef = window.ref(window.storage, `alfombras/${nombreArchivo}`);
+    const res = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imagenBase64 })
+    });
+    const data = await res.json();
+    if (!data.url) throw new Error("No se pudo obtener la URL de la imagen");
 
-    await window.uploadString(storageRef, base64, 'data_url');
-
-    const imagenURL = await window.getDownloadURL(storageRef);
-
+    const imagenURL = data.url;
 
     await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
         method: "POST",
