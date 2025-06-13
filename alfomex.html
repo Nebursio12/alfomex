@@ -988,7 +988,8 @@
           telefono: telefono,
           medidas: medidas,
           costo: costo,
-          imagen: imagenURL
+          imagen: imagenURL,
+          uid: user.uid 
         })
     }).then(res => res.json()).then(data => {
        console.log("📬 Respuesta del backend:", data);  // ⬅️ Agrega este
