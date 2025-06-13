@@ -1003,6 +1003,7 @@
     document.getElementById("añadirCarrito").disabled = true;
     iniciarTemporizadorVisual();
   } catch (err) {
+    console.error("❌ Error al enviar:", err);
     mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
   } finally {
     document.getElementById("loaderOverlay").style.display = "none";
