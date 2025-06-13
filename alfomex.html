@@ -948,7 +948,12 @@
 
   await user.reload(); // 👈 Recarga datos para asegurar email y phoneNumber actualizados
 
-  
+
+
+  const usuarioSnap = await window.getDoc(window.doc(window.db, "usuarios", user.uid));
+  const telefono = usuarioSnap.exists() ? usuarioSnap.data().telefono || "No registrado" : "No encontrado";
+
+
 
   const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
   const correo = user.email || "correo@sin-dato.com";
@@ -983,7 +988,7 @@
     }).catch(err => {
        console.error("❌ Error al contactar backend:", err);
     });
-    
+
 
     mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
     document.getElementById("añadirCarrito").disabled = true;
