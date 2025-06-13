@@ -1009,6 +1009,10 @@
         costo: costo,
         imagen: imagenURL
       })
+    }).then(res => res.json()).then(data => {
+       console.log("📬 Respuesta del backend:", data);  // ⬅️ Agrega este
+    }).catch(err => {
+       console.error("❌ Error al contactar backend:", err);
     });
     await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
 
