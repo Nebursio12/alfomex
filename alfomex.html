@@ -935,7 +935,7 @@
     });
     await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
 
-    mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
+    mostrarNotificacion("✅ Pedido enviado", "success");
     document.getElementById("añadirCarrito").disabled = true;
     iniciarTemporizadorVisual();
   } catch (err) {
