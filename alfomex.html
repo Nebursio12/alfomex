@@ -956,14 +956,17 @@
   formData.append("image", imagenBase64);
 
   try {
-    const res = await fetch("https://api.imgbb.com/1/upload?key=33c4e7c89f5133b08fae2fe2b7a3849a", {
+    const res = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
       method: "POST",
-      body: formData
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ imagenBase64 })
     });
     const data = await res.json();
     if (!data.success) throw new Error("Error al subir imagen");
 
-    const imagenURL = data.data.url;
+    const imagenURL = data.url;
 
     const templateParams = {
       cliente: nombre,
