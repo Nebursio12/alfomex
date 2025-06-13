@@ -703,10 +703,7 @@
         const modal = document.getElementById("modalVistaCuarto");
         const imgAlfombra = document.getElementById("modalImagenAlfombra");
 
-        console.log("Modal:", modal);
-        console.log("imgAlfombra:", imgAlfombra);
-        console.log("vistaAlfombra.src:", vistaAlfombra.src);
-        console.log("vistaModalAbierto:", vistaModalAbierto);
+       
         if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return; 
         vistaModalAbierto = true;
         imgAlfombra.src = vistaAlfombra.src;
@@ -912,8 +909,7 @@
       imagen: imagenURL
     };
 
-    console.log("🔍 templateParams:", templateParams);
-    console.log("📧 usuario actual:", user);
+
 
     await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
       method: "POST",
@@ -929,9 +925,9 @@
         imagen: imagenURL
       })
     }).then(res => res.json()).then(data => {
-       console.log("📬 Respuesta del backend:", data);  // ⬅️ Agrega este
+
     }).catch(err => {
-       console.error("❌ Error al contactar backend:", err);
+
     });
     await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
 
@@ -939,7 +935,7 @@
     document.getElementById("añadirCarrito").disabled = true;
     iniciarTemporizadorVisual();
   } catch (err) {
-    console.error("❌ Error al enviar:", err);
+
     mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
   } finally {
     document.getElementById("loaderOverlay").style.display = "none";
