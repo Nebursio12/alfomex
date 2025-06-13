@@ -38,10 +38,6 @@
         <span style="color: white;">Cargando...</span>
       </nav>
     </header>
-    <div id="mySidenav" class="sidenav">
-      <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
-      <a href="#">Categorías</a>
-    </div>
     <div class="modal-overlay" id="modalOverlay"></div>
     <!-- Firebase App, Auth y Firestore -->
     <script type="module">
@@ -621,57 +617,8 @@
       });
       
 
-      function obtenerNombreDesdeURL(url) {
-        try {
-          const path = decodeURIComponent(url);
-          const partes = path.split("/");
-          if (!partes.length) return "Alfombra personalizada";
-          const nombreConExtension = partes[partes.length - 1].split("?")[0];
-          const nombre = nombreConExtension.split(".")[0];
-          return nombre || "Alfombra personalizada";
-        } catch (e) {
-          return "Alfombra personalizada";
-        }
-      }
 
-      function renderizarCarrito() {
-        const contenedor = document.getElementById("carritoLista");
-        const mensajeVacio = document.getElementById("mensajeCarritoVacio");
-        const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-        // Limpia todos los elementos excepto el mensaje
-        const itemsActuales = contenedor.querySelectorAll(".item-carrito");
-        itemsActuales.forEach(item => item.remove());
-        if (carrito.length === 0) {
-          mensajeVacio.style.display = "block";
-          contenedor.classList.add("oculto");
-          return;
-        }
-        mensajeVacio.style.display = "none";
-       
-
-        carrito.forEach(item => {
-          const div = document.createElement("div");
-          div.classList.add("item-carrito");
-          div.innerHTML = `
-            <img src="${item.imagen}" alt="${item.nombre}" style="width:50px;height:50px;border-radius:8px;">
-            <div style="flex:1">
-              <strong>${item.nombre}</strong><br>
-              Tamaño: ${item.ancho} x ${item.alto} cm<br>
-              Precio: ${item.costo}
-            </div>
-            <button onclick="eliminarDelCarrito(${item.id})" style="color:red;">✖</button>
-          `;
-          contenedor.appendChild(div);
-        });
-      }
-
-      function eliminarDelCarrito(id) {
-       let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-       carrito = carrito.filter(item => item.id !== id);
-       localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
-       renderizarCarrito();
-       actualizarContadorCarrito();
-      }
+    
 
       document.getElementById("cartBtn").addEventListener("click", () => {
        const carrito = document.getElementById("carritoLista");
@@ -870,16 +817,7 @@
    });
 
 
-    function actualizarContadorCarrito() {
-      const contador = document.getElementById("contadorCarrito");
-      const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-      if (carrito.length > 0) {
-        contador.innerText = carrito.length;
-        contador.style.display = "block";
-      } else {
-        contador.style.display = "none";
-      }
-    }
+   
     </script>
     <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
       <div class="modal-contenido" onclick="event.stopPropagation()">
