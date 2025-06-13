@@ -23,7 +23,6 @@
     </div>
     <header>
       <div class="header-left">
-        <button id="menuBtn" onclick="openNav()">☰</button>
         <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil" style="position: relative;">
           <i class="fas fa-shopping-cart"></i>
           <span id="contadorCarrito" style="position:absolute; top:-6px; right:-6px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none;"></span>
@@ -104,20 +103,6 @@
           await signOut(auth);
           window.location.href = "index.html";
         };
-        window.openNav = () => {
-          document.getElementById("mySidenav").classList.add("open");
-          document.getElementById("modalOverlay").classList.add("active");
-        };
-        window.closeNav = () => {
-          document.getElementById("mySidenav").classList.remove("open");
-          document.getElementById("modalOverlay").classList.remove("active");
-        };
-        document.getElementById("modalOverlay").addEventListener("click", closeNav);
-        document.getElementById("fondoPlantillas").addEventListener("click", function (e) {
-          if (e.target.id === "fondoPlantillas") {
-            cerrarPlantillas();
-          }
-        });
         canvas.width = 500;
         canvas.height = 500;
         draw();
