@@ -223,7 +223,7 @@
                 imgX = (canvas.width - img.width * scale) / 2;
                 imgY = (canvas.height - img.height * scale) / 2;
                 draw();
-                mostrarPresupuestoVisual();
+
                 calcularEstambre();
 
                 // Mostrar resultados
@@ -261,7 +261,7 @@
       let imgX = 0, imgY = 0;
       let scale = 1;
       function draw() {
-        mostrarPresupuestoVisual();
+
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -437,7 +437,7 @@
               imgY = (canvas.height - img.height * scale) / 2;
 
               draw();
-              mostrarPresupuestoVisual();
+      
 
               calcularEstambre();
               // Mostrar el panel derecho y resultado
@@ -532,7 +532,7 @@
           imgX = Math.min(Math.max(e.offsetX - offsetX, 0), canvas.width - img.width * scale);
           imgY = Math.min(Math.max(e.offsetY - offsetY, 0), canvas.height - img.height * scale);
           draw();
-          mostrarPresupuestoVisual();
+
 
           calcularEstambre();
           const panelEstambre = document.getElementById("panelEstambre");
@@ -551,7 +551,7 @@
         imgX = (canvas.width - img.width * scale) / 2;
         imgY = (canvas.height - img.height * scale) / 2;
         draw();
-        mostrarPresupuestoVisual();
+
 
         calcularEstambre();
       }
@@ -598,7 +598,7 @@
         scale = nuevoScale;
         centrarImagen();
         draw();
-        mostrarPresupuestoVisual();
+ 
 
         calcularEstambre();
         const ancho = (img.width * scale) / pxPorCm;
@@ -718,7 +718,7 @@
           
           // Forzar siempre el cálculo
           draw();
-          mostrarPresupuestoVisual();
+       
 
           calcularEstambre();
 
