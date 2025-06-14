@@ -880,122 +880,130 @@
 
    
   <script>
-    document.getElementById("añadirCarrito").addEventListener("click", () => {
-     document.getElementById("loaderOverlay").style.display = "flex"; // Mostrar loader
-     setTimeout(enviarPorCorreo, 50); // Pequeño delay para permitir que se vea
-    });
-  async function enviarPorCorreo() {
-  const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
-  const alto = ((img.height * scale) / pxPorCm).toFixed(2);
+document.getElementById("añadirCarrito").addEventListener("click", () => {
+  document.getElementById("loaderOverlay").style.display = "flex";
+  setTimeout(enviarPorCorreo, 50);
+});
+
+async function enviarPorCorreo() {
   const base64 = img?.src || "";
   const imagenBase64 = base64.includes("base64,") ? base64.split(",")[1] : base64;
 
-  const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ imagenBase64 })
-  });
-
-
   if (!imagenBase64 || imagenBase64.trim() === "") {
-     mostrarNotificacion("⚠️ Imagen inválida. Intenta subir otra imagen.", "error");
-     return;
+    mostrarNotificacion("⚠️ Imagen inválida. Intenta subir otra imagen.", "error");
+    return;
   }
 
+  // 🔍 1. Calcular el costo real con sharp desde backend
+  let costo = "Costo no calculado";
+  let medidas = "Medidas no disponibles";
 
+  try {
+    const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imagenBase64 })
+    });
+
+    const data = await res.json();
+
+    medidas = `${data.ancho} cm x ${data.alto} cm`;
+    costo = `Área cubierta: ${data.area} Costo Tela: $${data.tela} Costo Fieltro: $${data.fieltro} Costo Estambre Total: $${data.estambre} Costo aproximado: $${data.total}`;
+  } catch (err) {
+    console.error("❌ Error al calcular el costo:", err);
+    mostrarNotificacion("❌ No se pudo calcular el costo", "error");
+    document.getElementById("loaderOverlay").style.display = "none";
+    return;
+  }
+
+  // 🔐 2. Validación Firebase y bloqueo de 5 min
   if (!window.auth || !window.db) {
     mostrarNotificacion("❌ Error: Firebase no está disponible", "error");
     return;
   }
 
-  document.getElementById("loaderOverlay").style.display = "flex";
-
   window.auth.onAuthStateChanged(async function(user) {
-  if (!user) {
-    document.getElementById("loaderOverlay").style.display = "none";
-    // Guardar señal para mostrar login automáticamente con mensaje
-    localStorage.setItem("forzarLoginPedido", "true");
-    window.location.href = "index.html";
-    return;
-  }
-
-  await user.reload(); // 👈 Recarga datos para asegurar email y phoneNumber actualizados
-
-  const ref = window.doc(window.db, "pedidosUsuarios", user.uid);
-  const snapshot = await window.getDoc(ref);
-  const ahora = Date.now();
-
-  const usuarioSnap = await window.getDoc(window.doc(window.db, "usuarios", user.uid));
-  const telefono = usuarioSnap.exists() ? usuarioSnap.data().telefono || "No registrado" : "No encontrado";
-
-  if (snapshot.exists()) {
-    const ultimo = snapshot.data().ultimoPedido?.toMillis?.() || 0;
-    if (ahora - ultimo < 5 * 60 * 1000) {
+    if (!user) {
       document.getElementById("loaderOverlay").style.display = "none";
-      return mostrarNotificacion("⚠️ Solo puedes hacer pedidos cada 5 minutos", "error");
+      localStorage.setItem("forzarLoginPedido", "true");
+      window.location.href = "index.html";
+      return;
     }
-  }
 
-  const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
-  const correo = user.email || "correo@sin-dato.com";
+    await user.reload();
 
-  
+    const ref = window.doc(window.db, "pedidosUsuarios", user.uid);
+    const snapshot = await window.getDoc(ref);
+    const ahora = Date.now();
 
-  try {
-    const res = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
+    const usuarioSnap = await window.getDoc(window.doc(window.db, "usuarios", user.uid));
+    const telefono = usuarioSnap.exists() ? usuarioSnap.data().telefono || "No registrado" : "No encontrado";
+
+    if (snapshot.exists()) {
+      const ultimo = snapshot.data().ultimoPedido?.toMillis?.() || 0;
+      if (ahora - ultimo < 5 * 60 * 1000) {
+        document.getElementById("loaderOverlay").style.display = "none";
+        return mostrarNotificacion("⚠️ Solo puedes hacer pedidos cada 5 minutos", "error");
+      }
+    }
+
+    const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
+    const correo = user.email || "correo@sin-dato.com";
+
+    try {
+      // 3️⃣ Subir imagen a Firebase desde el backend
+      const res = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imagenBase64 })
-    });
-    const data = await res.json();
-    if (!data.url) throw new Error("No se pudo obtener la URL de la imagen");
+      });
+      const data = await res.json();
 
-    const imagenURL = data.url;
+      if (!data.url) throw new Error("No se pudo obtener la URL de la imagen");
 
-    await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
+      const imagenURL = data.url;
+
+      // 4️⃣ Enviar correo con info verificada
+      await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-           cliente: nombre,
-           email: correo,
-           telefono: telefono,
-           imagen: imagenURL
+          cliente: nombre,
+          email: correo,
+          telefono: telefono,
+          medidas: medidas,
+          costo: costo,
+          imagen: imagenURL
         })
-    }).then(res => res.json()).then(data => {
-       console.log("📬 Respuesta del backend:", data);  // ⬅️ Agrega este
-    }).catch(err => {
-       console.error("❌ Error al contactar backend:", err);
-    });
-    await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
+      });
 
-    mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
-    document.getElementById("añadirCarrito").disabled = true;
-    iniciarTemporizadorVisual();
-  } catch (err) {
-    console.error("❌ Error al enviar:", err);
-    mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
-  } finally {
-    document.getElementById("loaderOverlay").style.display = "none";
-  }
-});
+      await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
 
+      mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
+      document.getElementById("añadirCarrito").disabled = true;
+      iniciarTemporizadorVisual();
+
+    } catch (err) {
+      console.error("❌ Error al enviar:", err);
+      mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
+    } finally {
+      document.getElementById("loaderOverlay").style.display = "none";
+    }
+  });
 }
 
- function iniciarTemporizadorVisual() {
+function iniciarTemporizadorVisual() {
   const boton = document.getElementById("añadirCarrito");
   const texto = document.getElementById("totalFinal");
-  const fin = Date.now() + 5 * 60 * 1000; // 5 minutos
+  const fin = Date.now() + 5 * 60 * 1000;
 
   localStorage.setItem("bloqueoPedidoHasta", fin);
-
   boton.disabled = true;
 
   const intervalo = setInterval(() => {
     const restante = Math.max(0, localStorage.getItem("bloqueoPedidoHasta") - Date.now());
-
     const minutos = Math.floor(restante / 60000);
     const segundos = Math.floor((restante % 60000) / 1000).toString().padStart(2, '0');
-
     texto.textContent = `Espera ${minutos}:${segundos}`;
 
     if (restante <= 0) {
@@ -1006,8 +1014,8 @@
     }
   }, 1000);
 }
+</script>
 
- </script>
   <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
     <div style="width: 50px; height: 50px; border: 6px solid #ccc; border-top: 6px solid #000; border-radius: 50%; animation: spin 1s linear infinite;"></div>
   </div>
