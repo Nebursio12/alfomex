@@ -318,6 +318,8 @@
     });
 
     const data = await res.json();
+    console.log("🧾 Respuesta del servidor calcular-costo:", data);
+
 
     resultado.innerHTML = `
       <strong>Área cubierta:</strong> ${data.area}<br>
