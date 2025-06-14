@@ -56,71 +56,72 @@
       const auth = getAuth(app);
       window.auth = auth;
       // Espera a que el DOM esté cargado antes de acceder a elementos
-      window.addEventListener("DOMContentLoaded", async () => {
-  // ✅ Verifica si el usuario está logueado y tiene un pedido pendiente
-  const user = auth.currentUser;
-  if (user) {
-    const token = await user.getIdToken();
-    const res = await fetch("https://backend-1pvf.onrender.com/verificar-ultimo-pedido", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token })
-    });
+      window.addEventListener("DOMContentLoaded", () => {
+  onAuthStateChanged(auth, async (user) => {
+    const nav = document.getElementById("navOptions");
 
-    const data = await res.json();
-    if (data.ultimo) {
-      const ahora = Date.now();
-      const restante = data.ultimo + 5 * 60 * 1000 - ahora;
-      if (restante > 0) {
-        iniciarTemporizadorVisual(restante);
-      }
-    }
-  }
-      onAuthStateChanged(auth, async (user) => {
-        const nav = document.getElementById("navOptions");
-        if (user) {
-          nav.innerHTML = `
-            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-              <i class="fas fa-user-circle"></i>
-            </button>
-            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-              <i class="fas fa-sign-out-alt"></i>
-            </button>
-          `;
-          // 🔐 Obtener información desde backend usando token seguro
-          try {
-            const token = await user.getIdToken();
-            const res = await fetch("https://backend-1pvf.onrender.com/verificar-token", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ token })
-            });
+    if (user) {
+      nav.innerHTML = `
+        <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+          <i class="fas fa-user-circle"></i>
+        </button>
+        <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      `;
 
-            const data = await res.json();
-            console.log("✅ Datos seguros del usuario:", data);
-            // Puedes guardar data.telefono, data.nombre, etc. para usarlos después
+      try {
+        // 🔐 Obtener datos seguros del usuario
+        const token = await user.getIdToken();
+        const res = await fetch("https://backend-1pvf.onrender.com/verificar-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
 
-        } catch (err) {
-          console.error("❌ Error al obtener usuario del backend:", err);
+        const data = await res.json();
+        console.log("✅ Datos seguros del usuario:", data);
+
+        // 🕒 Verificar si ya hizo pedido y mostrar temporizador si es necesario
+        const verif = await fetch("https://backend-1pvf.onrender.com/verificar-ultimo-pedido", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+
+        const verifData = await verif.json();
+        if (verifData.ultimo) {
+          const ahora = Date.now();
+          const restante = verifData.ultimo + 5 * 60 * 1000 - ahora;
+          if (restante > 0) {
+            iniciarTemporizadorVisual(restante);
+          }
         }
-  } else {
-    nav.innerHTML = `
-      <button onclick="location.href='index.html'" title="Inicio" class="icon-btn btn-perfil">
-        <i class="fas fa-home"></i>
-      </button>
-    `;
-  }
+
+      } catch (err) {
+        console.error("❌ Error al verificar usuario o último pedido:", err);
+      }
+
+    } else {
+      nav.innerHTML = `
+        <button onclick="location.href='index.html'" title="Inicio" class="icon-btn btn-perfil">
+          <i class="fas fa-home"></i>
+        </button>
+      `;
+    }
+  });
+
+  // ✅ Inicializar canvas, botones y dibujo
+  window.cerrarSesion = async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
+  };
+
+  canvas.width = 500;
+  canvas.height = 500;
+  draw();
 });
 
-        window.cerrarSesion = async () => {
-          await signOut(auth);
-          window.location.href = "index.html";
-        };
-        canvas.width = 500;
-        canvas.height = 500;
-        draw();
-        
-      });
     </script>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal con-aviso-margin">
