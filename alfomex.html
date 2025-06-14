@@ -968,14 +968,6 @@ async function enviarPorCorreo() {
     medidas = `${data.ancho} cm x ${data.alto} cm`;
     costo = `Área cubierta: ${data.area} Costo Tela: $${data.tela} Costo Fieltro: $${data.fieltro} Costo Estambre Total: $${data.estambre} Costo aproximado: $${data.total}`;
 
-    // ✅ Mostrar visualmente en pantalla:
-    document.getElementById("resultado").innerHTML = `
-      <strong>Área cubierta:</strong> ${data.area}<br>
-      <strong>Costo Tela:</strong> $${data.tela} MXN<br>
-      <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
-      <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
-      <strong>Costo aproximado:</strong> $${data.total} MXN
-    `;
   } catch (err) {
     console.error("❌ Error al calcular el costo:", err);
     mostrarNotificacion("❌ No se pudo calcular el costo", "error");
