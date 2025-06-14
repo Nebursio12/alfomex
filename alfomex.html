@@ -307,21 +307,27 @@
         return `${r},${g},${b}`;
       }
       async function calcularEstambre() {
-  const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
-  const alto = ((img.height * scale) / pxPorCm).toFixed(2);
-
   try {
+    const canvasTemp = document.createElement("canvas");
+    canvasTemp.width = img.width;
+    canvasTemp.height = img.height;
+    const ctxTemp = canvasTemp.getContext("2d");
+    ctxTemp.drawImage(img, 0, 0);
+
+    const base64 = canvasTemp.toDataURL("image/png");
+    const imagenBase64 = base64.split(",")[1];
+
     const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ancho, alto })
+      body: JSON.stringify({ imagenBase64 })
     });
 
     const data = await res.json();
-    console.log("🧾 Respuesta del servidor calcular-costo:", data);
 
+    if (data.error) throw new Error(data.error);
 
-    resultado.innerHTML = `
+    document.getElementById("resultado").innerHTML = `
       <strong>Área cubierta:</strong> ${data.area}<br>
       <strong>Costo Tela:</strong> $${data.tela} MXN<br>
       <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
@@ -329,20 +335,11 @@
       <strong>Costo aproximado:</strong> $${data.total} MXN
     `;
 
-    document.getElementById("totalFinal").innerText = "Solicitar pedido";
-
-    // ✅ Mostrar el panel izquierdo con descripción
-    const panelEstambre = document.getElementById("panelEstambre");
-    if (img.src && img.width > 0 && img.height > 0) {
-      panelEstambre.style.display = "flex";
-      panelEstambre.style.visibility = "visible";
-      panelEstambre.style.opacity = "1";
-      panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-    }
-
   } catch (error) {
     console.error("❌ Error al calcular costo:", error);
-    resultado.innerHTML = `<span style="color:red">⚠️ Error al calcular el costo</span>`;
+    document.getElementById("resultado").innerHTML = `
+      <span style="color:red">⚠️ Error al calcular el costo</span>
+      `;
   }
 }
 
