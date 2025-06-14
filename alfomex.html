@@ -222,6 +222,13 @@
     `;
   }
 }
+  let debouncePresupuesto;
+function actualizarPresupuestoConRetraso() {
+  clearTimeout(debouncePresupuesto);
+  debouncePresupuesto = setTimeout(() => {
+    mostrarPresupuestoVisual();
+  }, 200); // espera 200ms sin cambios
+}
 
 
       const canvas = document.getElementById('lienzo');
@@ -584,7 +591,7 @@
 
 
 
-        mostrarPresupuestoVisual();
+         actualizarPresupuestoConRetraso(); // ✅ aquí
 
       }
 
@@ -632,7 +639,7 @@
         draw();
  
 
-        mostrarPresupuestoVisual();
+        actualizarPresupuestoConRetraso(); // ✅ aquí
 
         const ancho = (img.width * scale) / pxPorCm;
         const alto = (img.height * scale) / pxPorCm;
