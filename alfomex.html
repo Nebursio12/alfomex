@@ -161,37 +161,39 @@
     </div>
     <script>
 
-    function actualizarPresupuestoConScale() {
-      const canvasTemp = document.createElement("canvas");
-      canvasTemp.width = img.width * scale;
-      canvasTemp.height = img.height * scale;
-      const ctxTemp = canvasTemp.getContext("2d");
-      ctxTemp.drawImage(img, 0, 0, canvasTemp.width, canvasTemp.height);
+      function mostrarPresupuestoVisual() {
+  const ancho = (img.width * scale / pxPorCm).toFixed(2);
+  const alto = (img.height * scale / pxPorCm).toFixed(2);
+  const areaCm2 = (ancho * alto).toFixed(2);
+  const areaM2 = areaCm2 / 10000;
 
-      const base64 = canvasTemp.toDataURL("image/png");
-      const imagenBase64 = base64.split(",")[1];
+  const COSTOS = {
+    bolaEstambre: 35 * 3,
+    metrosBola: 200,
+    telaBase: 50 * 3,
+    fieltro: 30 * 3,
+    personalizacion: 299,
+    tejidoCm: 10,
+    distanciaPuntada: 0.3
+  };
 
-      fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imagenBase64 })
-      })
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("resultado").innerHTML = `
-            <strong>Área cubierta:</strong> ${data.area} (${data.ancho} x ${data.alto})<br>
-            <strong>Costo Tela:</strong> $${data.tela} MXN<br>
-            <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
-            <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
-            <strong>Costo aproximado:</strong> $${data.total} MXN
-          `;
-          
-          document.querySelector(".lateral").style.display = "flex"; // ✅ mostrar el panel derecho
-          document.getElementById("panelEstambre").style.display = "flex"; // ✅ mostrar el panel izquierdo
-        })
-        .catch(err => {
-          console.error("❌ Error al actualizar presupuesto con scale:", err);
-        });
+  const altoTejido = Math.sqrt(areaCm2);
+  const lineas = altoTejido / COSTOS.distanciaPuntada;
+  const estambreTotal = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+  const bolas = estambreTotal / COSTOS.metrosBola;
+
+  const costoEstambre = bolas * COSTOS.bolaEstambre;
+  const costoTela = areaM2 * COSTOS.telaBase;
+  const costoFieltro = areaM2 * COSTOS.fieltro;
+  const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
+
+  document.getElementById("resultado").innerHTML = `
+    <strong>Área cubierta:</strong> ${areaCm2} cm² (${ancho} x ${alto})<br>
+    <strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>
+    <strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>
+    <strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>
+    <strong>Costo aproximado:</strong> $${costoFinal.toFixed(2)} MXN
+  `;
   const panelEstambre = document.getElementById("panelEstambre");
   if (img && img.src) {
      panelEstambre.style.display = "flex";
@@ -616,8 +618,6 @@
         mostrarCambioDimensiones(ancho, alto);
         imgX = Math.min(Math.max(imgX, 0), canvas.width - img.width * scale);
         imgY = Math.min(Math.max(imgY, 0), canvas.height - img.height * scale);
-        actualizarPresupuestoConScale(); // 🔁 Llama al backend para actualizar los costos reales
-
       }
 
       function mostrarNotificacion(mensaje, tipo = "error") {
