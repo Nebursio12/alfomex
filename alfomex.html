@@ -363,17 +363,7 @@
         } else {
           document.getElementById('añadirCarrito').disabled = false;
         }
-        coloresUsados.forEach(([key, count]) => {
-          const porcentaje = count / totalPixels;
-          const areaCm2 = 10000 * porcentaje;
-          const altoTejido = Math.sqrt(areaCm2);
-          const lineas = altoTejido / COSTOS.distanciaPuntada;
-          const estambre = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
-          const bolas = estambre / COSTOS.metrosBola;
-          const costo = bolas * COSTOS.bolaEstambre;
-          const [r, g, b] = key.split(',');
-          detalle += `<div><div style="background:rgb(${r},${g},${b})"></div>${estambre.toFixed(2)} m - $${costo.toFixed(2)} MXN</div>`;
-        });
+        
         document.getElementById("totalFinal").innerText = "Solicitar pedido";
         // ✅ Mostrar y llenar la descripción
         // ✅ Mostrar el panel izquierdo y rellenar descripción
