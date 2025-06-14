@@ -895,7 +895,7 @@
      mostrarNotificacion("⚠️ Imagen inválida. Intenta subir otra imagen.", "error");
      return;
   }
-  const costo = document.getElementById("resultado")?.innerText || "Costo no calculado";
+
 
   if (!window.auth || !window.db) {
     mostrarNotificacion("❌ Error: Firebase no está disponible", "error");
@@ -932,7 +932,7 @@
 
   const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
   const correo = user.email || "correo@sin-dato.com";
-  const medidas = `${ancho} cm x ${alto} cm`;
+
   
 
   try {
@@ -950,13 +950,10 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          cliente: nombre,
-          email: correo,
-          telefono: telefono,
-          medidas: medidas,
-          costo: costo,
-          imagen: imagenURL,
-          uid: user.uid 
+           cliente: nombre,
+           email: correo,
+           telefono: telefono,
+           imagen: imagenURL
         })
     }).then(res => res.json()).then(data => {
        console.log("📬 Respuesta del backend:", data);  // ⬅️ Agrega este
