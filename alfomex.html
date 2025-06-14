@@ -886,6 +886,9 @@ document.getElementById("añadirCarrito").addEventListener("click", () => {
 });
 
 async function enviarPorCorreo() {
+  const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
+  const alto = ((img.height * scale) / pxPorCm).toFixed(2);
+
   const base64 = img?.src || "";
   const imagenBase64 = base64.includes("base64,") ? base64.split(",")[1] : base64;
 
