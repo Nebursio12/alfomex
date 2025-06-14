@@ -102,6 +102,7 @@
         canvas.width = 500;
         canvas.height = 500;
         draw();
+        
       });
     </script>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
@@ -159,6 +160,42 @@
       </div>
     </div>
     <script>
+
+      function mostrarPresupuestoVisual() {
+  const ancho = (img.width * scale / pxPorCm).toFixed(2);
+  const alto = (img.height * scale / pxPorCm).toFixed(2);
+  const areaCm2 = (ancho * alto).toFixed(2);
+  const areaM2 = areaCm2 / 10000;
+
+  const COSTOS = {
+    bolaEstambre: 35 * 3,
+    metrosBola: 200,
+    telaBase: 50 * 3,
+    fieltro: 30 * 3,
+    personalizacion: 299,
+    tejidoCm: 10,
+    distanciaPuntada: 0.3
+  };
+
+  const altoTejido = Math.sqrt(areaCm2);
+  const lineas = altoTejido / COSTOS.distanciaPuntada;
+  const estambreTotal = lineas * (1 / COSTOS.tejidoCm) * altoTejido;
+  const bolas = estambreTotal / COSTOS.metrosBola;
+
+  const costoEstambre = bolas * COSTOS.bolaEstambre;
+  const costoTela = areaM2 * COSTOS.telaBase;
+  const costoFieltro = areaM2 * COSTOS.fieltro;
+  const costoFinal = costoEstambre + costoTela + costoFieltro + COSTOS.personalizacion;
+
+  document.getElementById("resultado").innerHTML = `
+    <strong>Área cubierta:</strong> ${areaCm2} cm² (${ancho} x ${alto})<br>
+    <strong>Costo Tela:</strong> $${costoTela.toFixed(2)} MXN<br>
+    <strong>Costo Fieltro:</strong> $${costoFieltro.toFixed(2)} MXN<br>
+    <strong>Costo Estambre Total:</strong> $${costoEstambre.toFixed(2)} MXN<br>
+    <strong>Costo aproximado:</strong> $${costoFinal.toFixed(2)} MXN
+  `;
+}
+
       const canvas = document.getElementById('lienzo');
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientWidth;
@@ -186,6 +223,7 @@
                 imgX = (canvas.width - img.width * scale) / 2;
                 imgY = (canvas.height - img.height * scale) / 2;
                 draw();
+                mostrarPresupuestoVisual();
                 calcularEstambre();
 
                 // Mostrar resultados
@@ -223,6 +261,8 @@
       let imgX = 0, imgY = 0;
       let scale = 1;
       function draw() {
+        mostrarPresupuestoVisual();
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // ⛔️ SALIR si no hay imagen
@@ -397,6 +437,8 @@
               imgY = (canvas.height - img.height * scale) / 2;
 
               draw();
+              mostrarPresupuestoVisual();
+
               calcularEstambre();
               // Mostrar el panel derecho y resultado
               document.querySelector('.lateral').style.display = 'flex';
@@ -490,6 +532,8 @@
           imgX = Math.min(Math.max(e.offsetX - offsetX, 0), canvas.width - img.width * scale);
           imgY = Math.min(Math.max(e.offsetY - offsetY, 0), canvas.height - img.height * scale);
           draw();
+          mostrarPresupuestoVisual();
+
           calcularEstambre();
           const panelEstambre = document.getElementById("panelEstambre");
           const descripcionContenido = document.getElementById("descripcionContenido");
@@ -507,6 +551,8 @@
         imgX = (canvas.width - img.width * scale) / 2;
         imgY = (canvas.height - img.height * scale) / 2;
         draw();
+        mostrarPresupuestoVisual();
+
         calcularEstambre();
       }
 
@@ -552,6 +598,8 @@
         scale = nuevoScale;
         centrarImagen();
         draw();
+        mostrarPresupuestoVisual();
+
         calcularEstambre();
         const ancho = (img.width * scale) / pxPorCm;
         const alto = (img.height * scale) / pxPorCm;
@@ -670,6 +718,8 @@
           
           // Forzar siempre el cálculo
           draw();
+          mostrarPresupuestoVisual();
+
           calcularEstambre();
 
           // Mostrar panel derecho y botón
