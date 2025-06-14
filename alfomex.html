@@ -440,6 +440,8 @@
       
 
               calcularEstambre();
+              mostrarPresupuestoVisual();
+
               // Mostrar el panel derecho y resultado
               document.querySelector('.lateral').style.display = 'flex';
               document.getElementById("resultado").style.display = "block";
@@ -554,6 +556,8 @@
 
 
         calcularEstambre();
+        mostrarPresupuestoVisual();
+
       }
 
       let ultimaAdvertenciaZoom = 0;
@@ -601,6 +605,8 @@
  
 
         calcularEstambre();
+        mostrarPresupuestoVisual();
+
         const ancho = (img.width * scale) / pxPorCm;
         const alto = (img.height * scale) / pxPorCm;
         mostrarCambioDimensiones(ancho, alto);
@@ -721,6 +727,8 @@
        
 
           calcularEstambre();
+          mostrarPresupuestoVisual();
+
 
           // Mostrar panel derecho y botón
           document.querySelector('.lateral').style.display = 'flex';
