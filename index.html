@@ -390,19 +390,23 @@ window.añadirAlCarrito = (producto) => {
              return;
             }
 
-            const querySnapshot = await getDocs(collection(db, "usuarios"));
+            // 🔐 Validar en backend si ya existen
+            const res = await fetch("https://backend-1pvf.onrender.com/validar-registro", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ correo, telefono })
+            });
+            const data = await res.json();
 
-            const telefonoYaExiste = querySnapshot.docs.some(doc => doc.data().telefono === "+52" + telefono);
-            if (telefonoYaExiste) {
-              errorMsg.textContent = "Este número de teléfono ya está registrado.";
-              return;
+            if (data.correoUsado) {
+               errorMsg.textContent = "Este correo ya está registrado.";
+               return;
+            }
+            if (data.telefonoUsado) {
+               errorMsg.textContent = "Este número de teléfono ya está registrado.";
+               return;
             }
 
-            const correoYaExisteEnFirestore = querySnapshot.docs.some(doc => doc.data().correo === correo);
-            if (correoYaExisteEnFirestore) {
-              errorMsg.textContent = "Este correo ya está registrado.";
-              return;
-            }
 
             // Si todo está bien, se puede continuar con el reCAPTCHA y SMS
             if (!window.recaptchaVerifier) {
