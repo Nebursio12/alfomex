@@ -891,8 +891,14 @@ async function enviarPorCorreo() {
   const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
   const alto = ((img.height * scale) / pxPorCm).toFixed(2);
 
-  const base64 = img?.src || "";
-  const imagenBase64 = base64.includes("base64,") ? base64.split(",")[1] : base64;
+  const canvasTemp = document.createElement("canvas");
+  canvasTemp.width = img.width;
+  canvasTemp.height = img.height;
+  const ctxTemp = canvasTemp.getContext("2d");
+  ctxTemp.drawImage(img, 0, 0);
+
+  const base64 = canvasTemp.toDataURL("image/png");
+  const imagenBase64 = base64.split(",")[1];
 
   if (!imagenBase64 || imagenBase64.trim() === "") {
     mostrarNotificacion("⚠️ Imagen inválida. Intenta subir otra imagen.", "error");
