@@ -47,45 +47,43 @@
         onAuthStateChanged,
         signOut
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-      import {
-        getFirestore,
-        collection,
-        getDocs,
-        doc,
-        getDoc,
-        setDoc,
-        serverTimestamp
-      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
       const firebaseConfig = {
         apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
         authDomain: "alfomex-f4efa.firebaseapp.com",
         projectId: "alfomex-f4efa",
-        storageBucket: "alfomex-f4efa.appspot.com",
-        messagingSenderId: "1090528818564",
-        appId: "1:1090528818564:web:dac6cb3333a2ee443919d1"
       };
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
-      const db = getFirestore(app);
       window.auth = auth;
-      window.db = db;
-      window.doc = doc;
-      window.getDoc = getDoc;
-      window.setDoc = setDoc;
-      window.serverTimestamp = serverTimestamp;
       // Espera a que el DOM esté cargado antes de acceder a elementos
       window.addEventListener("DOMContentLoaded", () => {
-        onAuthStateChanged(auth, (user) => {
-  const nav = document.getElementById("navOptions");
-  if (user) {
-    nav.innerHTML = `
-      <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-        <i class="fas fa-user-circle"></i>
-      </button>
-      <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-        <i class="fas fa-sign-out-alt"></i>
-      </button>
-    `;
+      onAuthStateChanged(auth, async (user) => {
+        const nav = document.getElementById("navOptions");
+        if (user) {
+          nav.innerHTML = `
+            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          `;
+          // 🔐 Obtener información desde backend usando token seguro
+          try {
+            const token = await user.getIdToken();
+            const res = await fetch("https://backend-1pvf.onrender.com/verificar-token", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token })
+            });
+
+            const data = await res.json();
+            console.log("✅ Datos seguros del usuario:", data);
+            // Puedes guardar data.telefono, data.nombre, etc. para usarlos después
+
+        } catch (err) {
+          console.error("❌ Error al obtener usuario del backend:", err);
+        }
   } else {
     nav.innerHTML = `
       <button onclick="location.href='index.html'" title="Inicio" class="icon-btn btn-perfil">
