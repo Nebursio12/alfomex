@@ -890,6 +890,12 @@
   const base64 = img?.src || "";
   const imagenBase64 = base64.includes("base64,") ? base64.split(",")[1] : base64;
 
+  const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ imagenBase64 })
+  });
+
 
   if (!imagenBase64 || imagenBase64.trim() === "") {
      mostrarNotificacion("⚠️ Imagen inválida. Intenta subir otra imagen.", "error");
