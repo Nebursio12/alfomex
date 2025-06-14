@@ -1081,7 +1081,7 @@ async function enviarPorCorreo() {
 }
 
 
-function iniciarTemporizadorVisual() {
+function iniciarTemporizadorVisual(restanteMs = 5 * 60 * 1000) {
   const boton = document.getElementById("añadirCarrito");
   const texto = document.getElementById("totalFinal");
 
