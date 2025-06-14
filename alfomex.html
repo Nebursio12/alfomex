@@ -978,7 +978,6 @@ async function enviarPorCorreo() {
     medidas = `${data.ancho} cm x ${data.alto} cm`;
     costo = `Área cubierta: ${data.area} Costo Tela: $${data.tela} Costo Fieltro: $${data.fieltro} Costo Estambre Total: $${data.estambre} Costo aproximado: $${data.total}`;
   } catch (err) {
-    console.error("❌ Error al calcular el costo:", err);
     mostrarNotificacion("❌ No se pudo calcular el costo", "error");
     document.getElementById("loaderOverlay").style.display = "none";
     return;
@@ -1001,16 +1000,16 @@ async function enviarPorCorreo() {
 
     const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
     const correo = user.email || "correo@sin-dato.com";
-    const telefono = user.phoneNumber || "No registrado"; // ✅ Añade esto manualmente
+    const telefono = user.phoneNumber || "No registrado";
 
     try {
-      const res = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
+      const subir = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imagenBase64 })
       });
-      const data = await res.json();
 
+      const data = await subir.json();
       if (!data.url) throw new Error("No se pudo obtener la URL de la imagen");
 
       const imagenURL = data.url;
@@ -1030,22 +1029,27 @@ async function enviarPorCorreo() {
         })
       });
 
-      // ✅ Guardar timestamp del pedido desde backend
-      try {
-        const token = await auth.currentUser.getIdToken();
-        await fetch("https://backend-1pvf.onrender.com/guardar-pedido-firestore", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token })
-        });
-        console.log("✅ Pedido registrado en Firestore");
-      } catch (e) {
-        console.error("❌ No se pudo registrar el pedido en Firestore:", e);
+      const token = await auth.currentUser.getIdToken();
+      const validar = await fetch("https://backend-1pvf.onrender.com/guardar-pedido-firestore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+      });
+
+      if (validar.status === 429) {
+        mostrarNotificacion("⚠️ Solo puedes hacer pedidos cada 5 minutos", "error");
+        document.getElementById("loaderOverlay").style.display = "none";
+        return;
       }
 
       mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
       document.getElementById("añadirCarrito").disabled = true;
       iniciarTemporizadorVisual();
+
+      // ✅ Redirigir después de éxito
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 3000);
 
     } catch (err) {
       console.error("❌ Error al enviar:", err);
@@ -1055,6 +1059,7 @@ async function enviarPorCorreo() {
     }
   });
 }
+
 
 function iniciarTemporizadorVisual() {
   const boton = document.getElementById("añadirCarrito");
