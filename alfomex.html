@@ -185,6 +185,9 @@
             <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
             <strong>Costo aproximado:</strong> $${data.total} MXN
           `;
+          
+          document.querySelector(".lateral").style.display = "flex"; // ✅ mostrar el panel derecho
+          document.getElementById("panelEstambre").style.display = "flex"; // ✅ mostrar el panel izquierdo
         })
         .catch(err => {
           console.error("❌ Error al actualizar presupuesto con scale:", err);
