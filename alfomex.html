@@ -607,18 +607,7 @@
       });
       
 
-      function obtenerNombreDesdeURL(url) {
-        try {
-          const path = decodeURIComponent(url);
-          const partes = path.split("/");
-          if (!partes.length) return "Alfombra personalizada";
-          const nombreConExtension = partes[partes.length - 1].split("?")[0];
-          const nombre = nombreConExtension.split(".")[0];
-          return nombre || "Alfombra personalizada";
-        } catch (e) {
-          return "Alfombra personalizada";
-        }
-      }
+      
 
       function renderizarCarrito() {
         const contenedor = document.getElementById("carritoLista");
