@@ -161,36 +161,34 @@
     </div>
     <script>
 
-      async function mostrarPresupuestoVisual() {
-  try {
-    const canvasTemp = document.createElement("canvas");
-    canvasTemp.width = img.width;
-    canvasTemp.height = img.height;
-    const ctxTemp = canvasTemp.getContext("2d");
-    ctxTemp.drawImage(img, 0, 0);
+    function actualizarPresupuestoConScale() {
+      const canvasTemp = document.createElement("canvas");
+      canvasTemp.width = img.width * scale;
+      canvasTemp.height = img.height * scale;
+      const ctxTemp = canvasTemp.getContext("2d");
+      ctxTemp.drawImage(img, 0, 0, canvasTemp.width, canvasTemp.height);
 
-    const base64 = canvasTemp.toDataURL("image/png");
-    const imagenBase64 = base64.split(",")[1];
+      const base64 = canvasTemp.toDataURL("image/png");
+      const imagenBase64 = base64.split(",")[1];
 
-    const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imagenBase64 })
-    });
-
-    const data = await res.json();
-
-    document.getElementById("resultado").innerHTML = `
-      <strong>Área cubierta:</strong> ${data.area} (${data.ancho} x ${data.alto})<br>
-      <strong>Costo Tela:</strong> $${data.tela} MXN<br>
-      <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
-      <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
-      <strong>Costo aproximado:</strong> $${data.total} MXN
-    `;
-  } catch (err) {
-    console.error("❌ Error al calcular presupuesto visual:", err);
-    document.getElementById("resultado").innerHTML = `<span style="color:red">⚠️ Error al calcular presupuesto</span>`;
-  }
+      fetch("https://backend-1pvf.onrender.com/calcular-costo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imagenBase64 })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("resultado").innerHTML = `
+            <strong>Área cubierta:</strong> ${data.area} (${data.ancho} x ${data.alto})<br>
+            <strong>Costo Tela:</strong> $${data.tela} MXN<br>
+            <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
+            <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
+            <strong>Costo aproximado:</strong> $${data.total} MXN
+          `;
+        })
+        .catch(err => {
+          console.error("❌ Error al actualizar presupuesto con scale:", err);
+        });
   const panelEstambre = document.getElementById("panelEstambre");
   if (img && img.src) {
      panelEstambre.style.display = "flex";
