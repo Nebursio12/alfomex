@@ -39,7 +39,7 @@
       </nav>
     </header>
     <div class="modal-overlay" id="modalOverlay"></div>
-    <!-- Firebase App, Auth y Firestore -->
+
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
       import {
@@ -964,7 +964,6 @@ async function enviarPorCorreo() {
     return;
   }
 
-  // 🔍 1. Calcular el costo real con sharp desde backend
   let costo = "Costo no calculado";
   let medidas = "Medidas no disponibles";
 
@@ -976,10 +975,8 @@ async function enviarPorCorreo() {
     });
 
     const data = await res.json();
-
     medidas = `${data.ancho} cm x ${data.alto} cm`;
     costo = `Área cubierta: ${data.area} Costo Tela: $${data.tela} Costo Fieltro: $${data.fieltro} Costo Estambre Total: $${data.estambre} Costo aproximado: $${data.total}`;
-
   } catch (err) {
     console.error("❌ Error al calcular el costo:", err);
     mostrarNotificacion("❌ No se pudo calcular el costo", "error");
@@ -987,8 +984,7 @@ async function enviarPorCorreo() {
     return;
   }
 
-  // 🔐 2. Validación Firebase y bloqueo de 5 min
-  if (!window.auth || !window.db) {
+  if (!window.auth) {
     mostrarNotificacion("❌ Error: Firebase no está disponible", "error");
     return;
   }
@@ -1003,26 +999,11 @@ async function enviarPorCorreo() {
 
     await user.reload();
 
-    const ref = window.doc(window.db, "pedidosUsuarios", user.uid);
-    const snapshot = await window.getDoc(ref);
-    const ahora = Date.now();
-
-    const usuarioSnap = await window.getDoc(window.doc(window.db, "usuarios", user.uid));
-    const telefono = usuarioSnap.exists() ? usuarioSnap.data().telefono || "No registrado" : "No encontrado";
-
-    if (snapshot.exists()) {
-      const ultimo = snapshot.data().ultimoPedido?.toMillis?.() || 0;
-      if (ahora - ultimo < 5 * 60 * 1000) {
-        document.getElementById("loaderOverlay").style.display = "none";
-        return mostrarNotificacion("⚠️ Solo puedes hacer pedidos cada 5 minutos", "error");
-      }
-    }
-
     const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
     const correo = user.email || "correo@sin-dato.com";
+    const telefono = user.phoneNumber || "No registrado"; // ✅ Añade esto manualmente
 
     try {
-      // 3️⃣ Subir imagen a Firebase desde el backend
       const res = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1034,7 +1015,6 @@ async function enviarPorCorreo() {
 
       const imagenURL = data.url;
 
-      // 4️⃣ Enviar correo con info verificada
       await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1050,7 +1030,18 @@ async function enviarPorCorreo() {
         })
       });
 
-      await window.setDoc(ref, { ultimoPedido: window.serverTimestamp() }, { merge: true });
+      // ✅ Guardar timestamp del pedido desde backend
+      try {
+        const token = await auth.currentUser.getIdToken();
+        await fetch("https://backend-1pvf.onrender.com/guardar-pedido-firestore", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        console.log("✅ Pedido registrado en Firestore");
+      } catch (e) {
+        console.error("❌ No se pudo registrar el pedido en Firestore:", e);
+      }
 
       mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
       document.getElementById("añadirCarrito").disabled = true;
