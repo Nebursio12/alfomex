@@ -403,6 +403,11 @@ window.añadirAlCarrito = (producto) => {
               body: JSON.stringify({ correo, telefono })
             });
             const data = await res.json();
+            if (data.error) {
+               errorMsg.textContent = data.error; // Muestra el mensaje del backend (si fue bloqueado)
+               return;
+            }
+
 
             if (data.correoUsado) {
                errorMsg.textContent = "Este correo ya está registrado.";
