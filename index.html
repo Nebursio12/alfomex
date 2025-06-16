@@ -403,11 +403,7 @@ window.añadirAlCarrito = (producto) => {
               body: JSON.stringify({ correo, telefono })
             });
             const data = await res.json();
-            if (data.error) {
-               errorMsg.textContent = data.error; // Muestra el mensaje del backend (si fue bloqueado)
-               return;
-            }
-
+            
 
             if (data.correoUsado) {
                errorMsg.textContent = "Este correo ya está registrado.";
@@ -440,13 +436,6 @@ window.añadirAlCarrito = (producto) => {
             modalCodigo.style.display = "flex";
             modalCodigo.classList.add("active");
             modalSMS.classList.add("active");
-            const bloqueoPrevio = localStorage.getItem("bloqueoVerificacionSMS");
-            if (bloqueoPrevio && Date.now() < Number(bloqueoPrevio)) {
-             document.getElementById("codigoSMS").disabled = true;
-             document.getElementById("btnVerificarCodigo").disabled = true;
-             document.getElementById("errorSMS").textContent = "⏳ Verificación bloqueada. Intenta más tarde.";
-            }
-
 
           } catch (e) {
             console.error(e);
@@ -493,17 +482,9 @@ window.añadirAlCarrito = (producto) => {
     }
 
 let yaVerificado = false; // fuera del event listener
-let intentosCodigoSMS = 0;
-let maxIntentosSMS = 5;
-const BLOQUEO_SMS_MS = 5 * 60 * 1000; // 5 minutos
 document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
   const codigo = document.getElementById("codigoSMS").value.trim();
   const errorSMS = document.getElementById("errorSMS");
-  const bloqueo = localStorage.getItem("bloqueoVerificacionSMS");
-  if (bloqueo && Date.now() < Number(bloqueo)) {
-    errorSMS.textContent = "⏳ Espera unos minutos antes de intentar otra vez.";
-    return;
-  }
 
   if (!/^\d{6}$/.test(codigo)) {
     errorSMS.textContent = "Código inválido.";
@@ -512,11 +493,6 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
 
   if (yaVerificado) {
     errorSMS.textContent = "Ya verificado, por favor recarga.";
-    return;
-  }
-
-  if (intentosCodigoSMS >= maxIntentosSMS) {
-    bloquearIntentosSMS(); // 🔐 Bloqueo duro
     return;
   }
 
@@ -559,12 +535,6 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
 
 
   } catch (e) {
-    intentosCodigoSMS++;
-    if (intentosCodigoSMS >= maxIntentosSMS) {
-      bloquearIntentosSMS(); // 🔐 Llama aquí también
-    } else {
-      errorSMS.textContent = "❌ Código incorrecto. Intenta nuevamente.";
-    }
     if (auth.currentUser) {
       console.warn("Error falso: ya estaba logueado");
 
@@ -582,7 +552,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
       window.location.reload();
       return;
     }
-    
+
     console.error(e);
     errorSMS.textContent = "Código incorrecto o vencido.";
   }
@@ -606,21 +576,6 @@ window.scrollToCategoria = (id) => {
 window.abrirCarrito = () => {
   alert("Aquí iría el carrito o modal de compras 🛒");
 };
-function bloquearIntentosSMS() {
-  const ahora = Date.now();
-  const desbloqueo = ahora + BLOQUEO_SMS_MS;
-  localStorage.setItem("bloqueoVerificacionSMS", desbloqueo);
-
-  cerrarModalCodigo();
-
-  const errorSMS = document.getElementById("errorSMS");
-  if (errorSMS) {
-    errorSMS.textContent = "🚫 Intentos agotados. Espera 5 minutos para volver a intentarlo.";
-  }
-
-  alert("🚫 Demasiados intentos fallidos. Por seguridad, la verificación se ha bloqueado durante 5 minutos.");
-}
-
 
 function renderizarCarrito() {
   const contenedor = document.getElementById("carritoLista");
@@ -735,18 +690,6 @@ function actualizarContadorCarrito() {
 document.addEventListener("DOMContentLoaded", () => {
   renderizarCarrito();
   actualizarContadorCarrito();
-  const bloqueoPrevio = localStorage.getItem("bloqueoVerificacionSMS");
-  if (bloqueoPrevio && Date.now() < Number(bloqueoPrevio)) {
-    const codigo = document.getElementById("codigoSMS");
-    const btn = document.getElementById("btnVerificarCodigo");
-    const error = document.getElementById("errorSMS");
-
-    if (codigo && btn && error) {
-      codigo.disabled = true;
-      btn.disabled = true;
-      error.textContent = "⏳ Verificación bloqueada. Intenta más tarde.";
-    }
-  }
   // 🔐 Si venía de alfomex.html sin login, mostrar login y toast
   if (localStorage.getItem("forzarLoginPedido") === "true") {
     localStorage.removeItem("forzarLoginPedido");
