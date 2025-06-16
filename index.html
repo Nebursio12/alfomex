@@ -78,10 +78,15 @@
       </div>
       <div id="errorMsg" class="error"></div>
     </div>
-    <section class="carrusel">
-      <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.jpg" alt="Alfombra 1" />
-      <img src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Alfombra 2" />
-    </section>
+    <div class="banner-solido">
+  <div class="banner-imagenes">
+    <img class="banner-img active" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.jpg" alt="Banner 1">
+    <img class="banner-img" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Banner 2">
+    <img class="banner-img" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/3.jpg" alt="Banner 3">
+  </div>
+  <div class="puntos-banner" id="puntosBanner"></div>
+</div>
+
     <div class="botones-categorias">
      <button onclick="scrollToCategoria('originaless')"><span class="emoji">🎨</span> <span class="texto">Originales</span></button>
      <button onclick="scrollToCategoria('personajess')"><span class="emoji">🎭</span> <span class="texto">Personajes</span></button>
@@ -740,6 +745,44 @@ function mostrarToastCarrito(mensaje) {
   </div>
   <p>&copy; 2024–2025 Alfomex. Todos los derechos reservados.</p>
 </footer>
+  <script>
+  const imgs = document.querySelectorAll(".banner-img");
+  const puntosContainer = document.getElementById("puntosBanner");
+  let currentIndex = 0;
+  let interval;
+
+  imgs.forEach((_, i) => {
+    const punto = document.createElement("span");
+    punto.addEventListener("click", () => {
+      mostrarImagen(i);
+      reiniciarIntervalo();
+    });
+    puntosContainer.appendChild(punto);
+  });
+
+  const puntos = puntosContainer.querySelectorAll("span");
+
+  function mostrarImagen(index) {
+    imgs.forEach(img => img.classList.remove("active"));
+    puntos.forEach(p => p.classList.remove("active"));
+    imgs[index].classList.add("active");
+    puntos[index].classList.add("active");
+    currentIndex = index;
+  }
+
+  function siguienteImagen() {
+    currentIndex = (currentIndex + 1) % imgs.length;
+    mostrarImagen(currentIndex);
+  }
+
+  function reiniciarIntervalo() {
+    clearInterval(interval);
+    interval = setInterval(siguienteImagen, 5000);
+  }
+
+  mostrarImagen(0); // Inicial
+  interval = setInterval(siguienteImagen, 5000);
+</script>
 
   </body>
 </html>
