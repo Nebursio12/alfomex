@@ -486,6 +486,8 @@ window.añadirAlCarrito = (producto) => {
     }
 
 let yaVerificado = false; // fuera del event listener
+let intentosCodigoSMS = 0;
+let maxIntentosSMS = 5;
 document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
   const codigo = document.getElementById("codigoSMS").value.trim();
   const errorSMS = document.getElementById("errorSMS");
@@ -497,6 +499,11 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
 
   if (yaVerificado) {
     errorSMS.textContent = "Ya verificado, por favor recarga.";
+    return;
+  }
+
+  if (intentosCodigoSMS >= maxIntentosSMS) {
+    errorSMS.textContent = "🚫 Límite de intentos alcanzado. Intenta más tarde.";
     return;
   }
 
@@ -556,7 +563,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
       window.location.reload();
       return;
     }
-
+    intentosCodigoSMS++;
     console.error(e);
     errorSMS.textContent = "Código incorrecto o vencido.";
   }
