@@ -212,20 +212,7 @@
         cursor: pointer;
       }
 
-      .carrusel {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        margin-top: 70px;
-      }
-
-      .carrusel img {
-        width: 100%;
-        max-width: 600px;
-        height: auto;
-        scroll-snap-align: center;
-        margin: auto;
-      }
+     
 
       .catalogo {
         padding: 20px;
@@ -638,4 +625,25 @@
 .puntos-banner span.active {
   opacity: 1;
   transform: scale(1.3);
+}
+
+.boton-banner {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.boton-banner:hover {
+  background: #ffcc00;
+  color: black;
 }
