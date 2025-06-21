@@ -415,18 +415,35 @@ window.añadirAlCarrito = (producto) => {
             }
 
             // NUEVA VERIFICACIÓN DE BLOQUEO
-            const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ telefono: "+52" + telefono })  // mismo formato
-            });
-            const bloqueoData = await resBloqueo.json();
+            try {
+               const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ telefono: "+52" + telefono })
+               });
 
-            if (!resBloqueo.ok) {
-               const mins = Math.ceil((bloqueoData.segundosFaltantes || 600) / 60);
-               errorMsg.textContent = `⏳ Espera ${mins} minutos antes de volver a intentarlo.`;
-               return;
+               const bloqueoData = await resBloqueo.json();
+
+               if (!resBloqueo.ok) {
+                 // Mostrar mensaje adecuado según el error
+                 if (resBloqueo.status === 429) {
+                    const mins = Math.ceil((bloqueoData.segundosFaltantes || 600) / 60);
+                    errorMsg.textContent = `⏳ Espera ${mins} minutos antes de intentarlo otra vez.`;
+                 } else if (resBloqueo.status === 403) {
+                   errorMsg.textContent = "Este número ya está registrado.";
+                 } else {
+                   errorMsg.textContent = "No se puede enviar el código en este momento.";
+                 }
+                   return;
+                }
+
+               // Si todo está bien, continuar con el envío del SMS
+
+            } catch (error) {
+              console.error("Error al verificar SMS:", error);
+              errorMsg.textContent = "Error al verificar el número. Intenta más tarde.";
             }
+
 
 
             // Si todo está bien, se puede continuar con el reCAPTCHA y SMS
