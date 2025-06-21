@@ -400,7 +400,7 @@ window.añadirAlCarrito = (producto) => {
             const res = await fetch("https://backend-1pvf.onrender.com/validar-registro", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ correo, telefono })
+              body: JSON.stringify({ correo, telefono: "+52" + telefono })
             });
             const data = await res.json();
             
