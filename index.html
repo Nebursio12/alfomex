@@ -414,6 +414,19 @@ window.añadirAlCarrito = (producto) => {
                return;
             }
 
+            // NUEVA VERIFICACIÓN DE BLOQUEO
+            const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ telefono: "+52" + telefono })  // mismo formato
+            });
+            const bloqueoData = await resBloqueo.json();
+
+            if (!resBloqueo.ok) {
+               errorMsg.textContent = `Espera ${bloqueoData.segundosFaltantes || 60} segundos antes de intentarlo otra vez.`;
+               return;
+            }
+
 
             // Si todo está bien, se puede continuar con el reCAPTCHA y SMS
             if (!window.recaptchaVerifier) {
