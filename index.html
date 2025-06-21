@@ -423,7 +423,8 @@ window.añadirAlCarrito = (producto) => {
             const bloqueoData = await resBloqueo.json();
 
             if (!resBloqueo.ok) {
-               errorMsg.textContent = `Espera ${bloqueoData.segundosFaltantes || 60} segundos antes de intentarlo otra vez.`;
+               const mins = Math.ceil((bloqueoData.segundosFaltantes || 600) / 60);
+               errorMsg.textContent = `⏳ Espera ${mins} minutos antes de volver a intentarlo.`;
                return;
             }
 
