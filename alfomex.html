@@ -201,13 +201,20 @@
     const data = await res.json();
     if (data.error) throw new Error(data.error);
 
-    document.getElementById("resultado").innerHTML = `
-      <strong>Área cubierta:</strong> ${data.area}<br>
-      <strong>Costo Tela:</strong> $${data.tela} MXN<br>
-      <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
-      <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
-      <strong>Costo aproximado:</strong> $${data.total} MXN
-    `;
+    const resultado = document.getElementById("resultado");
+    resultado.innerHTML = ""; // Limpia
+
+    [
+       ["Área cubierta:", data.area],
+       ["Costo Tela:", `$${data.tela} MXN`],
+       ["Costo Fieltro:", `$${data.fieltro} MXN`],
+       ["Costo Estambre Total:", `$${data.estambre} MXN`],
+       ["Costo aproximado:", `$${data.total} MXN`]
+    ].forEach(([titulo, valor]) => {
+       const p = document.createElement("p");
+       p.textContent = `${titulo} ${valor}`;
+       resultado.appendChild(p);
+    });
 
     const panelEstambre = document.getElementById("panelEstambre");
     if (img && img.src) {
@@ -218,9 +225,9 @@
     }
   } catch (err) {
     console.error("❌ Error al calcular presupuesto:", err);
-    document.getElementById("resultado").innerHTML = `
-      <span style="color:red">⚠️ No se pudo calcular el presupuesto</span>
-    `;
+    const resultado = document.getElementById("resultado");
+    resultado.textContent = "⚠️ No se pudo calcular el presupuesto";
+    resultado.style.color = "red";
   }
 }
   let debouncePresupuesto;
@@ -403,13 +410,20 @@ function actualizarPresupuestoConRetraso() {
 
     if (data.error) throw new Error(data.error);
 
-    document.getElementById("resultado").innerHTML = `
-      <strong>Área cubierta:</strong> ${data.area}<br>
-      <strong>Costo Tela:</strong> $${data.tela} MXN<br>
-      <strong>Costo Fieltro:</strong> $${data.fieltro} MXN<br>
-      <strong>Costo Estambre Total:</strong> $${data.estambre} MXN<br>
-      <strong>Costo aproximado:</strong> $${data.total} MXN
-    `;
+    const resultado = document.getElementById("resultado");
+    resultado.innerHTML = ""; // Limpia
+
+    [
+      ["Área cubierta:", data.area],
+      ["Costo Tela:", `$${data.tela} MXN`],
+      ["Costo Fieltro:", `$${data.fieltro} MXN`],
+      ["Costo Estambre Total:", `$${data.estambre} MXN`],
+      ["Costo aproximado:", `$${data.total} MXN`]
+    ].forEach(([titulo, valor]) => {
+      const p = document.createElement("p");
+      p.textContent = `${titulo} ${valor}`;
+      resultado.appendChild(p);
+    });
 
   } catch (error) {
     console.error("❌ Error al calcular costo:", error);
