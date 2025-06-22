@@ -414,13 +414,50 @@ window.añadirAlCarrito = (producto) => {
            }
 
            // 🔒 Verificación con backend para bloqueo por IP/número
-           const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
-             method: "POST",
-             headers: { "Content-Type": "application/json" },
-             body: JSON.stringify({ telefono: "+52" + telefono })
-           });
+           let bloqueoData = {};
 
-           const bloqueoData = await resBloqueo.json();
+try {
+  const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ telefono: "+52" + telefono })
+  });
+
+  try {
+    bloqueoData = await resBloqueo.clone().json();
+  } catch {
+    try {
+      const text = await resBloqueo.text();
+      bloqueoData.error = text;
+    } catch {
+      bloqueoData.error = "Respuesta vacía del backend.";
+    }
+  }
+
+  if (!resBloqueo.ok) {
+    if (resBloqueo.status === 429) {
+      const segundos = bloqueoData.segundosFaltantes || null;
+      if (segundos) {
+        const mins = Math.floor(segundos / 60);
+        const secs = segundos % 60;
+        errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} minutos antes de intentarlo.`;
+      } else {
+        errorMsg.textContent = "⏳ Espera unos minutos antes de intentarlo.";
+      }
+    } else if (resBloqueo.status === 403) {
+      errorMsg.textContent = "Este número ya está registrado.";
+    } else {
+      errorMsg.textContent = "No se puede enviar el código en este momento.";
+    }
+    return;
+  }
+
+} catch (error) {
+  console.warn("❌ Fallo total al contactar el backend:", error);
+  errorMsg.textContent = "No se pudo contactar con el servidor. Intenta más tarde.";
+  return;
+}
+
 
            if (!resBloqueo.ok) {
              // Mostrar mensaje adecuado según el error
