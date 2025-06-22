@@ -423,17 +423,22 @@ window.añadirAlCarrito = (producto) => {
            const bloqueoData = await resBloqueo.json();
 
            if (!resBloqueo.ok) {
-             // Mostrar mensaje adecuado según el error
-             if (resBloqueo.status === 429) {
-               const mins = Math.ceil((bloqueoData.segundosFaltantes || 600) / 60);
-               errorMsg.textContent = `⏳ Espera ${mins} minutos antes de intentarlo otra vez.`;
-             } else if (resBloqueo.status === 403) {
-               errorMsg.textContent = "Este número ya está registrado.";
-             } else {
-               errorMsg.textContent = "No se puede enviar el código en este momento.";
-             }
-             return;
-            }
+              if (resBloqueo.status === 429) {
+                 const segundos = bloqueoData.segundosFaltantes;
+                 if (segundos) {
+                    const mins = Math.floor(segundos / 60);
+                    const secs = segundos % 60;
+                    errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} antes de intentarlo otra vez.`;
+                  } else {
+                    errorMsg.textContent = bloqueoData.error || "⏳ Espera unos minutos antes de volver a intentar.";
+                  }
+                } else if (resBloqueo.status === 403) {
+                  errorMsg.textContent = "Este número ya está registrado.";
+                } else {
+                  errorMsg.textContent = "No se puede enviar el código en este momento.";
+                }
+                return;
+              }
 
             // ✅ Solo si pasó todo lo anterior, se procede al envío del SMS
             if (!window.recaptchaVerifier) {
