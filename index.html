@@ -427,7 +427,8 @@ window.añadirAlCarrito = (producto) => {
              } catch {
                try {
                  const text = await resBloqueo.text();
-                 console.warn("Respuesta sin JSON:", text);
+                 bloqueoData.error = text;
+                 console.warn("Texto recibido:", text);
                 } catch {
                  console.warn("Respuesta vacía del backend.");
                 }
@@ -435,18 +436,27 @@ window.añadirAlCarrito = (producto) => {
 
 
              if (!resBloqueo.ok) {
-               if (resBloqueo.status === 429) {
-                 const segundos = bloqueoData.segundosFaltantes || 600;
-                 const mins = Math.floor(segundos / 60);
-                 const secs = segundos % 60;
-                 errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} minutos para volver a intentar.`;
-               } else if (resBloqueo.status === 403) {
-                 errorMsg.textContent = "Este número ya está registrado.";
-               } else {
-                 errorMsg.textContent = "No se puede enviar el código en este momento.";
-               }
-               return;
-            }
+  if (resBloqueo.status === 429) {
+    // Puede venir desde express-rate-limit o desde tu propio backend
+    const segundos = bloqueoData.segundosFaltantes || null;
+
+    if (segundos) {
+      const mins = Math.floor(segundos / 60);
+      const secs = segundos % 60;
+      errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} minutos para volver a intentar.`;
+    } else {
+      errorMsg.textContent = bloqueoData.error || "⛔ Demasiados intentos. Intenta más tarde.";
+    }
+
+  } else if (resBloqueo.status === 403) {
+    errorMsg.textContent = "Este número ya está registrado.";
+  } else {
+    errorMsg.textContent = "No se puede enviar el código en este momento.";
+  }
+
+  return;
+}
+
           } catch (error) {
             console.error("❌ Error al contactar con el backend:", error);
             errorMsg.textContent = "No se pudo verificar tu número. Revisa tu conexión e inténtalo de nuevo.";
