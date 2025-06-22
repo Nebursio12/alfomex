@@ -398,37 +398,47 @@ window.añadirAlCarrito = (producto) => {
 
             // 🔐 Validar en backend si ya existen
             // 🔒 Verificación con backend para bloqueo por IP/número
-const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ telefono: "+52" + telefono })
-});
-
+let resBloqueo;
 let bloqueoData = {};
-try {
-  bloqueoData = await resBloqueo.clone().json();
-} catch {
-  try {
-    const text = await resBloqueo.text();
-    bloqueoData.error = text;
-  } catch {
-    bloqueoData.error = "Error desconocido del servidor.";
-  }
-}
 
-if (!resBloqueo.ok) {
-  if (resBloqueo.status === 429) {
-    const segundos = bloqueoData.segundosFaltantes || 600;
-    const mins = Math.floor(segundos / 60);
-    const secs = segundos % 60;
-    errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} minutos antes de intentar otra vez.`;
-  } else if (resBloqueo.status === 403) {
-    errorMsg.textContent = "Este número ya está registrado.";
-  } else {
-    errorMsg.textContent = bloqueoData.error || "No se puede enviar el código en este momento.";
+try {
+  resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ telefono: "+52" + telefono })
+  });
+
+  try {
+    bloqueoData = await resBloqueo.clone().json();
+  } catch {
+    try {
+      const text = await resBloqueo.text();
+      bloqueoData.error = text;
+    } catch {
+      bloqueoData.error = "Error desconocido del servidor.";
+    }
   }
+
+  if (!resBloqueo.ok) {
+    if (resBloqueo.status === 429) {
+      const segundos = bloqueoData.segundosFaltantes || 600;
+      const mins = Math.floor(segundos / 60);
+      const secs = segundos % 60;
+      errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} minutos antes de intentar otra vez.`;
+    } else if (resBloqueo.status === 403) {
+      errorMsg.textContent = "Este número ya está registrado.";
+    } else {
+      errorMsg.textContent = bloqueoData.error || "No se puede enviar el código en este momento.";
+    }
+    return;
+  }
+
+} catch (errorInterno) {
+  console.error("❌ Error consultando bloqueo:", errorInterno);
+  errorMsg.textContent = "Error al verificar intentos previos. Intenta más tarde.";
   return;
 }
+
 
 
             // ✅ Solo si pasó todo lo anterior, se procede al envío del SMS
