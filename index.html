@@ -421,7 +421,18 @@ window.añadirAlCarrito = (producto) => {
                body: JSON.stringify({ telefono: "+52" + telefono })
              });
 
-             const bloqueoData = await resBloqueo.json().catch(() => ({}));
+             let bloqueoData = {};
+             try {
+               bloqueoData = await resBloqueo.clone().json();
+             } catch {
+               try {
+                 const text = await resBloqueo.text();
+                 console.warn("Respuesta sin JSON:", text);
+                } catch {
+                 console.warn("Respuesta vacía del backend.");
+                }
+              }
+
 
              if (!resBloqueo.ok) {
                if (resBloqueo.status === 429) {
