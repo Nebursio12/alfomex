@@ -397,43 +397,39 @@ window.añadirAlCarrito = (producto) => {
             }
 
             // 🔐 Validar en backend si ya existen
-            const res = await fetch("https://backend-1pvf.onrender.com/validar-registro", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ correo, telefono: "+52" + telefono })
-           });
-           const data = await res.json();
+            // 🔒 Verificación con backend para bloqueo por IP/número
+const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ telefono: "+52" + telefono })
+});
 
-           if (data.correoUsado) {
-             errorMsg.textContent = "Este correo ya está registrado.";
-             return;
-           }
-           if (data.telefonoUsado) {
-             errorMsg.textContent = "Este número de teléfono ya está registrado.";
-             return;
-           }
+let bloqueoData = {};
+try {
+  bloqueoData = await resBloqueo.clone().json();
+} catch {
+  try {
+    const text = await resBloqueo.text();
+    bloqueoData.error = text;
+  } catch {
+    bloqueoData.error = "Error desconocido del servidor.";
+  }
+}
 
-           // 🔒 Verificación con backend para bloqueo por IP/número
-           const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
-             method: "POST",
-             headers: { "Content-Type": "application/json" },
-             body: JSON.stringify({ telefono: "+52" + telefono })
-           });
+if (!resBloqueo.ok) {
+  if (resBloqueo.status === 429) {
+    const segundos = bloqueoData.segundosFaltantes || 600;
+    const mins = Math.floor(segundos / 60);
+    const secs = segundos % 60;
+    errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} minutos antes de intentar otra vez.`;
+  } else if (resBloqueo.status === 403) {
+    errorMsg.textContent = "Este número ya está registrado.";
+  } else {
+    errorMsg.textContent = bloqueoData.error || "No se puede enviar el código en este momento.";
+  }
+  return;
+}
 
-           const bloqueoData = await resBloqueo.json();
-
-           if (!resBloqueo.ok) {
-             // Mostrar mensaje adecuado según el error
-             if (resBloqueo.status === 429) {
-               const mins = Math.ceil((bloqueoData.segundosFaltantes || 600) / 60);
-               errorMsg.textContent = `⏳ Espera ${mins} minutos antes de intentarlo otra vez.`;
-             } else if (resBloqueo.status === 403) {
-               errorMsg.textContent = "Este número ya está registrado.";
-             } else {
-               errorMsg.textContent = "No se puede enviar el código en este momento.";
-             }
-             return;
-            }
 
             // ✅ Solo si pasó todo lo anterior, se procede al envío del SMS
             if (!window.recaptchaVerifier) {
