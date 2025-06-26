@@ -551,7 +551,8 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
       nombre: window.datosUsuarioTemporal.nombre,
       apellido: window.datosUsuarioTemporal.apellido,
       correo: user.email || "sincorreo@alfomex.com",
-      telefono: user.phoneNumber || "No registrado"
+      telefono: user.phoneNumber || "No registrado",
+      rol: "cliente" 
     });
 
     cerrarModalCodigo();
