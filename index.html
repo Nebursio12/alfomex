@@ -30,11 +30,6 @@
         </button>
       </div>
     </div>
-    <div id="mySidenav" class="sidenav">
-      <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
-      <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
-      <a href="javascript:void(0)">Categorías</a>
-    </div>
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal" id="loginModal">
       <h3 id="modalTitle">Entrar</h3>
@@ -82,7 +77,7 @@
       </div>
       <a href="alfomex.html" class="boton-banner">🧶 Pedido personalizado</a>
 
-      <!-- PUNTOS -->
+
       <div class="puntos-banner" id="puntosBanner"></div>
     </div>
 
@@ -172,7 +167,7 @@ async function mostrarMenu() {
   }
 }
 
-mostrarMenu(); // 👈 LLAMADA FINAL
+mostrarMenu(); 
 window.añadirAlCarrito = (producto) => {
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
   carrito.push(producto);
@@ -190,7 +185,7 @@ window.añadirAlCarrito = (producto) => {
 
 
       window.openNav = () => {
-        // Cierra el modal si está abierto
+
         cerrarModal();
         document.getElementById("mySidenav").classList.add("open");
         document.getElementById("modalOverlay").classList.add("active");
@@ -203,7 +198,7 @@ window.añadirAlCarrito = (producto) => {
 
       window.abrirModal = () => {
         closeNav();
-        toggleFormulario(false); // 🔥 Fuerza modo login correctamente
+        toggleFormulario(false); 
         document.getElementById("loginModal").classList.add("active");
         document.getElementById("modalOverlay").classList.add("active");
       };
@@ -215,7 +210,7 @@ window.añadirAlCarrito = (producto) => {
         modal.classList.remove("active");
         overlay.classList.remove("active");
 
-        // 🔥 Limpia recuperación
+
         document.getElementById("recuperacion").style.display = "none";
         document.getElementById("emailRecuperar").value = "";
 
@@ -327,7 +322,7 @@ window.añadirAlCarrito = (producto) => {
        } else {
          modoRegistro = !modoRegistro;
        }
-        // 🔥 Limpia recuperación al cambiar de formulario
+        
         document.getElementById("recuperacion").style.display = "none";
         document.getElementById("emailRecuperar").value = "";
 
@@ -386,14 +381,14 @@ window.añadirAlCarrito = (producto) => {
           }
 
           try {
-            // Verificar si el correo ya está en uso
+       
             const metodosCorreo = await fetchSignInMethodsForEmail(auth, correo);
             if (metodosCorreo.length > 0) {
               errorMsg.textContent = "Este correo ya está registrado.";
               return;
             }
 
-            // 🔐 Validar en backend si ya existen
+       
             const res = await fetch("https://backend-1pvf.onrender.com/validar-registro", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -410,7 +405,7 @@ window.añadirAlCarrito = (producto) => {
              return;
            }
 
-           // 🔒 Verificación con backend para bloqueo por IP/número
+           
            const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
              method: "POST",
              headers: { "Content-Type": "application/json" },
@@ -437,7 +432,7 @@ window.añadirAlCarrito = (producto) => {
                 return;
               }
 
-            // ✅ Solo si pasó todo lo anterior, se procede al envío del SMS
+            
             if (!window.recaptchaVerifier) {
               window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
                 size: "invisible",
@@ -479,7 +474,7 @@ window.añadirAlCarrito = (producto) => {
       });
 
       document.getElementById("telefonoRegistro").addEventListener("input", function () {
-       this.value = this.value.replace(/\D/g, ""); // 🔒 solo números (elimina letras y espacios)
+       this.value = this.value.replace(/\D/g, ""); 
       });
 
     function cerrarModalCodigo() {
@@ -493,7 +488,7 @@ window.añadirAlCarrito = (producto) => {
       document.getElementById("errorSMS").textContent = "";
     }
     
-    window.cerrarModalCodigo = cerrarModalCodigo; // ← 🔥 Añade esta línea justo aquí
+    window.cerrarModalCodigo = cerrarModalCodigo; 
     function mostrarBienvenida(nombreCompleto) {
       const toast = document.getElementById("toastBienvenida");
       toast.textContent = `Bienvenido ${nombreCompleto}`;
@@ -501,10 +496,10 @@ window.añadirAlCarrito = (producto) => {
 
       setTimeout(() => {
         toast.classList.remove("show");
-      }, 4000); // 4 segundos
+      }, 4000); 
     }
 
-let yaVerificado = false; // fuera del event listener
+let yaVerificado = false; 
 document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
   const codigo = document.getElementById("codigoSMS").value.trim();
   const errorSMS = document.getElementById("errorSMS");
@@ -523,7 +518,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     const result = await window.confirmationResultGlobal.confirm(codigo);
     const user = result.user;
 
-    // Ya está autenticado con número → ahora solo vinculamos el correo
+    
     const credencial = EmailAuthProvider.credential(
       window.datosUsuarioTemporal.correo,
       window.datosUsuarioTemporal.password
@@ -532,7 +527,7 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
     try {
       await linkWithCredential(user, credencial);
     } catch (err) {
-      await user.delete(); // elimina el usuario si el correo ya está usado
+      await user.delete(); 
       cerrarModalCodigo();
       errorSMS.textContent = "Este correo ya está en uso. Intenta con otro.";
       return;
@@ -609,7 +604,7 @@ function renderizarCarrito() {
 
   const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-  // Limpiar items anteriores
+  
   contenedor.querySelectorAll(".item-carrito").forEach(item => item.remove());
 
   if (carrito.length === 0) {
@@ -695,8 +690,6 @@ function eliminarDelCarrito(index) {
   
 }
 window.eliminarDelCarrito = eliminarDelCarrito;
-
-// Mostrar/Ocultar
 window.abrirCarrito = () => {
   const carrito = document.getElementById("carritoLista");
   carrito.classList.toggle("oculto");
@@ -714,10 +707,10 @@ function actualizarContadorCarrito() {
 document.addEventListener("DOMContentLoaded", () => {
   renderizarCarrito();
   actualizarContadorCarrito();
-  // 🔐 Si venía de alfomex.html sin login, mostrar login y toast
+ 
   if (localStorage.getItem("forzarLoginPedido") === "true") {
     localStorage.removeItem("forzarLoginPedido");
-    abrirModal(); // Abre el panel de login
+    abrirModal(); 
     const toast = document.getElementById("toastCarrito");
     toast.textContent = "🔒 Para hacer un pedido personalizado, necesitas tener una cuenta.";
     toast.classList.add("show", "toast-alerta");
@@ -737,14 +730,14 @@ function mostrarToastCarrito(mensaje) {
 
   setTimeout(() => {
     toast.classList.remove("show");
-  }, 3000); // Mostrar durante 3 segundos
+  }, 3000); 
 }
 
 
 
     </script>
     <div id="recaptcha-container"></div>
-    <!-- MODAL CÓDIGO SMS -->
+  
     <div id="modalCodigo">
       <div class="modal" id="modalSMS" style="min-width:300px;">
         <h3>Verificación por SMS</h3>
@@ -806,7 +799,7 @@ function mostrarToastCarrito(mensaje) {
     interval = setInterval(siguienteImagen, 5000);
   }
 
-  mostrarImagen(0); // Inicial
+  mostrarImagen(0); 
   interval = setInterval(siguienteImagen, 5000);
 </script>
 
