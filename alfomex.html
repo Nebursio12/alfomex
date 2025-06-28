@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="estilos.css">
-    <style>
-      /* El CSS ha sido movido a estilos.css */
-    </style>
   </head>
   <body>
     <div id="overlayDrag" class="drag-overlay">
@@ -55,7 +52,7 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       window.auth = auth;
-      // Espera a que el DOM esté cargado antes de acceder a elementos
+      
       window.addEventListener("DOMContentLoaded", () => {
   onAuthStateChanged(auth, async (user) => {
     const nav = document.getElementById("navOptions");
@@ -71,7 +68,7 @@
       `;
 
       try {
-        // 🔐 Obtener datos seguros del usuario
+        
         const token = await user.getIdToken();
         const res = await fetch("https://backend-1pvf.onrender.com/verificar-token", {
           method: "POST",
@@ -82,7 +79,7 @@
         const data = await res.json();
         console.log("✅ Datos seguros del usuario:", data);
 
-        // 🕒 Verificar si ya hizo pedido y mostrar temporizador si es necesario
+        
         const verif = await fetch("https://backend-1pvf.onrender.com/verificar-ultimo-pedido", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -111,7 +108,7 @@
     }
   });
 
-  // ✅ Inicializar canvas, botones y dibujo
+  
   window.cerrarSesion = async () => {
     await signOut(auth);
     window.location.href = "index.html";
@@ -126,7 +123,7 @@
     </script>
     <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
     <div class="contenedor-principal con-aviso-margin">
-      <!-- Lateral izquierdo para descripción del estambre -->
+      
       <div class="lateral-izquierda" id="panelEstambre">
         <div id="descripcionContenido">
           <h3 style="color: black; margin-top: 0;">Descripción del Material</h3>
@@ -169,7 +166,7 @@
         </div>
         <div id="areaCubierta"></div>
       </div>
-      <!-- Lateral derecho para presupuesto -->
+      
       <div class="lateral">
         <div id="resultado"></div>
         <button id="añadirCarrito" class="boton-total">
@@ -202,7 +199,7 @@
     if (data.error) throw new Error(data.error);
 
     const resultado = document.getElementById("resultado");
-    resultado.innerHTML = ""; // Limpia
+    resultado.innerHTML = ""; 
 
     [
        ["Área cubierta:", data.area],
@@ -235,7 +232,7 @@ function actualizarPresupuestoConRetraso() {
   clearTimeout(debouncePresupuesto);
   debouncePresupuesto = setTimeout(() => {
     mostrarPresupuestoVisual();
-  }, 200); // espera 200ms sin cambios
+  }, 200); 
 }
 
 
@@ -245,7 +242,7 @@ function actualizarPresupuestoConRetraso() {
       const ctx = canvas.getContext('2d');
       let vistaModalAbierto = false;
       const imgInput = document.getElementById('imgInput');
-      // Drag & Drop
+      
       document.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
@@ -269,7 +266,7 @@ function actualizarPresupuestoConRetraso() {
 
 
 
-                // Mostrar resultados
+                
                 document.querySelector('.lateral').style.display = 'flex';
                 document.getElementById("resultado").style.display = "block";
                 document.getElementById("añadirCarrito").style.display = "flex";
@@ -308,13 +305,13 @@ function actualizarPresupuestoConRetraso() {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // ⛔️ SALIR si no hay imagen
+        
         if (!img || !img.src) {
           document.getElementById("botonCentralImagen").style.display = "block";
           const zoom = document.getElementById("zoomControles");
-          if (zoom) zoom.style.display = "none"; // Ocultar controles si existen
+          if (zoom) zoom.style.display = "none"; 
           
-          // Opcional: puedes dibujar un mensaje tipo "Sube tu imagen aquí"
+          
           ctx.fillStyle = '#666';
           ctx.font = '18px Segoe UI';
           ctx.textAlign = 'center';
@@ -329,7 +326,7 @@ function actualizarPresupuestoConRetraso() {
           const zoom = document.getElementById("zoomControles");
            if (zoom) zoom.style.display = "flex";
         }
-        // 🟩 Dibuja la cuadrícula solo si hay imagen cargada
+        
         for (let i = 0; i <= 100; i++) {
           const px = i * pxPorCm;
           ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
@@ -339,7 +336,7 @@ function actualizarPresupuestoConRetraso() {
 
         ctx.strokeStyle = '#999';
         ctx.textAlign = "left";
-        ctx.textBaseline = "top"; // asegura que se dibuje desde la esquina
+        ctx.textBaseline = "top"; 
         for (let i = 0; i <= 100; i += 10) {
           const px = i * pxPorCm;
           ctx.beginPath();
@@ -353,22 +350,22 @@ function actualizarPresupuestoConRetraso() {
           ctx.fillStyle = '#000';
           ctx.font = '10px Arial';
           if (i !== 0) {
-            ctx.fillText(`${i}cm`, px + 4, 4);        // arriba (X)
-            ctx.fillText(`${i}cm`, 4, px + 4);        // izquierda (Y)
+            ctx.fillText(`${i}cm`, px + 4, 4);        
+            ctx.fillText(`${i}cm`, 4, px + 4);        
           } else {
-            ctx.fillText(`0cm`, 4, 4); // esquina superior izquierda
+            ctx.fillText(`0cm`, 4, 4); 
           }
         }
 
-        // 🖼 Dibuja la imagen
+        
         ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
 
-        // Calcula y muestra dimensiones
+        
         const anchoCm = (img.width * scale) / pxPorCm;
         const altoCm = (img.height * scale) / pxPorCm;
-        document.getElementById("areaCubierta").innerHTML = ""; // Oculta ese bloque
+        document.getElementById("areaCubierta").innerHTML = ""; 
 
-        // Ajusta la vista en el cuarto
+        
         const vistaAlfombra = document.getElementById("vistaAlfombra");
         if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
           const pxPorCmCuarto = 496 / 300;
@@ -411,7 +408,7 @@ function actualizarPresupuestoConRetraso() {
     if (data.error) throw new Error(data.error);
 
     const resultado = document.getElementById("resultado");
-    resultado.innerHTML = ""; // Limpia
+    resultado.innerHTML = ""; 
 
     [
       ["Área cubierta:", data.area],
@@ -454,11 +451,10 @@ function actualizarPresupuestoConRetraso() {
         }
         
         document.getElementById("totalFinal").innerText = "Solicitar pedido";
-        // ✅ Mostrar y llenar la descripción
-        // ✅ Mostrar el panel izquierdo y rellenar descripción
+        
         const panelEstambre = document.getElementById("panelEstambre");
         const descContenido = document.getElementById("descripcionContenido");
-        // Solo mostrar el panel si hay colores detectados
+        
         if (img.src && img.width > 0 && img.height > 0) {
           panelEstambre.style.display = "flex";
           panelEstambre.style.visibility = "visible";
@@ -492,16 +488,16 @@ function actualizarPresupuestoConRetraso() {
  
               mostrarPresupuestoVisual();
 
-              // Mostrar el panel derecho y resultado
+              
               document.querySelector('.lateral').style.display = 'flex';
               document.getElementById("resultado").style.display = "block";
               document.getElementById("añadirCarrito").style.display = "flex";
 
-              // ✅ Cargar imagen recortada en ambas vistas
+              
               const recorteSrc = imagenRecortada.src;
               document.getElementById("vistaAlfombra").src = recorteSrc;
               document.getElementById("vistaAlfombra").style.display = "block";
-              // Mostrar vista automáticamente también en móviles
+              
               if (window.innerWidth < 1000) {
                 const vista = document.getElementById("vistaAlfombra");
                 const contenedor = document.querySelector(".zoom-container");
@@ -523,9 +519,9 @@ function actualizarPresupuestoConRetraso() {
               }
 
               document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
-              document.getElementById("modalImagenAlfombra").src = recorteSrc; // ✅ para vista modal
+              document.getElementById("modalImagenAlfombra").src = recorteSrc; 
 
-              // ✅ Actualizar vista previa de botón
+              
               const previewImg = document.querySelector(".btn-preview-cuarto img");
               if (previewImg && window.innerWidth >= 1000) {
                   previewImg.src = recorteSrc;
@@ -606,21 +602,21 @@ function actualizarPresupuestoConRetraso() {
 
 
 
-         actualizarPresupuestoConRetraso(); // ✅ aquí
+         actualizarPresupuestoConRetraso(); 
 
       }
 
       let ultimaAdvertenciaZoom = 0;
       function mostrarCambioDimensiones(ancho, alto) {
        const ahora = Date.now();
-       if (ahora - ultimaAdvertenciaZoom < 1000) return; // espera al menos 1 segundo
+       if (ahora - ultimaAdvertenciaZoom < 1000) return; 
        ultimaAdvertenciaZoom = ahora;
 
        const toast = document.getElementById("toastNotificacion");
        if (!toast) return;
 
-       toast.classList.remove("toast-dimensiones", "toast-advertencia"); // Limpia anteriores
-       toast.classList.add("toast-dimensiones"); // ✅ Añade gris
+       toast.classList.remove("toast-dimensiones", "toast-advertencia"); 
+       toast.classList.add("toast-dimensiones"); 
 
        toast.innerHTML = `Anchura: ${ancho.toFixed(2)} cm<br>Altura: ${alto.toFixed(2)} cm`;
        toast.classList.add("mostrar");
@@ -633,12 +629,12 @@ function actualizarPresupuestoConRetraso() {
       let zoomInterval;
       function aplicarZoom(delta) {
         const nuevoScale = scale + delta;
-        if (nuevoScale < 0.1) return; // Mínimo permitido
+        if (nuevoScale < 0.1) return; 
 
         const nuevaAnchuraCm = (img.width * nuevoScale) / pxPorCm;
         const nuevaAlturaCm = (img.height * nuevoScale) / pxPorCm;
 
-        // Si alguno excede 100 cm, no aplicar el zoom
+        
         if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) {
             mostrarNotificacion("⚠️ Tamaño máximo alcanzado (100 cm)");
             return;
@@ -654,7 +650,7 @@ function actualizarPresupuestoConRetraso() {
         draw();
  
 
-        actualizarPresupuestoConRetraso(); // ✅ aquí
+        actualizarPresupuestoConRetraso(); 
 
         const ancho = (img.width * scale) / pxPorCm;
         const alto = (img.height * scale) / pxPorCm;
@@ -671,7 +667,7 @@ function actualizarPresupuestoConRetraso() {
         if (tipo === "success") {
           toast.style.background = "#81C784";
         } else {
-          toast.classList.add("toast-advertencia"); // ✅ Añade la clase roja
+          toast.classList.add("toast-advertencia"); 
         }
 
         toast.innerText = mensaje;
@@ -684,7 +680,7 @@ function actualizarPresupuestoConRetraso() {
 
       function iniciarZoom(delta) {
         aplicarZoom(delta);
-        zoomInterval = setInterval(() => aplicarZoom(delta), 100); // Cada 100ms
+        zoomInterval = setInterval(() => aplicarZoom(delta), 100); 
       }
       function detenerZoom() {
         clearInterval(zoomInterval);
@@ -693,7 +689,7 @@ function actualizarPresupuestoConRetraso() {
       const zoomMenos = document.getElementById("zoomMenos");
 
       function iniciarZoomSeguro(delta) {
-        detenerZoom(); // por si estaba uno activo
+        detenerZoom(); 
         aplicarZoom(delta);
         zoomInterval = setInterval(() => aplicarZoom(delta), 100);
       }
@@ -715,7 +711,7 @@ function actualizarPresupuestoConRetraso() {
         const contenedor = document.getElementById("carritoLista");
         const mensajeVacio = document.getElementById("mensajeCarritoVacio");
         const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-        // Limpia todos los elementos excepto el mensaje
+        
         const itemsActuales = contenedor.querySelectorAll(".item-carrito");
         itemsActuales.forEach(item => item.remove());
         if (carrito.length === 0) {
@@ -771,7 +767,7 @@ function actualizarPresupuestoConRetraso() {
           imgY = (canvas.height - img.height * scale) / 2;
           
           
-          // Forzar siempre el cálculo
+          
           draw();
        
 
@@ -779,12 +775,12 @@ function actualizarPresupuestoConRetraso() {
           mostrarPresupuestoVisual();
 
 
-          // Mostrar panel derecho y botón
+         
           document.querySelector('.lateral').style.display = 'flex';
           document.getElementById("resultado").style.display = "block";
           document.getElementById("añadirCarrito").style.display = "flex";
 
-          // Mostrar vista previa en cuarto
+          
           const vista = document.getElementById("vistaAlfombra");
           const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
 
@@ -814,7 +810,7 @@ function actualizarPresupuestoConRetraso() {
           document.getElementById("vistaAlfombra").setAttribute("data-src-real", fondoSrc || src);
 
 
-          // Mostrar el panel izquierdo
+          
           const panelEstambre = document.getElementById("panelEstambre");
           if (panelEstambre) {
             panelEstambre.style.display = "flex";
@@ -826,7 +822,7 @@ function actualizarPresupuestoConRetraso() {
           
         };
 
-        // 🔥 Este onerror detecta si la imagen falla
+        
         tempImg.onerror = () => {
           mostrarNotificacion("❌ No se pudo cargar la imagen. Verifica el enlace.");
         };
@@ -879,12 +875,12 @@ function actualizarPresupuestoConRetraso() {
         zoomCanvas.height = canvas.height;
         const zoomCtx = zoomCanvas.getContext("2d");
 
-        // Fondo del cuarto
+        
         if (mostrarFondoCuarto && fondoCuarto.complete) {
          zoomCtx.drawImage(fondoCuarto, 0, 0, zoomCanvas.width, zoomCanvas.height);
         }
 
-        // Imagen de la alfombra
+        
         if (img && img.complete) {
          zoomCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
         }
@@ -895,17 +891,17 @@ function actualizarPresupuestoConRetraso() {
        const btnPreview = document.querySelector(".btn-preview-cuarto");
        const modal = document.getElementById("modalVistaCuarto");
        renderizarCarrito();
-       actualizarContadorCarrito(); // ✅ Nuevo
+       actualizarContadorCarrito(); 
 
-       // ✅ INICIAR TEMPORIZADOR SI YA ESTÁ CORRIENDO
+       
        const bloqueo = localStorage.getItem("bloqueoPedidoHasta");
        if (bloqueo && Date.now() < bloqueo) {
          iniciarTemporizadorVisual();
        }
 
-       // 🟩 Forzar dibujo inicial si no hay imagen
+       
        if (!img || !img.src) {
-        draw(); // esto dibuja el mensaje en el lienzo al cargar
+        draw(); 
        }
        
 
@@ -972,7 +968,7 @@ function actualizarPresupuestoConRetraso() {
       </div>
     </div>
     <script>
-       // Agrega la clase al cargar
+       
        window.addEventListener("DOMContentLoaded", () => {
           document.body.classList.add("con-aviso");
        });
@@ -1087,11 +1083,11 @@ async function enviarPorCorreo() {
         return;
       }
 
-      mostrarNotificacion("✅ Pedido enviado correctamente por correo", "success");
+      mostrarNotificacion("✅ Pedido enviado", "success");
       document.getElementById("añadirCarrito").disabled = true;
       iniciarTemporizadorVisual();
 
-      // ✅ Redirigir después de éxito
+      
       setTimeout(() => {
         window.location.href = "index.html";
       }, 3000);
