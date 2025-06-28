@@ -236,7 +236,7 @@
         border-radius: 8px;
       }
 
-      /* Fondo oscuro del modal */
+    
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -411,7 +411,7 @@
       }
       @media (max-width: 480px) {
   .catalogo {
-    grid-template-columns: 1fr; /* Solo una columna en móviles */
+    grid-template-columns: 1fr; 
   }
 
   .alfombra img {
@@ -452,7 +452,7 @@
   font-size: 1.2rem;
 }
 
-/* 🔥 En móviles: los 4 en fila y ocultar texto */
+
 @media (max-width: 480px) {
   .botones-categorias {
     flex-wrap: nowrap;
@@ -494,7 +494,7 @@
   font-size: 1.2rem;
 }
 
-/* Puedes agregar contador de ítems encima del ícono si lo deseas: */
+
 .btn-carrito::after {
   content: attr(data-count);
   position: absolute;
@@ -505,7 +505,7 @@
   font-size: 0.7rem;
   padding: 2px 5px;
   border-radius: 50%;
-  display: none; /* Pon "inline-block" para activarlo dinámicamente */
+  display: none; 
 }
 
 .btn-añadir {
