@@ -1,5 +1,5 @@
 
-/* TODO EL ESTILO GENERAL DE ALFOMEX */
+
 :root {
   --primary: #ffcc00;
   --secondary: #003366;
@@ -200,7 +200,7 @@ canvas {
   display: block;
   margin-top: 10px;
   font-size: 1.2rem;
-  color: black; /* antes estaba var(--secondary) */
+  color: black; 
 }
 
 #colorDetalle div {
@@ -480,24 +480,24 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-/* Estilo base para el contenedor */
+
 #vistaCuarto {
   position: relative;
   width: 100%;
   max-width: 100%;
-  aspect-ratio: 1 / 1; /* cuadrado */
+  aspect-ratio: 1 / 1; 
   overflow: hidden;
-  display: none; /* Oculto por defecto (solo se mostrará si el botón lo activa o si es móvil) */
+  display: none; 
 }
 
-/* Oculta la imagen si no tiene src */
+
 #vistaAlfombra[src=""] {
   display: none !important;
 }
 
 
 
-/* En móviles: mostrar vista previa directamente y ocultar el botón */
+
 
 
 .modal-vista-cuarto {
@@ -573,7 +573,7 @@ h2, .alerta, .plantilla-btn-container {
   transform-origin: center center;
   left: 50%;
   top: 65%;
-  transform: translate(-50%, -50%) scale(1); /* el scale se actualiza vía JS */
+  transform: translate(-50%, -50%) scale(1); 
 }
 
 .btn-preview-cuarto {
@@ -662,7 +662,7 @@ h2, .alerta, .plantilla-btn-container {
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: #666; /* color por defecto */
+  background: #666; 
   color: #fff;
   padding: 12px 20px;
   border-radius: 8px;
@@ -682,7 +682,7 @@ h2, .alerta, .plantilla-btn-container {
 .carrito-lista {
   position: absolute;
   top: 60px;
-  left: 10px; /* 🔄 cambia de right a left */
+  left: 10px; 
   background: #fff;
   border: 1px solid #ccc;
   padding: 10px;
@@ -693,7 +693,7 @@ h2, .alerta, .plantilla-btn-container {
   display: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 
-  color: #333; /* 👈 Color oscuro para que el texto se vea */
+  color: #333; 
 }
 
 .carrito-lista:not(.oculto) {
@@ -710,11 +710,11 @@ h2, .alerta, .plantilla-btn-container {
 }
 
 .item-carrito strong {
-  color: #003366; /* 👈 Color azul fuerte para nombre */
+  color: #003366; 
 }
 
 .item-carrito div {
-  font-size: 14px; /* 👈 Tamaño uniforme del texto */
+  font-size: 14px; 
 }
 
 #contadorCarrito {
@@ -729,7 +729,7 @@ h2, .alerta, .plantilla-btn-container {
   display: none;
 }
 
-/* MEDIA QUERY UNIFICADA PARA MOVILES (hasta 999px) */
+
 @media (max-width: 999px) {
   .lateral-izquierda,
   .lateral {
@@ -810,7 +810,7 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-/* MEDIA QUERY UNIFICADA PARA ESCRITORIO (desde 1000px) */
+
 @media (min-width: 1000px) {
   .contenedor-principal {
     flex-direction: row;
@@ -875,7 +875,7 @@ h2, .alerta, .plantilla-btn-container {
 }
 
 body.con-aviso .contenedor-principal {
-  margin-top: 120px; /* 80px normal + 40px del aviso */
+  margin-top: 120px; 
 }
 
 body:not(.con-aviso) .contenedor-principal {
@@ -901,16 +901,16 @@ body:not(.con-aviso) .contenedor-principal {
   background: none;
   border: none;
   font-size: 20px;
-  z-index: 1001; /* Mayor al aviso-movimiento */
+  z-index: 1001;
   margin-left: auto;
   cursor: pointer;
   color: black;
   padding-left: 20px;
 }
 
-/* Mueve el header hacia abajo solo si el aviso está visible */
+
 body.con-aviso header {
-  margin-top: 40px; /* Igual al alto del aviso para evitar huecos */
+  margin-top: 40px; 
 }
 
 .aviso-movimiento {
@@ -918,7 +918,7 @@ body.con-aviso header {
   white-space: nowrap;
   overflow: hidden;
   animation: moverTexto 12s linear infinite;
-  pointer-events: none; /* Esto evita que bloquee clics al botón */
+  pointer-events: none; 
 }
 
 
@@ -959,12 +959,12 @@ body.con-aviso header {
   border-radius: 10px;
 }
 
-/* Color para advertencias */
+
 .toast-advertencia {
   background: crimson !important;
 }
 
-/* Color para mensaje de dimensiones */
+
 .toast-dimensiones {
   background: #444 !important;
 }
