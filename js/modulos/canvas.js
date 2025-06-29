@@ -98,3 +98,6 @@ function recortarTransparencias(imagen, callback) {
 window.addEventListener("DOMContentLoaded", () => {
   if (typeof draw === "function") draw();
 });
+
+window.recortarTransparencias = recortarTransparencias;
+window.draw = draw;
