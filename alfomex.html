@@ -1,1148 +1,144 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
-    <title>Personaliza tu Alfombra - Alfomex</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="estilos.css">
-  </head>
-  <body>
-    <div id="overlayDrag" class="drag-overlay">
-      <div class="drag-message" id="mensajeDrag">¡Suelta tu imagen aquí!</div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+  <title>Personaliza tu Alfombra - Alfomex</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div id="overlayDrag" class="drag-overlay">
+    <div class="drag-message" id="mensajeDrag">¡Suelta tu imagen aquí!</div>
+  </div>
+
+  <div id="avisoEnvio">
+    <div class="aviso-movimiento">
+      Por el momento, solo hay envíos en México
     </div>
-    <div id="avisoEnvio">
-      <div class="aviso-movimiento">
-        Por el momento, solo hay envíos en México
+    <button onclick="cerrarAviso()" class="cerrar-aviso">&times;</button>
+  </div>
+
+  <header>
+    <div class="header-left">
+      <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil" style="position: relative;">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="contadorCarrito" style="position:absolute; top:-6px; right:-6px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none;"></span>
+      </button>
+      <div id="carritoLista" class="carrito-lista oculto">
+        <div id="mensajeCarritoVacio" style="display: none; color: #666; font-size: 0.95rem; text-align: center; padding: 20px;">
+          🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
+        </div>
       </div>
-      <button onclick="cerrarAviso()" class="cerrar-aviso">&times;</button>
     </div>
-    <header>
-      <div class="header-left">
-        <button id="cartBtn" title="Carrito" class="icon-btn btn-perfil" style="position: relative;">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="contadorCarrito" style="position:absolute; top:-6px; right:-6px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none;"></span>
-        </button>
-        <div id="carritoLista" class="carrito-lista oculto">
-          <div id="mensajeCarritoVacio" style="display: none; color: #666; font-size: 0.95rem; text-align: center; padding: 20px;">
-            🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
-          </div>
-        </div>
-      </div>
-      <div class="logo">ALFOMEX</div>
-      <nav class="header-right" id="navOptions">
-        <span style="color: white;">Cargando...</span>
-      </nav>
-    </header>
-    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="logo">ALFOMEX</div>
+    <nav class="header-right" id="navOptions">
+      <span style="color: white;">Cargando...</span>
+    </nav>
+  </header>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-      import {
-        getAuth,
-        onAuthStateChanged,
-        signOut
-      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-      const firebaseConfig = {
-        apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
-        authDomain: "alfomex-f4efa.firebaseapp.com",
-        projectId: "alfomex-f4efa",
-      };
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      window.auth = auth;
-      
-      window.addEventListener("DOMContentLoaded", () => {
-  onAuthStateChanged(auth, async (user) => {
-    const nav = document.getElementById("navOptions");
+  <div class="modal-overlay" id="modalOverlay"></div>
 
-    if (user) {
-      nav.innerHTML = `
-        <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-          <i class="fas fa-user-circle"></i>
-        </button>
-        <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      `;
+  <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
 
-      try {
-        
-        const token = await user.getIdToken();
-        const res = await fetch("https://backend-1pvf.onrender.com/verificar-token", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token })
-        });
-
-        const data = await res.json();
-        console.log("✅ Datos seguros del usuario:", data);
-
-        
-        const verif = await fetch("https://backend-1pvf.onrender.com/verificar-ultimo-pedido", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token })
-        });
-
-        const verifData = await verif.json();
-        if (verifData.ultimo) {
-          const ahora = Date.now();
-          const restante = verifData.ultimo + 5 * 60 * 1000 - ahora;
-          if (restante > 0) {
-            iniciarTemporizadorVisual(restante);
-          }
-        }
-
-      } catch (err) {
-        console.error("❌ Error al verificar usuario o último pedido:", err);
-      }
-
-    } else {
-      nav.innerHTML = `
-        <button onclick="location.href='index.html'" title="Inicio" class="icon-btn btn-perfil">
-          <i class="fas fa-home"></i>
-        </button>
-      `;
-    }
-  });
-
-  
-  window.cerrarSesion = async () => {
-    await signOut(auth);
-    window.location.href = "index.html";
-  };
-
-  canvas.width = 500;
-  canvas.height = 500;
-  draw();
-});
-
-
-    </script>
-    <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
-    <div class="contenedor-principal con-aviso-margin">
-      
-      <div class="lateral-izquierda" id="panelEstambre">
-        <div id="descripcionContenido">
-          <h3 style="color: black; margin-top: 0;">Descripción del Material</h3>
-          <p>
-            Nuestras alfombras están elaboradas con hilo de estambre 100% acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
-          </p>
-          <p>
-            <strong>Cuidados:</strong><br>
-            - Lavar a mano con agua fría y jabón neutro.<br>
-            - No usar cloro ni exprimir.<br>
-            - Secar colgada a la sombra.<br>
-            - Evitar el uso de lavadora o secadora para prolongar su vida útil.
-          </p>
-          <div class="vista-cuarto-toggle">
-            <button class="btn-preview-cuarto" title="Vista previa en cuarto">
-              <img src="cuarto.png" alt="Vista previa" />
-            </button>
-          </div>
-          <div id="vistaCuarto" class="zoom-container">
-            <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
-            <img id="vistaAlfombra" src="" class="zoom-img" alt="Vista previa" style="display: none;" />
-          </div>
-        </div>
-      </div>
-      <div class="canvas-contenedor">
-        <canvas id="lienzo"></canvas>
-        <div id="contenedorBotonImagen" style="text-align: center; margin-top: 10px;">
-          <div id="botonCentralImagen" class="boton-central-imagen" onclick="document.getElementById('imgInput').click()">
-            <i class="fas fa-image"></i> Seleccionar imagen
-          </div>
-        </div>
-        <div id="toastNotificacion" class="toast-notificacion"></div>
-        <div class="controls" id="zoomControles">
-          <button id="zoomMas" class="zoom-btn" title="Zoom +">
-            <i class="fas fa-search-plus"></i>
-          </button>
-          <button id="zoomMenos" class="zoom-btn" title="Zoom -">
-            <i class="fas fa-search-minus"></i>
+  <div class="contenedor-principal con-aviso-margin">
+    <div class="lateral-izquierda" id="panelEstambre">
+      <div id="descripcionContenido">
+        <h3 style="color: black; margin-top: 0;">Descripción del Material</h3>
+        <p>
+          Nuestras alfombras están elaboradas con hilo de estambre 100% acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
+        </p>
+        <p>
+          <strong>Cuidados:</strong><br>
+          - Lavar a mano con agua fría y jabón neutro.<br>
+          - No usar cloro ni exprimir.<br>
+          - Secar colgada a la sombra.<br>
+          - Evitar el uso de lavadora o secadora para prolongar su vida útil.
+        </p>
+        <div class="vista-cuarto-toggle">
+          <button class="btn-preview-cuarto" title="Vista previa en cuarto">
+            <img src="cuarto.png" alt="Vista previa" />
           </button>
         </div>
-        <div id="areaCubierta"></div>
+        <div id="vistaCuarto" class="zoom-container">
+          <img src="cuarto.png" alt="Cuarto de muestra" style="width: 100%; display: block;">
+          <img id="vistaAlfombra" src="" class="zoom-img" alt="Vista previa" style="display: none;" />
+        </div>
       </div>
-      
-      <div class="lateral">
-        <div id="resultado"></div>
-        <button id="añadirCarrito" class="boton-total">
-          <i class="fas fa-paper-plane"></i>
-          <span id="totalFinal">Solicitar pedido</span>
+    </div>
+
+    <div class="canvas-contenedor">
+      <canvas id="lienzo"></canvas>
+      <div id="contenedorBotonImagen" style="text-align: center; margin-top: 10px;">
+        <div id="botonCentralImagen" class="boton-central-imagen" onclick="document.getElementById('imgInput').click()">
+          <i class="fas fa-image"></i> Seleccionar imagen
+        </div>
+      </div>
+      <div id="toastNotificacion" class="toast-notificacion"></div>
+      <div class="controls" id="zoomControles">
+        <button id="zoomMas" class="zoom-btn" title="Zoom +">
+          <i class="fas fa-search-plus"></i>
+        </button>
+        <button id="zoomMenos" class="zoom-btn" title="Zoom -">
+          <i class="fas fa-search-minus"></i>
         </button>
       </div>
+      <div id="areaCubierta"></div>
     </div>
-    <script>
 
-      async function mostrarPresupuestoVisual() {
-  const canvasTemp = document.createElement("canvas");
-  canvasTemp.width = img.width * scale;
-  canvasTemp.height = img.height * scale;
-
-  const ctxTemp = canvasTemp.getContext("2d");
-  ctxTemp.drawImage(img, 0, 0, canvasTemp.width, canvasTemp.height);
-
-  const base64 = canvasTemp.toDataURL("image/png");
-  const imagenBase64 = base64.split(",")[1];
-
-  try {
-    const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imagenBase64 })
-    });
-
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    const resultado = document.getElementById("resultado");
-    resultado.innerHTML = ""; 
-
-    [
-       ["Área cubierta:", data.area],
-       ["Costo Tela:", `$${data.tela} MXN`],
-       ["Costo Fieltro:", `$${data.fieltro} MXN`],
-       ["Costo Estambre Total:", `$${data.estambre} MXN`],
-       ["Costo aproximado:", `$${data.total} MXN`]
-    ].forEach(([titulo, valor]) => {
-       const p = document.createElement("p");
-       p.textContent = `${titulo} ${valor}`;
-       resultado.appendChild(p);
-    });
-
-    const panelEstambre = document.getElementById("panelEstambre");
-    if (img && img.src) {
-      panelEstambre.style.display = "flex";
-      panelEstambre.style.visibility = "visible";
-      panelEstambre.style.opacity = "1";
-      panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-    }
-  } catch (err) {
-    console.error("❌ Error al calcular presupuesto:", err);
-    const resultado = document.getElementById("resultado");
-    resultado.textContent = "⚠️ No se pudo calcular el presupuesto";
-    resultado.style.color = "red";
-  }
-}
-  let debouncePresupuesto;
-function actualizarPresupuestoConRetraso() {
-  clearTimeout(debouncePresupuesto);
-  debouncePresupuesto = setTimeout(() => {
-    mostrarPresupuestoVisual();
-  }, 200); 
-}
-
-
-      const canvas = document.getElementById('lienzo');
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientWidth;
-      const ctx = canvas.getContext('2d');
-      let vistaModalAbierto = false;
-      const imgInput = document.getElementById('imgInput');
-      
-      document.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'copy';
-      });
-      document.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = function(evt) {
-            const imagenOriginal = new Image();
-            imagenOriginal.onload = function () {
-              recortarTransparencias(imagenOriginal, function(imagenRecortada) {
-                img = imagenRecortada;
-                const factorX = canvas.width / img.width;
-                const factorY = canvas.height / img.height;
-                scale = Math.min(factorX, factorY, 1);
-                imgX = (canvas.width - img.width * scale) / 2;
-                imgY = (canvas.height - img.height * scale) / 2;
-                draw();
-
-
-
-                
-                document.querySelector('.lateral').style.display = 'flex';
-                document.getElementById("resultado").style.display = "block";
-                document.getElementById("añadirCarrito").style.display = "flex";
-
-                const recorteSrc = imagenRecortada.src;
-                document.getElementById("vistaAlfombra").src = recorteSrc;
-                document.getElementById("vistaAlfombra").style.display = "block";
-                document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
-                document.getElementById("modalImagenAlfombra").src = recorteSrc;
-
-                const previewImg = document.querySelector(".btn-preview-cuarto img");
-                if (previewImg && window.innerWidth >= 1000) {
-                  previewImg.src = recorteSrc;
-                }
-              });
-            };
-            imagenOriginal.src = evt.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-
-      const resultado = document.getElementById('resultado');
-      const colorDetalle = document.getElementById('colorDetalle');
-      const totalFinal = document.getElementById('totalFinal');
-      const pxPorCm = canvas.width / 100;
-      let img = new Image();
-      let fondoCuarto = new Image();
-      let mostrarFondoCuarto = false;
-      let dragging = false;
-      let offsetX = 0, offsetY = 0;
-      let imgX = 0, imgY = 0;
-      let scale = 1;
-      function draw() {
-
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        
-        if (!img || !img.src) {
-          document.getElementById("botonCentralImagen").style.display = "block";
-          const zoom = document.getElementById("zoomControles");
-          if (zoom) zoom.style.display = "none"; 
-          
-          
-          ctx.fillStyle = '#666';
-          ctx.font = '18px Segoe UI';
-          ctx.textAlign = 'center';
-          ctx.fillText("Arrastra una imagen o da clic en el botón para añadirla", canvas.width / 2, canvas.height / 2 - 20);
-          ctx.fillText("Puedes usar archivos en formato PNG o JPG de buena calidad", canvas.width / 2, canvas.height / 2 + 10);
-          ctx.fillText("Tu diseño será analizado automáticamente al cargar.", canvas.width / 2, canvas.height / 2 + 40);
-
-          document.getElementById("areaCubierta").innerHTML = "";
-          return;
-        } else {
-          document.getElementById("botonCentralImagen").style.display = "none";
-          const zoom = document.getElementById("zoomControles");
-           if (zoom) zoom.style.display = "flex";
-        }
-        
-        for (let i = 0; i <= 100; i++) {
-          const px = i * pxPorCm;
-          ctx.fillStyle = i % 10 === 0 ? '#ddd' : '#eee';
-          ctx.fillRect(px, 0, 1, canvas.height);
-          ctx.fillRect(0, px, canvas.width, 1);
-        }
-
-        ctx.strokeStyle = '#999';
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top"; 
-        for (let i = 0; i <= 100; i += 10) {
-          const px = i * pxPorCm;
-          ctx.beginPath();
-          ctx.moveTo(px, 0);
-          ctx.lineTo(px, canvas.height);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(0, px);
-          ctx.lineTo(canvas.width, px);
-          ctx.stroke();
-          ctx.fillStyle = '#000';
-          ctx.font = '10px Arial';
-          if (i !== 0) {
-            ctx.fillText(`${i}cm`, px + 4, 4);        
-            ctx.fillText(`${i}cm`, 4, px + 4);        
-          } else {
-            ctx.fillText(`0cm`, 4, 4); 
-          }
-        }
-
-        
-        ctx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
-
-        
-        const anchoCm = (img.width * scale) / pxPorCm;
-        const altoCm = (img.height * scale) / pxPorCm;
-        document.getElementById("areaCubierta").innerHTML = ""; 
-
-        
-        const vistaAlfombra = document.getElementById("vistaAlfombra");
-        if (vistaAlfombra && vistaAlfombra.style.display !== "none") {
-          const pxPorCmCuarto = 496 / 300;
-          vistaAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
-          vistaAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
-          vistaAlfombra.style.position = "absolute";
-          vistaAlfombra.style.top = "78%";
-          vistaAlfombra.style.left = "25%";
-          vistaAlfombra.style.transform = "translate(-50%, -50%)";
-        }
-      }
-
-      function agruparColor(r, g, b, mapa, tolerancia = 50) {
-        for (let [key, _] of mapa.entries()) {
-          const [r2, g2, b2] = key.split(',').map(Number);
-          const distancia = Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
-          if (distancia <= tolerancia) return key;
-        }
-        return `${r},${g},${b}`;
-      }
-      async function calcularEstambre() {
-  try {
-    const canvasTemp = document.createElement("canvas");
-    canvasTemp.width = img.width;
-    canvasTemp.height = img.height;
-    const ctxTemp = canvasTemp.getContext("2d");
-    ctxTemp.drawImage(img, 0, 0);
-
-    const base64 = canvasTemp.toDataURL("image/png");
-    const imagenBase64 = base64.split(",")[1];
-
-    const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imagenBase64 })
-    });
-
-    const data = await res.json();
-
-    if (data.error) throw new Error(data.error);
-
-    const resultado = document.getElementById("resultado");
-    resultado.innerHTML = ""; 
-
-    [
-      ["Área cubierta:", data.area],
-      ["Costo Tela:", `$${data.tela} MXN`],
-      ["Costo Fieltro:", `$${data.fieltro} MXN`],
-      ["Costo Estambre Total:", `$${data.estambre} MXN`],
-      ["Costo aproximado:", `$${data.total} MXN`]
-    ].forEach(([titulo, valor]) => {
-      const p = document.createElement("p");
-      p.textContent = `${titulo} ${valor}`;
-      resultado.appendChild(p);
-    });
-
-  } catch (error) {
-    console.error("❌ Error al calcular costo:", error);
-    document.getElementById("resultado").innerHTML = `
-      <span style="color:red">⚠️ Error al calcular el costo</span>
-      `;
-  }
-}
-
-
-      function calcularPorColor(imageData, totalPixels, total) {
-        const mapa = new Map();
-        for (let i = 0; i < imageData.data.length; i += 4) {
-          if (imageData.data[i + 3] < 10) continue;
-          const r = imageData.data[i];
-          const g = imageData.data[i + 1];
-          const b = imageData.data[i + 2];
-          const key = agruparColor(r, g, b, mapa, 50);
-          mapa.set(key, (mapa.get(key) || 0) + 1);
-        }
-        const coloresUsados = [...mapa.entries()].filter(([_, count]) => count / totalPixels > 0.01);
-        let detalle = '<strong>Estambre por color:</strong><br>';
-        if (coloresUsados.length > 50) {
-          detalle += `<span style="color:red;font-weight:bold">Demasiados colores detectados (${coloresUsados.length}). Contacta para personalización avanzada.</span>`;
-          document.getElementById('añadirCarrito').disabled = true;
-        } else {
-          document.getElementById('añadirCarrito').disabled = false;
-        }
-        
-        document.getElementById("totalFinal").innerText = "Solicitar pedido";
-        
-        const panelEstambre = document.getElementById("panelEstambre");
-        const descContenido = document.getElementById("descripcionContenido");
-        
-        if (img.src && img.width > 0 && img.height > 0) {
-          panelEstambre.style.display = "flex";
-          panelEstambre.style.visibility = "visible";
-          panelEstambre.style.opacity = "1";
-          panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-        } else {
-          panelEstambre.style.display = "none";
-        }
-      }
-      imgInput.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          const imagenOriginal = new Image();
-          imagenOriginal.onload = function () {
-            recortarTransparencias(imagenOriginal, function(imagenRecortada) {
-              img = imagenRecortada;
-
-              const factorX = canvas.width / img.width;
-              const factorY = canvas.height / img.height;
-              scale = Math.min(factorX, factorY, 1);
-
-              imgX = (canvas.width - img.width * scale) / 2;
-              imgY = (canvas.height - img.height * scale) / 2;
-
-              draw();
-      
-
- 
-              mostrarPresupuestoVisual();
-
-              
-              document.querySelector('.lateral').style.display = 'flex';
-              document.getElementById("resultado").style.display = "block";
-              document.getElementById("añadirCarrito").style.display = "flex";
-
-              
-              const recorteSrc = imagenRecortada.src;
-              document.getElementById("vistaAlfombra").src = recorteSrc;
-              document.getElementById("vistaAlfombra").style.display = "block";
-              
-              if (window.innerWidth < 1000) {
-                const vista = document.getElementById("vistaAlfombra");
-                const contenedor = document.querySelector(".zoom-container");
-                const anchoRealPx = contenedor.offsetWidth;
-                const altoRealPx = contenedor.offsetHeight;
-                const cuartoCm = 300;
-
-                const pxPorCmCuarto = anchoRealPx / cuartoCm;
-
-                const anchoCmReal = (img.width * scale) / pxPorCm;
-                const altoCmReal = (img.height * scale) / pxPorCm;
-
-                vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
-                vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
-                vista.style.position = "absolute";
-                vista.style.top = "78%";
-                vista.style.left = "25%";
-                vista.style.transform = "translate(-50%, -50%)";
-              }
-
-              document.getElementById("vistaAlfombra").setAttribute("data-src-real", recorteSrc);
-              document.getElementById("modalImagenAlfombra").src = recorteSrc; 
-
-              
-              const previewImg = document.querySelector(".btn-preview-cuarto img");
-              if (previewImg && window.innerWidth >= 1000) {
-                  previewImg.src = recorteSrc;
-              }
-            });
-          };
-          imagenOriginal.src = evt.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-
-      function recortarTransparencias(imagen, callback) {
-        const canvasTmp = document.createElement('canvas');
-        canvasTmp.width = imagen.width;
-        canvasTmp.height = imagen.height;
-        const ctxTmp = canvasTmp.getContext('2d');
-        ctxTmp.drawImage(imagen, 0, 0);
-
-        const imgData = ctxTmp.getImageData(0, 0, canvasTmp.width, canvasTmp.height).data;
-        let top = canvasTmp.height, left = canvasTmp.width, right = 0, bottom = 0;
-
-        for (let y = 0; y < canvasTmp.height; y++) {
-          for (let x = 0; x < canvasTmp.width; x++) {
-            const i = (y * canvasTmp.width + x) * 4;
-            const alpha = imgData[i + 3];
-            if (alpha > 10) {
-              if (x < left) left = x;
-              if (x > right) right = x;
-              if (y < top) top = y;
-              if (y > bottom) bottom = y;
-            }
-          }
-        }
-
-        const ancho = right - left + 1;
-        const alto = bottom - top + 1;
-
-        const canvasRecorte = document.createElement('canvas');
-        canvasRecorte.width = ancho;
-        canvasRecorte.height = alto;
-        const ctxRecorte = canvasRecorte.getContext('2d');
-        ctxRecorte.drawImage(imagen, left, top, ancho, alto, 0, 0, ancho, alto);
-
-        const imgRecortada = new Image();
-        imgRecortada.onload = () => callback(imgRecortada);
-        imgRecortada.src = canvasRecorte.toDataURL();
-      }
-
-      canvas.addEventListener('mousedown', e => {
-        dragging = true;
-        offsetX = e.offsetX - imgX;
-        offsetY = e.offsetY - imgY;
-      });
-      canvas.addEventListener('mousemove', e => {
-        if (dragging) {
-          imgX = Math.min(Math.max(e.offsetX - offsetX, 0), canvas.width - img.width * scale);
-          imgY = Math.min(Math.max(e.offsetY - offsetY, 0), canvas.height - img.height * scale);
-          draw();
-
-
-
-          const panelEstambre = document.getElementById("panelEstambre");
-          const descripcionContenido = document.getElementById("descripcionContenido");
-          if (img && img.src && descripcionContenido.innerHTML.trim() !== "") {
-             panelEstambre.style.display = 'flex';
-             panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-          }
-        }
-      });
-      canvas.addEventListener('mouseup', () => dragging = false);
-      canvas.addEventListener('mouseleave', () => dragging = false);
-
-      function centrarImagen() {
-        if (!img.src) return;
-        imgX = (canvas.width - img.width * scale) / 2;
-        imgY = (canvas.height - img.height * scale) / 2;
-        draw();
-
-
-
-         actualizarPresupuestoConRetraso(); 
-
-      }
-
-      let ultimaAdvertenciaZoom = 0;
-      function mostrarCambioDimensiones(ancho, alto) {
-       const ahora = Date.now();
-       if (ahora - ultimaAdvertenciaZoom < 1000) return; 
-       ultimaAdvertenciaZoom = ahora;
-
-       const toast = document.getElementById("toastNotificacion");
-       if (!toast) return;
-
-       toast.classList.remove("toast-dimensiones", "toast-advertencia"); 
-       toast.classList.add("toast-dimensiones"); 
-
-       toast.innerHTML = `Anchura: ${ancho.toFixed(2)} cm<br>Altura: ${alto.toFixed(2)} cm`;
-       toast.classList.add("mostrar");
-
-       setTimeout(() => {
-         toast.classList.remove("mostrar");
-       }, 3000);
-      }
-
-      let zoomInterval;
-      function aplicarZoom(delta) {
-        const nuevoScale = scale + delta;
-        if (nuevoScale < 0.1) return; 
-
-        const nuevaAnchuraCm = (img.width * nuevoScale) / pxPorCm;
-        const nuevaAlturaCm = (img.height * nuevoScale) / pxPorCm;
-
-        
-        if (nuevaAnchuraCm > 100 || nuevaAlturaCm > 100) {
-            mostrarNotificacion("⚠️ Tamaño máximo alcanzado (100 cm)");
-            return;
-        }
-
-        if (nuevaAnchuraCm < 25 || nuevaAlturaCm < 25) {
-           mostrarNotificacion("⚠️ Tamaño mínimo alcanzado (25 cm)");
-           return;
-        }
-
-        scale = nuevoScale;
-        centrarImagen();
-        draw();
- 
-
-        actualizarPresupuestoConRetraso(); 
-
-        const ancho = (img.width * scale) / pxPorCm;
-        const alto = (img.height * scale) / pxPorCm;
-        mostrarCambioDimensiones(ancho, alto);
-        imgX = Math.min(Math.max(imgX, 0), canvas.width - img.width * scale);
-        imgY = Math.min(Math.max(imgY, 0), canvas.height - img.height * scale);
-      }
-
-      function mostrarNotificacion(mensaje, tipo = "error") {
-        const toast = document.getElementById("toastNotificacion");
-        if (!toast) return;
-        toast.classList.remove("toast-dimensiones", "toast-advertencia");
-
-        if (tipo === "success") {
-          toast.style.background = "#81C784";
-        } else {
-          toast.classList.add("toast-advertencia"); 
-        }
-
-        toast.innerText = mensaje;
-        toast.classList.add("mostrar");
-
-        setTimeout(() => {
-          toast.classList.remove("mostrar");
-        }, 3000);
-      }
-
-      function iniciarZoom(delta) {
-        aplicarZoom(delta);
-        zoomInterval = setInterval(() => aplicarZoom(delta), 100); 
-      }
-      function detenerZoom() {
-        clearInterval(zoomInterval);
-      }
-      const zoomMas = document.getElementById("zoomMas");
-      const zoomMenos = document.getElementById("zoomMenos");
-
-      function iniciarZoomSeguro(delta) {
-        detenerZoom(); 
-        aplicarZoom(delta);
-        zoomInterval = setInterval(() => aplicarZoom(delta), 100);
-      }
-
-      zoomMas.addEventListener("mousedown", () => iniciarZoomSeguro(0.01));
-      zoomMenos.addEventListener("mousedown", () => iniciarZoomSeguro(-0.01));
-      zoomMas.addEventListener("touchstart", () => iniciarZoomSeguro(0.01));
-      zoomMenos.addEventListener("touchstart", () => iniciarZoomSeguro(-0.01));
-
-      ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach(evt => {
-        zoomMas.addEventListener(evt, detenerZoom);
-        zoomMenos.addEventListener(evt, detenerZoom);
-      });
-      
-
-      
-
-      function renderizarCarrito() {
-        const contenedor = document.getElementById("carritoLista");
-        const mensajeVacio = document.getElementById("mensajeCarritoVacio");
-        const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-        
-        const itemsActuales = contenedor.querySelectorAll(".item-carrito");
-        itemsActuales.forEach(item => item.remove());
-        if (carrito.length === 0) {
-          mensajeVacio.style.display = "block";
-          contenedor.classList.add("oculto");
-          return;
-        }
-        mensajeVacio.style.display = "none";
-       
-
-        carrito.forEach(item => {
-          const div = document.createElement("div");
-          div.classList.add("item-carrito");
-          div.innerHTML = `
-            <img src="${item.imagen}" alt="${item.nombre}" style="width:50px;height:50px;border-radius:8px;">
-            <div style="flex:1">
-              <strong>${item.nombre}</strong><br>
-              Tamaño: ${item.ancho} x ${item.alto} cm<br>
-              Precio: ${item.costo}
-            </div>
-            <button onclick="eliminarDelCarrito(${item.id})" style="color:red;">✖</button>
-          `;
-          contenedor.appendChild(div);
-        });
-      }
-
-      function eliminarDelCarrito(id) {
-       let carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-       carrito = carrito.filter(item => item.id !== id);
-       localStorage.setItem("carritoAlfombras", JSON.stringify(carrito));
-       renderizarCarrito();
-       actualizarContadorCarrito();
-      }
-
-      document.getElementById("cartBtn").addEventListener("click", () => {
-       const carrito = document.getElementById("carritoLista");
-       carrito.classList.toggle("oculto");
-      });
-
-      document.addEventListener("DOMContentLoaded", renderizarCarrito);
-      
-
-      window.cargarImagenAlLienzo = function(src, fondoSrc = null) {
-        let tempImg = new Image();
-        tempImg.crossOrigin = "anonymous";
-
-        tempImg.onload = () => {
-          img = tempImg;
-          const factorX = canvas.width / img.width;
-          const factorY = canvas.height / img.height;
-          scale = Math.min(factorX, factorY, 1);
-          imgX = (canvas.width - img.width * scale) / 2;
-          imgY = (canvas.height - img.height * scale) / 2;
-          
-          
-          
-          draw();
-       
-
-
-          mostrarPresupuestoVisual();
-
-
-         
-          document.querySelector('.lateral').style.display = 'flex';
-          document.getElementById("resultado").style.display = "block";
-          document.getElementById("añadirCarrito").style.display = "flex";
-
-          
-          const vista = document.getElementById("vistaAlfombra");
-          const btnPreviewImg = document.querySelector(".btn-preview-cuarto img");
-
-          if (fondoSrc && vista) {
-            vista.src = fondoSrc;
-            vista.style.display = "block";
-        
-            const anchoCmReal = (img.width * scale) / pxPorCm;
-            const altoCmReal = (img.height * scale) / pxPorCm;
-
-            const pxPorCmCuarto = 496 / 300;
- 
-            vista.style.width = `${anchoCmReal * pxPorCmCuarto}px`;
-            vista.style.height = `${altoCmReal * pxPorCmCuarto}px`;
-
-            vista.style.position = "absolute";
-            vista.style.top = "78%";
-            vista.style.left = "25%";
-            vista.style.transform = "translate(-50%, -50%)";
-
-
-            if (btnPreviewImg && window.innerWidth >= 1000) {
-               btnPreviewImg.src = fondoSrc;
-            }
-          }
-
-          document.getElementById("vistaAlfombra").setAttribute("data-src-real", fondoSrc || src);
-
-
-          
-          const panelEstambre = document.getElementById("panelEstambre");
-          if (panelEstambre) {
-            panelEstambre.style.display = "flex";
-            panelEstambre.style.visibility = "visible";
-            panelEstambre.style.opacity = "1";
-            panelEstambre.style.animation = 'fadeSlideIn 0.4s ease forwards';
-          }
-
-          
-        };
-
-        
-        tempImg.onerror = () => {
-          mostrarNotificacion("❌ No se pudo cargar la imagen. Verifica el enlace.");
-        };
-
-        tempImg.src = src;
-      };
-      function toggleVistaCuarto() {
-        const modal = document.getElementById("modalVistaCuarto");
-        const imgAlfombra = document.getElementById("modalImagenAlfombra");
-
-        console.log("Modal:", modal);
-        console.log("imgAlfombra:", imgAlfombra);
-        console.log("vistaAlfombra.src:", vistaAlfombra.src);
-        console.log("vistaModalAbierto:", vistaModalAbierto);
-        if (!modal || !imgAlfombra || !vistaAlfombra.src || vistaModalAbierto) return; 
-        vistaModalAbierto = true;
-        imgAlfombra.src = vistaAlfombra.src;
-
-        const anchoCm = (img.width * scale) / pxPorCm;
-        const altoCm = (img.height * scale) / pxPorCm;
-
-        const pxPorCmCuarto = 496 / 300;
-
-        imgAlfombra.style.width = `${anchoCm * pxPorCmCuarto}px`;
-        imgAlfombra.style.height = `${altoCm * pxPorCmCuarto}px`;
-        imgAlfombra.style.position = "absolute";
-        imgAlfombra.style.top = "78%";
-        imgAlfombra.style.left = "25%";
-        imgAlfombra.style.transform = "translate(-50%, -50%)";
-
-        modal.classList.add("activo", "animarEntrada");
-        modal.classList.remove("animarSalida");
-
-      }
-
-      function cerrarVistaCuarto() {
-        const modal = document.getElementById("modalVistaCuarto");
-        if (!modal || !vistaModalAbierto) return;
-        vistaModalAbierto = false;
-        modal.classList.remove("animarEntrada");
-        modal.classList.add("animarSalida");
-        setTimeout(() => {
-          modal.classList.remove("activo", "animarSalida");
-        }, 200);
-      }
-      
-      function generarImagenZoom() {
-        const zoomCanvas = document.createElement("canvas");
-        zoomCanvas.width = canvas.width;
-        zoomCanvas.height = canvas.height;
-        const zoomCtx = zoomCanvas.getContext("2d");
-
-        
-        if (mostrarFondoCuarto && fondoCuarto.complete) {
-         zoomCtx.drawImage(fondoCuarto, 0, 0, zoomCanvas.width, zoomCanvas.height);
-        }
-
-        
-        if (img && img.complete) {
-         zoomCtx.drawImage(img, imgX, imgY, img.width * scale, img.height * scale);
-        }
-
-        return zoomCanvas.toDataURL("image/png");
-      }
-    document.addEventListener("DOMContentLoaded", () => {
-       const btnPreview = document.querySelector(".btn-preview-cuarto");
-       const modal = document.getElementById("modalVistaCuarto");
-       renderizarCarrito();
-       actualizarContadorCarrito(); 
-
-       
-       const bloqueo = localStorage.getItem("bloqueoPedidoHasta");
-       if (bloqueo && Date.now() < bloqueo) {
-         iniciarTemporizadorVisual();
-       }
-
-       
-       if (!img || !img.src) {
-        draw(); 
-       }
-       
-
-      
-
-     if (btnPreview && modal && window.innerWidth >= 1000) {
-        btnPreview.addEventListener("mouseenter", () => {
-         if (!vistaModalAbierto) toggleVistaCuarto();
-        });
-
-        modal.addEventListener("mouseleave", () => {
-          if (vistaModalAbierto) cerrarVistaCuarto();
-        });
-      }
-    });
-
-    const overlayDrag = document.getElementById("overlayDrag");
-    const mensajeDrag = document.getElementById("mensajeDrag");
-
-    document.addEventListener("dragenter", (e) => {
-     const dt = e.dataTransfer || e.originalEvent?.dataTransfer;
-     if (dt?.items?.length > 0) {
-       const tipo = dt.items[0].type;
-       if (!tipo.startsWith("image/")) {
-         mensajeDrag.textContent = "⚠️ Solo se permiten imágenes PNG o JPG";
-       } else {
-         mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
-       }
-     }
-     overlayDrag.classList.add("active");
-    });
-
-    document.addEventListener("dragleave", (e) => {
-     if (e.relatedTarget === null || e.target === document) {
-       overlayDrag.classList.remove("active");
-       mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
-     }
-   });
-
-   document.addEventListener("drop", () => {
-     overlayDrag.classList.remove("active");
-     mensajeDrag.textContent = "¡Suelta tu imagen aquí!";
-   });
-
-
-    function actualizarContadorCarrito() {
-      const contador = document.getElementById("contadorCarrito");
-      const carrito = JSON.parse(localStorage.getItem("carritoAlfombras")) || [];
-      if (carrito.length > 0) {
-        contador.innerText = carrito.length;
-        contador.style.display = "block";
-      } else {
-        contador.style.display = "none";
-      }
-    }
-    </script>
-    <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
-      <div class="modal-contenido" onclick="event.stopPropagation()">
-        <div class="contenedor-superpuesto">
-          <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
-          <img id="modalImagenAlfombra" src="" alt="Alfombra" />
-        </div>
-        <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
+    <div class="lateral">
+      <div id="resultado"></div>
+      <button id="añadirCarrito" class="boton-total">
+        <i class="fas fa-paper-plane"></i>
+        <span id="totalFinal">Solicitar pedido</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
+    <div class="modal-contenido" onclick="event.stopPropagation()">
+      <div class="contenedor-superpuesto">
+        <img id="modalFondoCuarto" src="cuarto.png" alt="Cuarto" />
+        <img id="modalImagenAlfombra" src="" alt="Alfombra" />
       </div>
+      <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
     </div>
-    <script>
-       
-       window.addEventListener("DOMContentLoaded", () => {
-          document.body.classList.add("con-aviso");
-       });
-
-       function cerrarAviso() {
-         const aviso = document.getElementById("avisoEnvio");
-         aviso.style.display = "none";
-         document.body.classList.remove("con-aviso");
-       }
-    </script>
-
-   
-  <script>
-document.getElementById("añadirCarrito").addEventListener("click", () => {
-  document.getElementById("loaderOverlay").style.display = "flex";
-  setTimeout(enviarPorCorreo, 50);
-});
-
-async function enviarPorCorreo() {
-  const ancho = ((img.width * scale) / pxPorCm).toFixed(2);
-  const alto = ((img.height * scale) / pxPorCm).toFixed(2);
-
-  const canvasTemp = document.createElement("canvas");
-  canvasTemp.width = img.width;
-  canvasTemp.height = img.height;
-  const ctxTemp = canvasTemp.getContext("2d");
-  ctxTemp.drawImage(img, 0, 0);
-
-  const base64 = canvasTemp.toDataURL("image/png");
-  const imagenBase64 = base64.split(",")[1];
-
-  if (!imagenBase64 || imagenBase64.trim() === "") {
-    mostrarNotificacion("⚠️ Imagen inválida. Intenta subir otra imagen.", "error");
-    return;
-  }
-
-  let costo = "Costo no calculado";
-  let medidas = "Medidas no disponibles";
-
-  try {
-    const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imagenBase64 })
-    });
-
-    const data = await res.json();
-    medidas = `${data.ancho} cm x ${data.alto} cm`;
-    costo = `Área cubierta: ${data.area} Costo Tela: $${data.tela} Costo Fieltro: $${data.fieltro} Costo Estambre Total: $${data.estambre} Costo aproximado: $${data.total}`;
-  } catch (err) {
-    mostrarNotificacion("❌ No se pudo calcular el costo", "error");
-    document.getElementById("loaderOverlay").style.display = "none";
-    return;
-  }
-
-  if (!window.auth) {
-    mostrarNotificacion("❌ Error: Firebase no está disponible", "error");
-    return;
-  }
-
-  window.auth.onAuthStateChanged(async function(user) {
-    if (!user) {
-      document.getElementById("loaderOverlay").style.display = "none";
-      localStorage.setItem("forzarLoginPedido", "true");
-      window.location.href = "index.html";
-      return;
-    }
-
-    await user.reload();
-
-    const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
-    const correo = user.email || "correo@sin-dato.com";
-    const telefono = user.phoneNumber || "No registrado";
-
-    try {
-      const subir = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imagenBase64 })
-      });
-
-      const data = await subir.json();
-      if (!data.url) throw new Error("No se pudo obtener la URL de la imagen");
-
-      const imagenURL = data.url;
-
-      await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cliente: nombre,
-          email: correo,
-          telefono: telefono,
-          medidas: medidas,
-          costo: costo,
-          imagen: imagenURL,
-          ancho: parseFloat(ancho),
-          alto: parseFloat(alto)
-        })
-      });
-
-      const token = await auth.currentUser.getIdToken();
-      const validar = await fetch("https://backend-1pvf.onrender.com/guardar-pedido-firestore", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token })
-      });
-
-      if (validar.status === 429) {
-        mostrarNotificacion("⚠️ Solo puedes hacer pedidos cada 5 minutos", "error");
-        document.getElementById("loaderOverlay").style.display = "none";
-        return;
-      }
-
-      mostrarNotificacion("✅ Pedido enviado", "success");
-      document.getElementById("añadirCarrito").disabled = true;
-      iniciarTemporizadorVisual();
-
-      
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 3000);
-
-    } catch (err) {
-      console.error("❌ Error al enviar:", err);
-      mostrarNotificacion("❌ Error al enviar: " + err.message, "error");
-    } finally {
-      document.getElementById("loaderOverlay").style.display = "none";
-    }
-  });
-}
-
-
-function iniciarTemporizadorVisual(restanteMs = 5 * 60 * 1000) {
-  const boton = document.getElementById("añadirCarrito");
-  const texto = document.getElementById("totalFinal");
-
-  boton.disabled = true;
-
-  const fin = Date.now() + restanteMs;
-
-  const intervalo = setInterval(() => {
-    const restante = Math.max(0, fin - Date.now());
-    const minutos = Math.floor(restante / 60000);
-    const segundos = Math.floor((restante % 60000) / 1000).toString().padStart(2, '0');
-    texto.textContent = `Espera ${minutos}:${segundos}`;
-
-    if (restante <= 0) {
-      clearInterval(intervalo);
-      texto.textContent = "Solicitar pedido";
-      boton.disabled = false;
-    }
-  }, 1000);
-}
-</script>
+  </div>
 
   <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
     <div style="width: 50px; height: 50px; border: 6px solid #ccc; border-top: 6px solid #000; border-radius: 50%; animation: spin 1s linear infinite;"></div>
   </div>
+
   <style>
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
   </style>
-  <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
-  <p><strong>¿Quiénes somos?</strong> Alfomex es una empresa dedicada a la personalización artesanal de alfombras únicas, combinando creatividad y calidad mexicana.</p>
-  <p>Síguenos en redes sociales:</p>
-  <div style="margin: 10px 0;">
-    <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://www.instagram.com/_alfomex/" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
-  </div>
-  <p>&copy; 2024–2025 Alfomex. Todos los derechos reservados.</p>
-</footer>
-  </body>
 
+  <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
+    <p><strong>¿Quiénes somos?</strong> Alfomex es una empresa dedicada a la personalización artesanal de alfombras únicas, combinando creatividad y calidad mexicana.</p>
+    <p>Síguenos en redes sociales:</p>
+    <div style="margin: 10px 0;">
+      <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/_alfomex/" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
+    </div>
+    <p>&copy; 2024–2025 Alfomex. Todos los derechos reservados.</p>
+  </footer>
+
+
+  <script type="module" src="js/modulos/firebase-config.js"></script>
+  <script type="module" src="js/modulos/auth.js"></script>
+  <script src="js/modulos/canvas.js"></script>
+  <script src="js/modulos/presupuesto.js"></script>
+  <script src="js/modulos/zoom.js"></script>
+  <script src="js/modulos/carrito.js"></script>
+  <script src="js/modulos/drag-drop.js"></script>
+  <script src="js/modulos/vistaCuarto.js"></script>
+  <script src="js/modulos/cargarImagen.js"></script>
+  <script src="js/modulos/envio.js"></script>
+  <script src="js/modulos/aviso-envio.js"></script>
+
+</body>
 </html>
