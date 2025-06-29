@@ -276,31 +276,24 @@ window.añadirAlCarrito = (producto) => {
       };
 
       onAuthStateChanged(auth, (user) => {
-  const nav = document.getElementById("navOptions");
-  let contenido = ``;
-
-  if (user) {
-    contenido = `
-      <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
-        <i class="fas fa-user-circle"></i>
-      </button>
-      <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
-        <i class="fas fa-sign-out-alt"></i>
-      </button>
-    `;
-    nav.innerHTML = contenido;
-  } else {
-    contenido = `<button id="btnEntrar">Entrar</button>`;
-    nav.innerHTML = contenido;
-
-    // Agrega el evento después de insertar el botón
-    const btnEntrar = document.getElementById("btnEntrar");
-    if (btnEntrar) {
-      btnEntrar.addEventListener("click", abrirModal);
-    }
-  }
-});
-
+        const nav = document.getElementById("navOptions");
+        let contenido = ``;
+        if (user) {
+          contenido = `
+            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          `;
+        } else {
+          contenido = `
+            <button onclick="abrirModal()">Entrar</button>
+          `;
+        }
+        nav.innerHTML = contenido;
+      });
 
       window.verificarPedidoPersonalizado = () => {
         if (auth.currentUser) {
