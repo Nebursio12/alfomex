@@ -217,8 +217,8 @@ window.añadirAlCarrito = (producto) => {
         setTimeout(() => {
           document.getElementById("errorMsg").textContent = "";
           document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
-          document.getElementById("loginEmail").value = "";
-          document.getElementById("loginPassword").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("password").value = "";
           document.getElementById("recuperacion").style.display = "none";
           document.getElementById("emailRecuperar").value = "";
         }, 300);
@@ -310,7 +310,7 @@ window.añadirAlCarrito = (producto) => {
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           cerrarModal();
-          closeNav();
+          window.closeNav();
         }
       });
 
