@@ -9,7 +9,7 @@ import {
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
-  authDomain: "alfomex-f4efa.firebaseapp.com",
+  authDomain: "alfomex.vercel.app",
   projectId: "alfomex-f4efa",
   storageBucket: "alfomex-f4efa.firebasestorage.app",
   messagingSenderId: "1090528818564",
