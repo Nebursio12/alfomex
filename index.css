@@ -587,3 +587,9 @@ button, .icon-btn {
 .contador-carrito:not(:empty) {
   display: block !important;
 }
+
+@media (max-width: 480px) {
+  .banner-img {
+    max-height: 200px;
+  }
+}
