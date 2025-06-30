@@ -1,6 +1,7 @@
 // js/modal.js
+
 function abrirModal() {
-  closeNav();
+  window.closeNav(); // 👈 aquí
   toggleFormulario(false);
   document.getElementById("loginModal").classList.add("active");
   document.getElementById("modalOverlay").classList.add("active");
@@ -24,19 +25,17 @@ function cerrarModal() {
   }, 300);
 }
 
-// 👉 Exponer funciones al contexto global:
 window.abrirModal = abrirModal;
 window.cerrarModal = cerrarModal;
 
-// Cierre automático
 document.getElementById("modalOverlay").addEventListener("click", () => {
   cerrarModal();
-  closeNav();
+  window.closeNav(); // 👈 también aquí
 });
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     cerrarModal();
-    closeNav();
+    window.closeNav(); // 👈 y aquí
   }
 });
