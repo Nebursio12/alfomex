@@ -550,3 +550,40 @@
   background: #ffcc00;
   color: black;
 }
+
+/* 🟢 Botones accesibles */
+button, .icon-btn {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* 🟢 Mejora para pantallas pequeñas */
+@media (max-width: 480px) {
+  html, body {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .modal input {
+    font-size: 1rem;
+  }
+
+  .btn-carrito, .btn-añadir {
+    padding: 12px;
+  }
+
+  .banner-solido {
+    height: 200px;
+  }
+}
+
+/* 🟢 Mejora en accesibilidad y contraste */
+.error, .error.red {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* 🟢 Asegura que el contador del carrito siempre sea visible si hay productos */
+.contador-carrito:not(:empty) {
+  display: block !important;
+}
