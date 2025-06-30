@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   </head>
   <body>
-    <!-- Encabezado -->
+  
     <header>
       <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
         <i class="fas fa-shopping-cart"></i>
@@ -20,14 +20,14 @@
       </nav>
     </header>
 
-    <!-- Menú lateral -->
+    
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
       <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
       <a href="javascript:void(0)">Categorías</a>
     </div>
 
-    <!-- Carrito -->
+    
     <div id="carritoLista" class="carrito-lista oculto">
       <div id="mensajeCarritoVacio" style="text-align:center; color:#666;">🛒 El carrito está vacío</div>
       <div id="resumenCarrito" style="margin-top: 15px; display: none;">
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <!-- Modal de login/registro -->
+   
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal" id="loginModal">
       <h3 id="modalTitle">Entrar</h3>
@@ -74,7 +74,7 @@
       <div id="errorMsg" class="error"></div>
     </div>
 
-    <!-- Banner -->
+   
     <div class="banner-solido">
       <div class="banner-imagenes">
         <img class="banner-img active" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.jpg" alt="Banner 1">
@@ -84,7 +84,7 @@
       <div class="puntos-banner" id="puntosBanner"></div>
     </div>
 
-    <!-- Botones categorías -->
+   
     <div class="botones-categorias">
       <button onclick="scrollToCategoria('originaless')">🎨 Originales</button>
       <button onclick="scrollToCategoria('personajess')">🎭 Personajes</button>
@@ -92,7 +92,7 @@
       <button onclick="scrollToCategoria('futboss')">⚽ Futbol</button>
     </div>
 
-    <!-- Catálogo -->
+   
     <main style="padding: 20px;">
       <h2>Originales</h2>
       <div id="originaless" class="catalogo"></div>
@@ -104,7 +104,7 @@
       <div id="futboss" class="catalogo"></div>
     </main>
 
-    <!-- Verificación -->
+    
     <div id="recaptcha-container"></div>
     <div id="modalCodigo">
       <div class="modal" id="modalSMS" style="min-width:300px;">
@@ -119,11 +119,11 @@
       </div>
     </div>
 
-    <!-- Toasts -->
+    
     <div id="toastBienvenida" class="toast-bienvenida"></div>
     <div id="toastCarrito" class="toast-bienvenida"></div>
 
-    <!-- Footer -->
+  
     <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
       <div style="margin: 10px 0;">
         <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
@@ -132,7 +132,7 @@
       <p>Copyright&copy; 2024. Alfomex</p>
     </footer>
 
-    <!-- Scripts en orden -->
+
     <script type="module" src="js/indexmodulos/config.js"></script>
     <script type="module" src="js/indexmodulos/authindex.js"></script>
     <script type="module" src="js/indexmodulos/catalogo.js"></script>
