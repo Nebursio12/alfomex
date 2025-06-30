@@ -597,6 +597,16 @@ button, .icon-btn {
     flex-direction: column;
     align-items: center;
   }
+
+  .botones-categorias button {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  .botones-categorias {
+    gap: 6px;
+  }
 }
 
 /* 🟢 Mejora en accesibilidad y contraste */
