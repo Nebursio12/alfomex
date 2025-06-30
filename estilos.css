@@ -74,36 +74,6 @@ header {
   gap: 10px;
 }
 
-#menuBtn {
-  font-size: 1.5rem;
-  color: white;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-h2 {
-  margin-top: 90px;
-  font-size: 1.5rem;
-  color: var(--secondary);
-  text-align: center;
-}
-
-.alerta {
-  text-align: center;
-  margin: 20px auto;
-  max-width: 90%;
-  font-size: 0.95rem;
-}
-
-.botones-superiores {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
 
 .controls {
   display: flex;
@@ -203,37 +173,6 @@ canvas {
   color: black; 
 }
 
-#colorDetalle div {
-  display: flex;
-  align-items: center;
-  margin: 5px 0;
-}
-
-#colorDetalle div div {
-  width: 25px;
-  height: 25px;
-  border: 1px solid #000;
-  margin-right: 10px;
-}
-
-
-
-.social-links {
-  margin: 40px auto;
-  text-align: center;
-}
-
-.social-links a {
-  margin: 0 15px;
-  font-size: 1.5rem;
-  color: var(--accent);
-  transition: transform 0.3s ease;
-}
-
-.social-links a:hover {
-  transform: scale(1.2);
-}
-
 .icon-btn {
   display: flex;
   align-items: center;
@@ -250,77 +189,8 @@ canvas {
   color: #000000;
 }
 
-.btn-logout {
-  background: crimson;
-  color: white;
-}
-
-.btn-perfil i, .btn-logout i {
+.btn-perfil i {
   pointer-events: none;
-}
-
-.cart-panel {
-  position: fixed;
-  top: 0;
-  right: -300px;
-  width: 300px;
-  height: 100%;
-  background: white;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 10000;
-  transition: right 0.3s ease;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.cart-panel.open {
-  right: 0;
-}
-
-.cart-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 9999;
-  display: none;
-}
-
-.cart-overlay.active {
-  display: block;
-}
-
-.sidenav {
-  position: fixed;
-  top: 0;
-  left: -250px;
-  width: 250px;
-  height: 100%;
-  background-color: #000000;
-  padding-top: 60px;
-  padding-left: 15px;
-  transition: left 0.3s ease;
-  z-index: 9999;
-  box-sizing: border-box;
-}
-
-.sidenav.open {
-  left: 0;
-}
-
-.sidenav a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 22px;
-  color: white;
-  display: block;
-  transition: 0.3s;
-}
-
-.sidenav a:hover {
-  color: #ddd;
 }
 
 .modal-overlay {
@@ -334,49 +204,6 @@ canvas {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-}
-
-.modal-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.dropdown-menu {
-  display: none;
-  border: 1px solid #ccc;
-  padding: 10px;
-  background: white;
-  max-height: 300px;
-  overflow-y: auto;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.dropdown-menu.show {
-  display: block;
-}
-
-.categoria {
-  margin-bottom: 15px;
-}
-
-.categoria h4 {
-  margin-bottom: 5px;
-  font-size: 16px;
-}
-
-.categoria img {
-  width: 100px;
-  height: auto;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: 0.2s;
-}
-
-.categoria img:hover {
-  border-color: #000;
 }
 
 
@@ -416,20 +243,6 @@ canvas {
 
 
 
-
-
-
-h2, .alerta, .plantilla-btn-container {
-  text-align: center;
-  width: 100%;
-}
-
-
-
-
-
-
-
 .lateral-izquierda {
   width: 100%;
   max-width: 500px;
@@ -449,8 +262,7 @@ h2, .alerta, .plantilla-btn-container {
   font-size: 1.4rem;
 }
 
-#resultado,
-#añadirCarrito {
+#resultado {
   display: none;
 }
 
@@ -491,11 +303,6 @@ h2, .alerta, .plantilla-btn-container {
 }
 
 
-#vistaAlfombra[src=""] {
-  display: none !important;
-}
-
-
 
 
 
@@ -511,10 +318,6 @@ h2, .alerta, .plantilla-btn-container {
   z-index: 9999;
   justify-content: center;
   align-items: center;
-}
-
-.modal-vista-cuarto.activo {
-  display: flex;
 }
 
 .modal-contenido {
@@ -625,14 +428,6 @@ h2, .alerta, .plantilla-btn-container {
   }
 }
 
-.modal-vista-cuarto.animarEntrada {
-  animation: vistaZoomIn 0.3s ease forwards;
-}
-
-.modal-vista-cuarto.animarSalida {
-  animation: vistaZoomOut 0.2s ease forwards;
-}
-
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -673,12 +468,6 @@ h2, .alerta, .plantilla-btn-container {
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.toast-notificacion.mostrar {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
 .carrito-lista {
   position: absolute;
   top: 60px;
@@ -698,23 +487,6 @@ h2, .alerta, .plantilla-btn-container {
 
 .carrito-lista:not(.oculto) {
   display: block;
-}
-
-.item-carrito {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
-}
-
-.item-carrito strong {
-  color: #003366; 
-}
-
-.item-carrito div {
-  font-size: 14px; 
 }
 
 #contadorCarrito {
@@ -762,12 +534,6 @@ h2, .alerta, .plantilla-btn-container {
     padding: 15px !important;
   }
 
-  #añadirCarrito {
-    margin: 0 auto 10px auto !important;
-    padding: 12px !important;
-    font-size: 0.95rem !important;
-  }
-
   .controls {
     flex-direction: row;
     flex-wrap: nowrap;
@@ -779,25 +545,9 @@ h2, .alerta, .plantilla-btn-container {
     font-size: 1rem;
   }
 
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  .alerta {
-    font-size: 0.95rem;
-    padding: 12px;
-  }
-
-  .controls button,
-  #añadirCarrito,
-  .upload-btn {
+  .controls button {
     width: 90%;
     margin: 8px auto;
-  }
-
-  .social-links {
-    margin-top: 20px !important;
-    margin-bottom: 10px !important;
   }
 
   .vista-cuarto-toggle {
@@ -847,8 +597,7 @@ h2, .alerta, .plantilla-btn-container {
   }
 
   #resultado,
-  #totalFinal,
-  #añadirCarrito {
+  #totalFinal {
     margin-left: 0;
     margin-right: 0;
   }
@@ -872,10 +621,6 @@ h2, .alerta, .plantilla-btn-container {
 
 .contenedor-principal {
   transition: margin-top 0.3s ease;
-}
-
-body.con-aviso .contenedor-principal {
-  margin-top: 120px; 
 }
 
 body:not(.con-aviso) .contenedor-principal {
@@ -906,11 +651,6 @@ body:not(.con-aviso) .contenedor-principal {
   cursor: pointer;
   color: black;
   padding-left: 20px;
-}
-
-
-body.con-aviso header {
-  margin-top: 40px; 
 }
 
 .aviso-movimiento {
@@ -945,10 +685,6 @@ body.con-aviso header {
   pointer-events: none;
 }
 
-.drag-overlay.active {
-  display: flex;
-}
-
 .drag-message {
   color: white;
   font-size: 2rem;
@@ -957,16 +693,6 @@ body.con-aviso header {
   padding: 20px 40px;
   border: 3px dashed #fff;
   border-radius: 10px;
-}
-
-
-.toast-advertencia {
-  background: crimson !important;
-}
-
-
-.toast-dimensiones {
-  background: #444 !important;
 }
 
 .boton-central-imagen {
