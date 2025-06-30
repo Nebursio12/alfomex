@@ -599,8 +599,4 @@ button, .icon-btn {
   font-weight: bold;
 }
 
-/* 🟢 Asegura que el contador del carrito siempre sea visible si hay productos */
-.contador-carrito:not(:empty) {
-  display: block !important;
-}
 
