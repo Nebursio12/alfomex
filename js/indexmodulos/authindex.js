@@ -21,7 +21,7 @@ import {
   collection
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-import { auth, db } from "/alfomex/js/indexmodulos/config.js";
+import { auth, db } from "/js/indexmodulos/config.js";
 
 // Estado de registro
 let modoRegistro = false;

@@ -4,7 +4,7 @@ import {
   addDoc
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-import { auth, db } from "/alfomex/js/indexmodulos/config.js";
+import { auth, db } from "/js/indexmodulos/config.js";
 
 // Añadir producto al carrito
 window.añadirAlCarrito = (producto) => {

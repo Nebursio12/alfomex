@@ -6,7 +6,7 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-import { db } from "/alfomex/js/indexmodulos/config.js";
+import { db } from "/js/indexmodulos/config.js";
 // Función para mostrar las alfombras por categoría
 async function mostrarMenu() {
   const categorias = ["originales", "personajes", "marcas", "futbos"];
