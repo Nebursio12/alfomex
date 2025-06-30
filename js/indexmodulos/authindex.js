@@ -1,4 +1,4 @@
-// js/firebase/auth.js
+
 import {
   signInWithEmailAndPassword,
   setPersistence,
@@ -23,11 +23,11 @@ import {
 
 import { auth, db } from "/js/indexmodulos/config.js";
 
-// Estado de registro
+
 let modoRegistro = false;
 let yaVerificado = false;
 
-// Actualizar nav según estado de sesión
+
 onAuthStateChanged(auth, (user) => {
   const nav = document.getElementById("navOptions");
   nav.innerHTML = user
@@ -42,7 +42,7 @@ onAuthStateChanged(auth, (user) => {
     : `<button onclick="abrirModal()">Entrar</button>`;
 });
 
-// Iniciar sesión
+
 window.iniciarSesion = async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -61,7 +61,7 @@ window.iniciarSesion = async () => {
   }
 };
 
-// Recuperación de contraseña
+
 window.mostrarRecuperacion = () => {
   document.getElementById("recuperacion").style.display = "block";
 };
@@ -90,13 +90,13 @@ window.enviarRecuperacion = async () => {
   }
 };
 
-// Cerrar sesión
+
 window.cerrarSesion = async () => {
   await signOut(auth);
   window.location.href = "index.html";
 };
 
-// Cambiar entre login y registro
+
 window.toggleFormulario = (forzarModo = null) => {
   if (forzarModo !== null) {
     modoRegistro = forzarModo;
@@ -120,7 +120,7 @@ window.toggleFormulario = (forzarModo = null) => {
   document.getElementById("formRegister").classList.toggle("out", !modoRegistro);
 };
 
-// Enviar formulario
+
 document.getElementById("submitBtn").addEventListener("click", async () => {
   const errorMsg = document.getElementById("errorMsg");
   errorMsg.textContent = "";
@@ -230,7 +230,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
   }
 });
 
-// Verificar código SMS
+
 document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
   const codigo = document.getElementById("codigoSMS").value.trim();
   const errorSMS = document.getElementById("errorSMS");
@@ -287,12 +287,12 @@ document.getElementById("btnVerificarCodigo").addEventListener("click", async ()
   }
 });
 
-// Input de teléfono solo acepta números
+
 document.getElementById("telefonoRegistro").addEventListener("input", function () {
   this.value = this.value.replace(/\D/g, "");
 });
 
-// Función de cierre de modal de código
+
 function cerrarModalCodigo() {
   const modalCodigo = document.getElementById("modalCodigo");
   const modalSMS = document.getElementById("modalSMS");

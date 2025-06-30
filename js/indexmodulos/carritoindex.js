@@ -1,4 +1,4 @@
-// js/carrito.js
+
 import {
   collection,
   addDoc
@@ -6,7 +6,7 @@ import {
 
 import { auth, db } from "/js/indexmodulos/config.js";
 
-// Añadir producto al carrito
+
 window.añadirAlCarrito = (producto) => {
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
   carrito.push(producto);
@@ -17,7 +17,7 @@ window.añadirAlCarrito = (producto) => {
   actualizarContadorCarrito();
 };
 
-// Mostrar contenido del carrito
+
 function renderizarCarrito() {
   const contenedor = document.getElementById("carritoLista");
   const mensajeVacio = document.getElementById("mensajeCarritoVacio");
@@ -58,7 +58,7 @@ function renderizarCarrito() {
   totalTexto.innerText = total.toFixed(2);
 }
 
-// Eliminar un producto del carrito
+
 window.eliminarDelCarrito = (index) => {
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
   carrito.splice(index, 1);
@@ -67,13 +67,13 @@ window.eliminarDelCarrito = (index) => {
   actualizarContadorCarrito();
 };
 
-// Mostrar u ocultar el carrito (modal o panel)
+
 window.abrirCarrito = () => {
   const carrito = document.getElementById("carritoLista");
   carrito.classList.toggle("oculto");
 };
 
-// Actualizar contador del carrito en el ícono
+
 function actualizarContadorCarrito() {
   const contador = document.getElementById("contadorCarrito");
   const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -81,7 +81,7 @@ function actualizarContadorCarrito() {
   contador.style.display = carrito.length ? "block" : "none";
 }
 
-// Comprar ahora (guarda en Firestore)
+
 window.comprarAhora = async () => {
   const user = auth.currentUser;
 
@@ -118,7 +118,7 @@ window.comprarAhora = async () => {
   }
 };
 
-// Toast de confirmación
+
 function mostrarToastCarrito(mensaje) {
   const toast = document.getElementById("toastCarrito");
   if (!toast) return;
@@ -130,7 +130,7 @@ function mostrarToastCarrito(mensaje) {
   }, 3000);
 }
 
-// Inicializar al cargar la página
+
 document.addEventListener("DOMContentLoaded", () => {
   renderizarCarrito();
   actualizarContadorCarrito();

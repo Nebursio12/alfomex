@@ -1,4 +1,4 @@
-// js/modal.js
+
 
 function abrirModal() {
   if (typeof window.closeNav === "function") window.closeNav();

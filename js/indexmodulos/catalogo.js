@@ -1,4 +1,4 @@
-// js/catalogo.js
+
 import {
   collection,
   getDocs,
@@ -7,7 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 import { db } from "/js/indexmodulos/config.js";
-// Función para mostrar las alfombras por categoría
+
 async function mostrarMenu() {
   const categorias = ["originales", "personajes", "marcas", "futbos"];
 
@@ -39,7 +39,7 @@ async function mostrarMenu() {
 
 mostrarMenu();
 
-// Función para desplazarse a la categoría
+
 window.scrollToCategoria = (id) => {
   const section = document.getElementById(id);
   if (section) {

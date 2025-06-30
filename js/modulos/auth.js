@@ -1,4 +1,4 @@
-// js/modulos/auth.js
+
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
 window.addEventListener("DOMContentLoaded", () => {
