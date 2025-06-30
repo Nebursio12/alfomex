@@ -22,7 +22,7 @@ async function mostrarMenu() {
       const tarjeta = document.createElement("div");
       tarjeta.className = "alfombra";
       tarjeta.innerHTML = `
-        <img src="${data.imagen}" alt="${data.nombre}" />
+        <img src="${data.imagen}" alt="${data.nombre}" width="200" height="200" loading="lazy" />
         <h4>${data.nombre}</h4>
         <p>$${data.precio}</p>
         <button class="btn-añadir" onclick='añadirAlCarrito(${JSON.stringify({
