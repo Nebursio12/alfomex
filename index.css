@@ -575,21 +575,27 @@ button, .icon-btn {
   .banner-solido {
     height: 200px;
   }
+  .banner-img {
+    max-height: 200px;
+  }
 
   .alfombra img {
-    max-width: 100%;
+    width: 100%;
+    max-width: 220px;
     height: auto;
-    object-fit: contain;
-    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
   }
 
   .alfombra {
-    padding: 10px;
-    max-width: 90%;
+    max-width: 260px;
     margin: 0 auto;
   }
-  .banner-img {
-    max-height: 200px;
+
+  .catalogo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 
