@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Catálogo - ALFOMEX</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
@@ -18,13 +18,11 @@
         <button onclick="abrirModal()">Entrar</button>
       </nav>
     </header>
-
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
       <a href="javascript:void(0)" onclick="verificarPedidoPersonalizado()">Pedido personalizado</a>
       <a href="javascript:void(0)">Categorías</a>
     </div>
-
     <div id="carritoLista" class="carrito-lista oculto">
       <div id="mensajeCarritoVacio" style="text-align:center; color:#666;">
         🛒 El carrito está vacío
@@ -37,9 +35,7 @@
         </button>
       </div>
     </div>
-
     <div class="modal-overlay" id="modalOverlay"></div>
-
     <div class="modal" id="loginModal">
       <h3 id="modalTitle">Entrar</h3>
       <div class="form-wrapper">
@@ -51,6 +47,7 @@
           <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
           <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 10px;">Enviar enlace</button>
         </div>
+
         <div id="formRegister" class="form-slide">
           <input type="text" id="nombreRegistro" placeholder="Nombre" />
           <input type="text" id="apellidoRegistro" placeholder="Apellido" />
@@ -78,39 +75,674 @@
       </div>
       <div id="errorMsg" class="error"></div>
     </div>
-
     <div class="banner-solido">
       <div class="banner-imagenes">
         <img class="banner-img active" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.jpg" alt="Banner 1">
         <img class="banner-img" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.jpg" alt="Banner 2">
       </div>
       <a href="alfomex.html" class="boton-banner">🧶 Pedido personalizado</a>
+
+
       <div class="puntos-banner" id="puntosBanner"></div>
     </div>
 
     <div class="botones-categorias">
-      <button onclick="scrollToCategoria('originaless')">🎨 Originales</button>
-      <button onclick="scrollToCategoria('personajess')">🎭 Personajes</button>
-      <button onclick="scrollToCategoria('marcass')">💼 Marcas</button>
-      <button onclick="scrollToCategoria('futboss')">⚽ Futbol</button>
+     <button onclick="scrollToCategoria('originaless')"><span class="emoji">🎨</span> <span class="texto">Originales</span></button>
+     <button onclick="scrollToCategoria('personajess')"><span class="emoji">🎭</span> <span class="texto">Personajes</span></button>
+     <button onclick="scrollToCategoria('marcass')"><span class="emoji">💼</span> <span class="texto">Marcas</span></button>
+     <button onclick="scrollToCategoria('futboss')"><span class="emoji">⚽</span> <span class="texto">Futbol</span></button>
     </div>
 
     <main style="padding: 20px;">
-      <h2>Originales</h2>
-      <div id="originaless" class="catalogo"></div>
+     <h2>Originales</h2>
+     <div id="originaless" class="catalogo"></div>
 
-      <h2>Personajes</h2>
-      <div id="personajess" class="catalogo"></div>
+     <h2>Personajes</h2>
+     <div id="personajess" class="catalogo"></div>
 
-      <h2>Marcas</h2>
-      <div id="marcass" class="catalogo"></div>
+     <h2>Marcas</h2>
+     <div id="marcass" class="catalogo"></div>
 
-      <h2>Futbol</h2>
-      <div id="futboss" class="catalogo"></div>
+     <h2>Futbol</h2>
+     <div id="futboss" class="catalogo"></div>
     </main>
 
-    <div id="recaptcha-container"></div>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        setPersistence,
+        browserLocalPersistence,
+        signOut,
+        onAuthStateChanged,
+        sendPasswordResetEmail,
+        fetchSignInMethodsForEmail,
+        RecaptchaVerifier,
+        signInWithPhoneNumber,
+        updateProfile,
+        EmailAuthProvider,
+        linkWithCredential
+        
+      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+      import { getFirestore, collection, getDocs, doc, setDoc, query, where, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+      const firebaseConfig = {
+        apiKey: "AIzaSyDPdVE3_R_ZsjBOZfa4bc9sMgBsLoDLlLc",
+        authDomain: "alfomex-f4efa.firebaseapp.com",
+        projectId: "alfomex-f4efa",
+        storageBucket: "alfomex-f4efa.firebasestorage.app",
+        messagingSenderId: "1090528818564",
+        appId: "1:1090528818564:web:dac6cb3333a2ee443919d1",
+        measurementId: "G-SW633HRXV1",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+
+
+async function mostrarMenu() {
+  const categorias = ["originales", "personajes", "marcas", "futbos"];
+
+  for (const cat of categorias) {
+    const snapshot = await getDocs(
+      query(collection(db, "menu"), where("categoria", "==", cat))
+    );
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const contenedor = document.getElementById(`${cat}s`);
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "alfombra";
+      tarjeta.innerHTML = `
+        <img src="${data.imagen}" alt="${data.nombre}" />
+        <h4>${data.nombre}</h4>
+        <p>$${data.precio}</p>
+        <button class="btn-añadir" onclick='añadirAlCarrito(${JSON.stringify({
+          nombre: data.nombre,
+          precio: data.precio,
+          imagen: data.imagen
+        })})'>🛒</button>
+      `;
+
+      contenedor.appendChild(tarjeta);
+    });
+  }
+}
+
+mostrarMenu(); 
+window.añadirAlCarrito = (producto) => {
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  carrito.push(producto);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+
+  renderizarCarrito();
+
+  mostrarToastCarrito(`🛒 ${producto.nombre} añadido al carrito`);
+  actualizarContadorCarrito();
+
+};
+
+
+
+
+
+      window.openNav = () => {
+
+        cerrarModal();
+        document.getElementById("mySidenav").classList.add("open");
+        document.getElementById("modalOverlay").classList.add("active");
+      };
+
+      window.closeNav = () => {
+        document.getElementById("mySidenav").classList.remove("open");
+        document.getElementById("modalOverlay").classList.remove("active");
+      };
+
+      window.abrirModal = () => {
+        closeNav();
+        toggleFormulario(false); 
+        document.getElementById("loginModal").classList.add("active");
+        document.getElementById("modalOverlay").classList.add("active");
+      };
+
+      window.cerrarModal = () => {
+        const modal = document.getElementById("loginModal");
+        const overlay = document.getElementById("modalOverlay");
+
+        modal.classList.remove("active");
+        overlay.classList.remove("active");
+
+
+        document.getElementById("recuperacion").style.display = "none";
+        document.getElementById("emailRecuperar").value = "";
+
+        setTimeout(() => {
+          document.getElementById("errorMsg").textContent = "";
+          document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
+          document.getElementById("email").value = "";
+          document.getElementById("password").value = "";
+          document.getElementById("recuperacion").style.display = "none";
+          document.getElementById("emailRecuperar").value = "";
+        }, 300);
+      };
+
+      document.getElementById("modalOverlay").addEventListener("click", () => {
+        cerrarModal();
+        closeNav();
+      });
+
+      window.iniciarSesion = async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = "";
+        errorMsg.classList.remove("error-anim", "red", "green");
+        try {
+          await setPersistence(auth, browserLocalPersistence);
+          await signInWithEmailAndPassword(auth, email, password);
+          window.location.reload();
+        } catch (error) {
+          errorMsg.classList.add("error-anim", "red");
+          errorMsg.textContent = "Correo o contraseña incorrectos.";
+        }
+      };
+
+      window.mostrarRecuperacion = () => {
+        document.getElementById("recuperacion").style.display = "block";
+      };
+
+      window.enviarRecuperacion = async () => {
+        const correo = document.getElementById("emailRecuperar").value;
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = "";
+        errorMsg.classList.remove("error-anim", "red", "green");
+        try {
+          const methods = await fetchSignInMethodsForEmail(auth, correo);
+          if (methods.length === 0) {
+            errorMsg.classList.add("error-anim", "red");
+            errorMsg.textContent = "Este correo no está registrado.";
+            return;
+          }
+          await sendPasswordResetEmail(auth, correo);
+          errorMsg.classList.add("error-anim", "green");
+          errorMsg.textContent = "Se envió el enlace al correo.";
+        } catch (error) {
+          errorMsg.classList.add("error-anim", "red");
+          errorMsg.textContent = "Error: " + error.message;
+        }
+      };
+
+      window.cerrarSesion = async () => {
+        await signOut(auth);
+        window.location.href = "index.html";
+      };
+
+      onAuthStateChanged(auth, (user) => {
+        const nav = document.getElementById("navOptions");
+        let contenido = ``;
+        if (user) {
+          contenido = `
+            <button onclick="location.href='perfil.html'" title="Perfil" class="icon-btn btn-perfil">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <button onclick="cerrarSesion()" title="Cerrar sesión" class="icon-btn btn-logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          `;
+        } else {
+          contenido = `
+            <button onclick="abrirModal()">Entrar</button>
+          `;
+        }
+        nav.innerHTML = contenido;
+      });
+
+      window.verificarPedidoPersonalizado = () => {
+        if (auth.currentUser) {
+          location.href = "alfomex.html";
+        } else {
+          abrirModal();
+        }
+      };
+      
+
+     
+
+      
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          cerrarModal();
+          closeNav();
+        }
+      });
+
+      let modoRegistro = false;
+
+      window.toggleFormulario = (forzarModo = null) => {
+       if (forzarModo !== null) {
+         modoRegistro = forzarModo;
+       } else {
+         modoRegistro = !modoRegistro;
+       }
+        
+        document.getElementById("recuperacion").style.display = "none";
+        document.getElementById("emailRecuperar").value = "";
+
+        document.getElementById("modalTitle").textContent = modoRegistro ? "Registro" : "Entrar";
+        document.getElementById("submitBtn").textContent = modoRegistro ? "Registrarse" : "Entrar";
+        document.querySelector('[onclick="toggleFormulario()"]').textContent =
+          modoRegistro ? "¿Ya tienes una cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
+        document.getElementById("errorMsg").textContent = "";
+
+        const loginForm = document.getElementById("formLogin");
+        const registerForm = document.getElementById("formRegister");
+
+        if (modoRegistro) {
+          loginForm.classList.remove("active");
+          loginForm.classList.add("out");
+          registerForm.classList.add("active");
+          registerForm.classList.remove("out");
+        } else {
+          registerForm.classList.remove("active");
+          registerForm.classList.add("out");
+          loginForm.classList.add("active");
+          loginForm.classList.remove("out");
+        }
+      };
+
+
+
+      document.getElementById("submitBtn").addEventListener("click", async () => {
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = "";
+
+        if (modoRegistro) {
+          const nombre = document.getElementById("nombreRegistro").value.trim();
+          const apellido = document.getElementById("apellidoRegistro").value.trim();
+          const telefono = document.getElementById("telefonoRegistro").value.trim();
+          const correo = document.getElementById("registroEmail").value.trim();
+          const password = document.getElementById("registroPassword").value;
+          
+
+          
+
+          if (!nombre || !apellido || !correo || !password || !telefono) {
+            errorMsg.textContent = "Completa todos los campos.";
+            return;
+          }
+
+          if (!/^\d{10}$/.test(telefono)) {
+            errorMsg.textContent = "El número telefónico debe tener 10 dígitos.";
+            return;
+          }
+
+         const correoValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo);
+         if (!correoValido) {
+           errorMsg.textContent = "Ingresa un correo electrónico válido.";
+           return;
+          }
+
+          try {
+       
+            const metodosCorreo = await fetchSignInMethodsForEmail(auth, correo);
+            if (metodosCorreo.length > 0) {
+              errorMsg.textContent = "Este correo ya está registrado.";
+              return;
+            }
+
+       
+            const res = await fetch("https://backend-1pvf.onrender.com/validar-registro", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ correo, telefono: "+52" + telefono })
+           });
+           const data = await res.json();
+
+           if (data.correoUsado) {
+             errorMsg.textContent = "Este correo ya está registrado.";
+             return;
+           }
+           if (data.telefonoUsado) {
+             errorMsg.textContent = "Este número de teléfono ya está registrado.";
+             return;
+           }
+
+           
+           const resBloqueo = await fetch("https://backend-1pvf.onrender.com/verificar-sms-bloqueo", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ telefono: "+52" + telefono })
+           });
+
+           const bloqueoData = await resBloqueo.json();
+
+           if (!resBloqueo.ok) {
+              if (resBloqueo.status === 429) {
+                 const segundos = bloqueoData.segundosFaltantes;
+                 if (segundos) {
+                    const mins = Math.floor(segundos / 60);
+                    const secs = segundos % 60;
+                    errorMsg.textContent = `⏳ Espera ${mins}:${secs.toString().padStart(2, "0")} antes de intentarlo otra vez.`;
+                  } else {
+                    errorMsg.textContent = bloqueoData.error || "⏳ Espera unos minutos antes de volver a intentar.";
+                  }
+                } else if (resBloqueo.status === 403) {
+                  errorMsg.textContent = "Este número ya está registrado.";
+                } else {
+                  errorMsg.textContent = "No se puede enviar el código en este momento.";
+                }
+                return;
+              }
+
+            
+            if (!window.recaptchaVerifier) {
+              window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+                size: "invisible",
+                callback: () => console.log("reCAPTCHA resuelto")
+              });
+              await window.recaptchaVerifier.render();
+            }
+
+            const fullPhone = "+52" + telefono;
+            const confirmationResult = await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
+
+            window.confirmationResultGlobal = confirmationResult;
+            window.datosUsuarioTemporal = { nombre, apellido, correo, password };
+
+            const modalCodigo = document.getElementById("modalCodigo");
+            const modalSMS = document.getElementById("modalSMS");
+
+            modalCodigo.style.display = "flex";
+            modalCodigo.classList.add("active");
+            modalSMS.classList.add("active");
+
+          } catch (error) {
+            console.error("❌ Error durante el proceso de registro:", error);
+            errorMsg.textContent = "Ocurrió un error inesperado. Intenta más tarde.";
+          }
+
+
+        } else {
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+          try {
+            await setPersistence(auth, browserLocalPersistence);
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.reload();
+          } catch (e) {
+            errorMsg.textContent = "Correo o contraseña incorrectos.";
+          }
+        }
+      });
+
+      document.getElementById("telefonoRegistro").addEventListener("input", function () {
+       this.value = this.value.replace(/\D/g, ""); 
+      });
+
+    function cerrarModalCodigo() {
+      const modalCodigo = document.getElementById("modalCodigo");
+      const modalSMS = document.getElementById("modalSMS");
+      modalCodigo.classList.remove("active");
+      modalSMS.classList.remove("active");
+      modalCodigo.style.display = "none";
+      
+      document.getElementById("codigoSMS").value = "";
+      document.getElementById("errorSMS").textContent = "";
+    }
+    
+    window.cerrarModalCodigo = cerrarModalCodigo; 
+    function mostrarBienvenida(nombreCompleto) {
+      const toast = document.getElementById("toastBienvenida");
+      toast.textContent = `Bienvenido ${nombreCompleto}`;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 4000); 
+    }
+
+let yaVerificado = false; 
+document.getElementById("btnVerificarCodigo").addEventListener("click", async () => {
+  const codigo = document.getElementById("codigoSMS").value.trim();
+  const errorSMS = document.getElementById("errorSMS");
+
+  if (!/^\d{6}$/.test(codigo)) {
+    errorSMS.textContent = "Código inválido.";
+    return;
+  }
+
+  if (yaVerificado) {
+    errorSMS.textContent = "Ya verificado, por favor recarga.";
+    return;
+  }
+
+  try {
+    const result = await window.confirmationResultGlobal.confirm(codigo);
+    const user = result.user;
+
+    
+    const credencial = EmailAuthProvider.credential(
+      window.datosUsuarioTemporal.correo,
+      window.datosUsuarioTemporal.password
+    );
+
+    try {
+      await linkWithCredential(user, credencial);
+    } catch (err) {
+      await user.delete(); 
+      cerrarModalCodigo();
+      errorSMS.textContent = "Este correo ya está en uso. Intenta con otro.";
+      return;
+    }   
+
+    yaVerificado = true;
+
+    await updateProfile(user, {
+      displayName: `${window.datosUsuarioTemporal.nombre} ${window.datosUsuarioTemporal.apellido}`
+    });
+
+    await setDoc(doc(db, "usuarios", user.uid), {
+      nombre: window.datosUsuarioTemporal.nombre,
+      apellido: window.datosUsuarioTemporal.apellido,
+      correo: user.email || "sincorreo@alfomex.com",
+      telefono: user.phoneNumber || "No registrado",
+      rol: "cliente" 
+    });
+
+    cerrarModalCodigo();
+    const nombreCompleto = `${window.datosUsuarioTemporal.nombre} ${window.datosUsuarioTemporal.apellido}`;
+    localStorage.setItem("bienvenida", nombreCompleto);
+    window.location.reload();
+
+
+  } catch (e) {
+    if (auth.currentUser) {
+      console.warn("Error falso: ya estaba logueado");
+
+      if (!yaVerificado) {
+        const currentUser = auth.currentUser;
+        await setDoc(doc(db, "usuarios", currentUser.uid), {
+          nombre: window.datosUsuarioTemporal.nombre,
+          apellido: window.datosUsuarioTemporal.apellido,
+          correo: currentUser.email || "sincorreo@alfomex.com",
+          telefono: currentUser.phoneNumber || "No registrado"
+        });
+      }
+
+      cerrarModalCodigo();
+      window.location.reload();
+      return;
+    }
+
+    console.error(e);
+    errorSMS.textContent = "Código incorrecto o vencido.";
+  }
+});
+
+    window.addEventListener("DOMContentLoaded", () => {
+     const nombreGuardado = localStorage.getItem("bienvenida");
+     if (nombreGuardado) {
+       mostrarBienvenida(nombreGuardado);
+       localStorage.removeItem("bienvenida");
+      }
+    });
+ 
+window.scrollToCategoria = (id) => {
+  const section = document.getElementById(id);
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
+window.abrirCarrito = () => {
+  alert("Aquí iría el carrito o modal de compras 🛒");
+};
+
+function renderizarCarrito() {
+  const contenedor = document.getElementById("carritoLista");
+  const mensajeVacio = document.getElementById("mensajeCarritoVacio");
+  const resumen = document.getElementById("resumenCarrito");
+  const totalTexto = document.getElementById("totalCarrito");
+
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+  
+  contenedor.querySelectorAll(".item-carrito").forEach(item => item.remove());
+
+  if (carrito.length === 0) {
+    mensajeVacio.style.display = "block";
+    resumen.style.display = "none";
+    contenedor.classList.add("oculto");
+    return;
+  }
+
+  mensajeVacio.style.display = "none";
+  resumen.style.display = "block";
+  contenedor.classList.remove("oculto");
+
+  let total = 0;
+
+  carrito.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.classList.add("item-carrito");
+    div.innerHTML = `
+      <img src="${item.imagen}" alt="${item.nombre}" style="width:50px;height:50px;border-radius:8px;">
+      <div style="flex:1">
+        <strong>${item.nombre}</strong><br>
+        Precio: $${item.precio}
+      </div>
+      <button onclick="eliminarDelCarrito(${index})" style="color:red;">&times;</button>
+    `;
+    contenedor.insertBefore(div, resumen); 
+    total += Number(item.precio);
+  });
+
+  totalTexto.innerText = total.toFixed(2);
+}
+async function comprarAhora() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    abrirModal();
+    mostrarToastCarrito("🔒 Debes iniciar sesión para comprar");
+    return;
+  }
+
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+  if (carrito.length === 0) {
+    mostrarToastCarrito("🛒 Tu carrito está vacío");
+    return;
+  }
+
+  const pedido = {
+    uid: user.uid,
+    correo: user.email || "Sin correo",
+    productos: carrito,
+    total: carrito.reduce((sum, item) => sum + Number(item.precio), 0),
+    fecha: new Date().toISOString(),
+    estado: "pendiente"
+  };
+
+  try {
+    await addDoc(collection(db, "pedidosUsuarios"), pedido);
+
+    mostrarToastCarrito("✅ Pedido enviado correctamente");
+    localStorage.removeItem("carrito");
+    renderizarCarrito();
+    actualizarContadorCarrito();
+  } catch (error) {
+    console.error("❌ Error al guardar pedido:", error);
+    mostrarToastCarrito("❌ Error al guardar el pedido");
+  }
+}
+
+window.comprarAhora = comprarAhora;
+
+
+
+
+function eliminarDelCarrito(index) {
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  carrito.splice(index, 1);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+  renderizarCarrito();
+  actualizarContadorCarrito();
+
+  
+}
+window.eliminarDelCarrito = eliminarDelCarrito;
+window.abrirCarrito = () => {
+  const carrito = document.getElementById("carritoLista");
+  carrito.classList.toggle("oculto");
+};
+
+document.addEventListener("DOMContentLoaded", renderizarCarrito);
+
+function actualizarContadorCarrito() {
+  const contador = document.getElementById("contadorCarrito");
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  contador.textContent = carrito.length;
+  contador.style.display = carrito.length ? "block" : "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderizarCarrito();
+  actualizarContadorCarrito();
+ 
+  if (localStorage.getItem("forzarLoginPedido") === "true") {
+    localStorage.removeItem("forzarLoginPedido");
+    abrirModal(); 
+    const toast = document.getElementById("toastCarrito");
+    toast.textContent = "🔒 Para hacer un pedido personalizado, necesitas tener una cuenta.";
+    toast.classList.add("show", "toast-alerta");
+
+    setTimeout(() => {
+      toast.classList.remove("show", "toast-alerta");
+    }, 3000);
+  }
+});
+
+function mostrarToastCarrito(mensaje) {
+  const toast = document.getElementById("toastCarrito");
+  if (!toast) return;
+
+  toast.textContent = mensaje;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000); 
+}
+
+
+
+    </script>
+    <div id="recaptcha-container"></div>
+  
     <div id="modalCodigo">
       <div class="modal" id="modalSMS" style="min-width:300px;">
         <h3>Verificación por SMS</h3>
@@ -124,25 +756,59 @@
       </div>
     </div>
 
-    <div id="toastBienvenida" class="toast-bienvenida"></div>
-    <div id="toastCarrito" class="toast-bienvenida"></div>
 
-    <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
-      <div style="margin: 10px 0;">
-        <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/_alfomex/" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
-      </div>
-      <p>Copyright &copy; 2024. Alfomex</p>
-    </footer>
+  <div id="toastBienvenida" class="toast-bienvenida"></div>
+  <div id="toastCarrito" class="toast-bienvenida"></div>
+  
+  <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
+  
 
-    <!-- Archivos JavaScript modularizados -->
-    <script type="module" src="js/indexmodulos/config.js"></script>
-    <script type="module" src="js/indexmodulos/auth.js"></script>
-    <script type="module" src="js/indexmodulos/catalogo.js"></script>
-    <script type="module" src="js/indexmodulos/carrito.js"></script>
-    <script type="module" src="js/indexmodulos/modal.js"></script>
-    <script type="module" src="js/indexmodulos/sidenav.js"></script>
-    <script type="module" src="js/indexmodulos/toasts.js"></script>
-    <script src="js/indexmodulos/banner.js"></script>
+  <div style="margin: 10px 0;">
+    <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://www.instagram.com/_alfomex/" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
+  </div>
+  <p>Copyrigth&copy; 2024. Alfomex</p>
+</footer>
+  <script>
+  const imgs = document.querySelectorAll(".banner-img");
+  const puntosContainer = document.getElementById("puntosBanner");
+  let currentIndex = 0;
+  let interval;
+
+  imgs.forEach((_, i) => {
+    const punto = document.createElement("span");
+    punto.addEventListener("click", () => {
+      mostrarImagen(i);
+      reiniciarIntervalo();
+    });
+    puntosContainer.appendChild(punto);
+  });
+
+  const puntos = puntosContainer.querySelectorAll("span");
+
+  function mostrarImagen(index) {
+    imgs.forEach(img => img.classList.remove("active"));
+    puntos.forEach(p => p.classList.remove("active"));
+    imgs[index].classList.add("active");
+    puntos[index].classList.add("active");
+    currentIndex = index;
+  }
+
+  function siguienteImagen() {
+    currentIndex = (currentIndex + 1) % imgs.length;
+    mostrarImagen(currentIndex);
+  }
+
+  function reiniciarIntervalo() {
+    clearInterval(interval);
+    interval = setInterval(siguienteImagen, 5000);
+  }
+
+  mostrarImagen(0); 
+  interval = setInterval(siguienteImagen, 5000);
+</script>
+
   </body>
 </html>
+
+
