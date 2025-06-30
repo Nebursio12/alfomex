@@ -575,6 +575,22 @@ button, .icon-btn {
   .banner-solido {
     height: 200px;
   }
+
+  .alfombra img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .alfombra {
+    padding: 10px;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  .banner-img {
+    max-height: 200px;
+  }
 }
 
 /* 🟢 Mejora en accesibilidad y contraste */
@@ -588,8 +604,3 @@ button, .icon-btn {
   display: block !important;
 }
 
-@media (max-width: 480px) {
-  .banner-img {
-    max-height: 200px;
-  }
-}
