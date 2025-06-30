@@ -1,4 +1,3 @@
-
 import {
   collection,
   getDocs,
@@ -21,16 +20,22 @@ async function mostrarMenu() {
       const contenedor = document.getElementById(`${cat}s`);
       const tarjeta = document.createElement("div");
       tarjeta.className = "alfombra";
+
+      const producto = {
+        nombre: data.nombre,
+        precio: data.precio,
+        imagen: data.imagen
+      };
+
       tarjeta.innerHTML = `
         <img src="${data.imagen}" alt="${data.nombre}" width="200" height="200" loading="lazy" />
         <h4>${data.nombre}</h4>
         <p>$${data.precio}</p>
-        <button class="btn-añadir" onclick='añadirAlCarrito(${JSON.stringify({
-          nombre: data.nombre,
-          precio: data.precio,
-          imagen: data.imagen
-        })})'>🛒</button>
+        <button class="btn-añadir">🛒</button>
       `;
+
+      const boton = tarjeta.querySelector("button");
+      boton.addEventListener("click", () => añadirAlCarrito(producto));
 
       contenedor.appendChild(tarjeta);
     });
@@ -38,7 +43,6 @@ async function mostrarMenu() {
 }
 
 mostrarMenu();
-
 
 window.scrollToCategoria = (id) => {
   const section = document.getElementById(id);
