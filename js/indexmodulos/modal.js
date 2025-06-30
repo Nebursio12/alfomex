@@ -1,8 +1,8 @@
 // js/modal.js
 
 function abrirModal() {
-  window.closeNav(); // 👈 aquí
-  toggleFormulario(false);
+  if (typeof window.closeNav === "function") window.closeNav();
+  if (typeof window.toggleFormulario === "function") window.toggleFormulario(false);
   document.getElementById("loginModal").classList.add("active");
   document.getElementById("modalOverlay").classList.add("active");
 }
@@ -20,8 +20,11 @@ function cerrarModal() {
   setTimeout(() => {
     document.getElementById("errorMsg").textContent = "";
     document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
+
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    if (email) email.value = "";
+    if (password) password.value = "";
   }, 300);
 }
 
@@ -30,12 +33,12 @@ window.cerrarModal = cerrarModal;
 
 document.getElementById("modalOverlay").addEventListener("click", () => {
   cerrarModal();
-  window.closeNav(); // 👈 también aquí
+  if (typeof window.closeNav === "function") window.closeNav();
 });
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     cerrarModal();
-    window.closeNav(); // 👈 y aquí
+    if (typeof window.closeNav === "function") window.closeNav();
   }
 });
