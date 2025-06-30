@@ -1,5 +1,5 @@
 // js/sidenav.js
-import { auth } from "./firebase/config.js";
+import { auth } from "/alfomex/js/indexmodulos/config.js";
 
 window.openNav = () => {
   cerrarModal();
