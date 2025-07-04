@@ -58,31 +58,38 @@ const params = new URLSearchParams(location.search);
 const id = params.get("id");
 
 async function cargarProducto() {
-  const ref = doc(db, "menu", id);
-  const snap = await getDoc(ref);
+  try {
+    const ref = doc(db, "menu", id);
+    const snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    document.body.innerHTML = "<h2>Producto no encontrado</h2>";
-    return;
+    const main = document.querySelector("main");
+
+    if (!snap.exists()) {
+      main.innerHTML = "<h2 style='text-align:center;'>Producto no encontrado</h2>";
+      return;
+    }
+
+    const data = snap.data();
+
+    document.getElementById("nombreProducto").textContent = data.nombre;
+    document.getElementById("precioProducto").textContent = `$${data.precio}`;
+    document.getElementById("imgPrincipal").src = data.imagen;
+    document.getElementById("descripcionProducto").textContent = data.descripcion || "Sin descripción disponible";
+
+    const producto = {
+      nombre: data.nombre,
+      precio: data.precio,
+      imagen: data.imagen
+    };
+
+    document.getElementById("añadirCarrito").addEventListener("click", () => añadirAlCarrito(producto));
+    document.getElementById("comprarAhora").addEventListener("click", () => comprarAhoraDirecto(producto));
+  } catch (err) {
+    console.error("❌ Error al cargar producto:", err);
+    document.querySelector("main").innerHTML = "<h2 style='text-align:center;'>Error al cargar producto</h2>";
   }
-
-  const data = snap.data();
-
-  document.getElementById("nombreProducto").textContent = data.nombre;
-  document.getElementById("precioProducto").textContent = `$${data.precio}`;
-  document.getElementById("imgPrincipal").src = data.imagen;
-  document.getElementById("descripcionProducto").textContent = data.descripcion || "Sin descripción disponible";
-
-  const producto = {
-    nombre: data.nombre,
-    precio: data.precio,
-    imagen: data.imagen
-  };
-
-  document.getElementById("añadirCarrito").addEventListener("click", () => añadirAlCarrito(producto));
-
-  document.getElementById("comprarAhora").addEventListener("click", () => comprarAhoraDirecto(producto));
 }
+
 
 function añadirAlCarrito(producto) {
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
