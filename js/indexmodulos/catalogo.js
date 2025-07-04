@@ -31,11 +31,21 @@ async function mostrarMenu() {
         <img src="${data.imagen}" alt="${data.nombre}" width="200" height="200" loading="lazy" />
         <h4>${data.nombre}</h4>
         <p>$${data.precio}</p>
-        <button class="btn-añadir">🛒</button>
+        <div class="botones-producto">
+          <button class="btn-añadir">🛒 Añadir</button>
+          <button class="btn-ver-mas">🔍 Ver más</button>
+        </div>
       `;
 
-      const boton = tarjeta.querySelector("button");
-      boton.addEventListener("click", () => añadirAlCarrito(producto));
+      // Botón para añadir al carrito
+      const btnAñadir = tarjeta.querySelector(".btn-añadir");
+      btnAñadir.addEventListener("click", () => añadirAlCarrito(producto));
+
+      // Botón para ir a la página del producto
+      const btnVerMas = tarjeta.querySelector(".btn-ver-mas");
+      btnVerMas.addEventListener("click", () => {
+        location.href = `producto.html?id=${doc.id}`;
+      });
 
       contenedor.appendChild(tarjeta);
     });
