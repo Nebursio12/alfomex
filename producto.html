@@ -53,17 +53,21 @@ async function cargarHeader() {
 
 async function cargarProducto() {
   try {
+    console.log("🔍 ID recibido:", id);
     const ref = doc(db, "menu", id);
+    console.log("🔍 Referencia:", ref.path);
     const snap = await getDoc(ref);
 
     const main = document.querySelector("main");
 
     if (!snap.exists()) {
+      console.warn("⚠️ Producto no encontrado para el ID:", id);
       main.innerHTML = "<h2 style='text-align:center;'>Producto no encontrado</h2>";
       return;
     }
 
     const data = snap.data();
+    console.log("✅ Datos del producto:", data);
 
     document.getElementById("nombreProducto").textContent = data.nombre;
     document.getElementById("precioProducto").textContent = `$${data.precio}`;
@@ -97,7 +101,6 @@ function comprarAhoraDirecto(producto) {
   location.href = "index.html#carritoLista";
 }
 
-// Cargar encabezado y luego producto
 (async () => {
   await cargarHeader();
   await cargarProducto();
