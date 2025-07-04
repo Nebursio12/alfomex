@@ -20,6 +20,25 @@ async function enviarPorCorreo() {
     return;
   }
 
+  let costo = "Costo no calculado";
+  let medidas = "Medidas no disponibles";
+
+  try {
+    const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imagenBase64 })
+    });
+
+    const data = await res.json();
+    medidas = `${data.ancho} cm x ${data.alto} cm`;
+    costo = `Área cubierta: ${data.area} Costo Tela: $${data.tela} Costo Fieltro: $${data.fieltro} Costo Estambre Total: $${data.estambre} Costo aproximado: $${data.total}`;
+  } catch (err) {
+    mostrarNotificacion("❌ No se pudo calcular el costo", "error");
+    document.getElementById("loaderOverlay").style.display = "none";
+    return;
+  }
+
   if (!window.auth) {
     mostrarNotificacion("❌ Error: Firebase no está disponible", "error");
     return;
@@ -34,47 +53,28 @@ async function enviarPorCorreo() {
     }
 
     await user.reload();
-    const token = await user.getIdToken();
 
     const nombre = user.displayName || user.phoneNumber || "Cliente sin nombre";
     const correo = user.email || "correo@sin-dato.com";
     const telefono = user.phoneNumber || "No registrado";
 
     try {
-      // 🔒 Calcular costo con token
-      const res = await fetch("https://backend-1pvf.onrender.com/calcular-costo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ imagenBase64 })
-      });
-      const data = await res.json();
-      const medidas = `${data.ancho} cm x ${data.alto} cm`;
-      const costo = `Área cubierta: ${data.area} Costo Tela: $${data.tela} Costo Fieltro: $${data.fieltro} Costo Estambre Total: $${data.estambre} Costo aproximado: $${data.total}`;
-
-      // 🔒 Subir imagen con token
       const subir = await fetch("https://backend-1pvf.onrender.com/subir-imagen", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imagenBase64 })
       });
-      const subirData = await subir.json();
-      if (!subirData.url) throw new Error("No se pudo obtener la URL de la imagen");
 
-      const imagenURL = subirData.url;
+      const data = await subir.json();
+      if (!data.url) throw new Error("No se pudo obtener la URL de la imagen");
 
-      // 🔒 Enviar pedido con token
+      const imagenURL = data.url;
+
+      
+
       await fetch("https://backend-1pvf.onrender.com/enviar-pedido", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cliente: nombre,
           email: correo,
@@ -87,7 +87,7 @@ async function enviarPorCorreo() {
         })
       });
 
-      // 🔒 Guardar pedido en Firestore
+      const token = await auth.currentUser.getIdToken();
       const validar = await fetch("https://backend-1pvf.onrender.com/guardar-pedido-firestore", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -115,4 +115,25 @@ async function enviarPorCorreo() {
       document.getElementById("loaderOverlay").style.display = "none";
     }
   });
+}
+
+function iniciarTemporizadorVisual(restanteMs = 5 * 60 * 1000) {
+  const boton = document.getElementById("añadirCarrito");
+  const texto = document.getElementById("totalFinal");
+
+  boton.disabled = true;
+  const fin = Date.now() + restanteMs;
+
+  const intervalo = setInterval(() => {
+    const restante = Math.max(0, fin - Date.now());
+    const minutos = Math.floor(restante / 60000);
+    const segundos = Math.floor((restante % 60000) / 1000).toString().padStart(2, '0');
+    texto.textContent = `Espera ${minutos}:${segundos}`;
+
+    if (restante <= 0) {
+      clearInterval(intervalo);
+      texto.textContent = "Solicitar pedido";
+      boton.disabled = false;
+    }
+  }, 1000);
 }
