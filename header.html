@@ -1,0 +1,19 @@
+<header>
+  <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
+    <i class="fas fa-shopping-cart"></i>
+    <span id="contadorCarrito" class="contador-carrito">0</span>
+  </button>
+  <div class="logo">ALFOMEX</div>
+  <nav id="navOptions">
+    <button onclick="abrirModal()">Entrar</button>
+  </nav>
+</header>
+
+<div id="carritoLista" class="carrito-lista oculto">
+  <div id="mensajeCarritoVacio" style="text-align:center; color:#666;">🛒 El carrito está vacío</div>
+  <div id="resumenCarrito" style="margin-top: 15px; display: none;">
+    <hr style="margin: 10px 0;">
+    <div style="font-weight: bold; font-size: 1rem; margin-bottom: 10px;">Total: $<span id="totalCarrito">0</span></div>
+    <button onclick="comprarAhora()" style="width: 100%; padding: 10px; background: black; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Comprar Ahora</button>
+  </div>
+</div>
