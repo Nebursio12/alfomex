@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Producto - Alfomex</title>
+  <link rel="stylesheet" href="producto.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <button onclick="location.href='index.html'" class="icon-btn"><i class="fas fa-home"></i></button>
+  <div class="logo">ALFOMEX</div>
+</header>
+
+<main class="producto-contenedor">
+  <div class="producto-imagen">
+    <img id="imgPrincipal" src="" alt="Imagen del producto" loading="lazy">
+  </div>
+
+  <div class="producto-detalles">
+    <h1 id="nombreProducto">Cargando...</h1>
+    <p id="precioProducto">$0.00</p>
+    <p id="descripcionProducto">Cargando descripción...</p>
+
+    <div class="acciones">
+      <button id="añadirCarrito">🛒 Añadir al carrito</button>
+      <button id="comprarAhora">💳 Comprar ahora</button>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { db } from "/js/indexmodulos/config.js";
+
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+
+async function cargarProducto() {
+  const ref = doc(db, "menu", id);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    document.body.innerHTML = "<h2>Producto no encontrado</h2>";
+    return;
+  }
+
+  const data = snap.data();
+
+  document.getElementById("nombreProducto").textContent = data.nombre;
+  document.getElementById("precioProducto").textContent = `$${data.precio}`;
+  document.getElementById("imgPrincipal").src = data.imagen;
+  document.getElementById("descripcionProducto").textContent = data.descripcion || "Sin descripción disponible";
+
+  const producto = {
+    nombre: data.nombre,
+    precio: data.precio,
+    imagen: data.imagen
+  };
+
+  document.getElementById("añadirCarrito").addEventListener("click", () => añadirAlCarrito(producto));
+
+  document.getElementById("comprarAhora").addEventListener("click", () => comprarAhoraDirecto(producto));
+}
+
+function añadirAlCarrito(producto) {
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  carrito.push(producto);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+  alert("Producto añadido al carrito ✅");
+}
+
+function comprarAhoraDirecto(producto) {
+  localStorage.setItem("carrito", JSON.stringify([producto]));
+  location.href = "index.html#carritoLista";
+}
+
+cargarProducto();
+</script>
+
+</body>
+</html>
