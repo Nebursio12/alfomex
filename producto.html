@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<!-- Header compartido -->
+<!-- Header dinámico -->
 <div id="headerContainer"></div>
 
 <main class="producto-contenedor">
@@ -37,15 +37,19 @@ import "/js/indexmodulos/carritoindex.js";
 import "/js/indexmodulos/authindex.js";
 import "/js/indexmodulos/modal.js";
 
-// Cargar encabezado dinámicamente desde header.html
-fetch("/header.html")
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById("headerContainer").innerHTML = html;
-  });
-
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
+
+async function cargarHeader() {
+  try {
+    const res = await fetch("/header.html");
+    const html = await res.text();
+    document.getElementById("headerContainer").innerHTML = html;
+  } catch (e) {
+    console.error("❌ Error al cargar el encabezado:", e);
+    document.getElementById("headerContainer").innerHTML = "<header>Error al cargar encabezado</header>";
+  }
+}
 
 async function cargarProducto() {
   try {
@@ -74,6 +78,7 @@ async function cargarProducto() {
 
     document.getElementById("añadirCarrito").addEventListener("click", () => añadirAlCarrito(producto));
     document.getElementById("comprarAhora").addEventListener("click", () => comprarAhoraDirecto(producto));
+
   } catch (err) {
     console.error("❌ Error al cargar producto:", err);
     document.querySelector("main").innerHTML = "<h2 style='text-align:center;'>Error al cargar producto</h2>";
@@ -92,7 +97,12 @@ function comprarAhoraDirecto(producto) {
   location.href = "index.html#carritoLista";
 }
 
-cargarProducto();
+// Cargar encabezado y luego producto
+(async () => {
+  await cargarHeader();
+  await cargarProducto();
+})();
+
 </script>
 
 </body>
