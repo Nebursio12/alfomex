@@ -57,7 +57,6 @@
       const { db } = await import("/js/indexmodulos/config.js");
       const { Carrito } = await import("/js/indexmodulos/carritoindex.js");
       // Importación condicional del modal
-      await import("/js/indexmodulos/modal.js"); // solo asegura la carga
       const abrirModal = window.abrirModal;
 
       // 2. Configuración de eventos
@@ -171,5 +170,14 @@
 <script type="module" src="js/indexmodulos/authindex.js"defer></script>
 <script type="module" src="js/indexmodulos/modal.js"defer></script>
 <script type="module" src="js/indexmodulos/toasts.js"defer></script>
+
+<script>
+  // Asegura que abrirModal esté disponible globalmente para onclick
+  window.addEventListener("DOMContentLoaded", () => {
+    if (!window.abrirModal) {
+      console.warn("abrirModal aún no está disponible");
+    }
+  });
+</script>
 </body>
 </html>
