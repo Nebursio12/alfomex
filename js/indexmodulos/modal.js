@@ -1,44 +1,79 @@
-
-
+// Versión mejorada que soporta tanto módulos como uso global
 function abrirModal() {
-  if (typeof window.closeNav === "function") window.closeNav();
-  if (typeof window.toggleFormulario === "function") window.toggleFormulario(false);
-  document.getElementById("loginModal").classList.add("active");
-  document.getElementById("modalOverlay").classList.add("active");
+  try {
+    if (typeof window.closeNav === "function") window.closeNav();
+    if (typeof window.toggleFormulario === "function") window.toggleFormulario(false);
+    
+    const modal = document.getElementById("loginModal");
+    const overlay = document.getElementById("modalOverlay");
+    
+    if (!modal || !overlay) {
+      console.error("Elementos del modal no encontrados");
+      return;
+    }
+    
+    modal.classList.add("active");
+    overlay.classList.add("active");
+  } catch (error) {
+    console.error("Error en abrirModal:", error);
+  }
 }
 
 function cerrarModal() {
-  const modal = document.getElementById("loginModal");
-  const overlay = document.getElementById("modalOverlay");
+  try {
+    const modal = document.getElementById("loginModal");
+    const overlay = document.getElementById("modalOverlay");
 
-  modal.classList.remove("active");
-  overlay.classList.remove("active");
+    if (modal) modal.classList.remove("active");
+    if (overlay) overlay.classList.remove("active");
 
-  document.getElementById("recuperacion").style.display = "none";
-  document.getElementById("emailRecuperar").value = "";
+    const recuperacion = document.getElementById("recuperacion");
+    if (recuperacion) recuperacion.style.display = "none";
+    
+    const emailRecuperar = document.getElementById("emailRecuperar");
+    if (emailRecuperar) emailRecuperar.value = "";
 
-  setTimeout(() => {
-    document.getElementById("errorMsg").textContent = "";
-    document.getElementById("errorMsg").classList.remove("error-anim", "red", "green");
+    setTimeout(() => {
+      const errorMsg = document.getElementById("errorMsg");
+      if (errorMsg) {
+        errorMsg.textContent = "";
+        errorMsg.classList.remove("error-anim", "red", "green");
+      }
 
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    if (email) email.value = "";
-    if (password) password.value = "";
-  }, 300);
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      if (email) email.value = "";
+      if (password) password.value = "";
+    }, 300);
+  } catch (error) {
+    console.error("Error en cerrarModal:", error);
+  }
 }
 
-window.abrirModal = abrirModal;
-window.cerrarModal = cerrarModal;
+// Sistema dual: Soporta tanto módulos como global
+if (typeof module !== 'undefined' && module.exports) {
+  // Entorno Node/Module
+  module.exports = { abrirModal, cerrarModal };
+} else {
+  // Navegador
+  window.abrirModal = abrirModal;
+  window.cerrarModal = cerrarModal;
 
-document.getElementById("modalOverlay").addEventListener("click", () => {
-  cerrarModal();
-  if (typeof window.closeNav === "function") window.closeNav();
-});
+  // Configura eventos solo si los elementos existen
+  document.addEventListener("DOMContentLoaded", () => {
+    const overlay = document.getElementById("modalOverlay");
+    if (overlay) {
+      overlay.addEventListener("click", () => {
+        cerrarModal();
+        if (typeof window.closeNav === "function") window.closeNav();
+      });
+    }
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    cerrarModal();
-    if (typeof window.closeNav === "function") window.closeNav();
-  }
-});
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        cerrarModal();
+        if (typeof window.closeNav === "function") window.closeNav();
+      }
+    });
+  });
+}
