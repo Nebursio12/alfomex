@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("precioProducto").textContent = `$${data.precio || "0"}`;
     document.getElementById("imgPrincipal").src = data.imagen || "";
     document.getElementById("descripcionProducto").textContent = 
-      data.descripcion || "Sin descripción disponible";
+      data.descripcion !== undefined ? data.descripcion : "Sin descripción disponible";
 
     // Botones
     const producto = { id, ...data };
