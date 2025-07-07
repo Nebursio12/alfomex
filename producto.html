@@ -55,47 +55,78 @@
   <!-- Mismos scripts que index.html -->
   <script type="module">
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-    import { db } from "/js/indexmodulos/config.js";
-    import { añadirAlCarrito } from "/js/indexmodulos/carritoindex.js";
+import { db } from "/js/indexmodulos/config.js";
+import { añadirAlCarrito } from "/js/indexmodulos/carritoindex.js";
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
+// Debug: Verifica que el módulo se cargue
+console.log("🔥 Módulo producto cargado");
 
-      if (!id) {
-        document.querySelector("main").innerHTML = "<h2>Producto no encontrado</h2>";
-        return;
-      }
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  
+  // Debug: Verifica el ID
+  console.log("🔍 ID del producto:", id);
+  if (!id) {
+    console.error("❌ No se encontró ID en la URL");
+    mostrarError("Producto no encontrado");
+    return;
+  }
 
-      try {
-        const docSnap = await getDoc(doc(db, "menu", id));
-        if (!docSnap.exists()) throw new Error("No existe");
+  try {
+    // Debug: Verifica la conexión a Firestore
+    console.log("📡 Conectando a Firestore...");
+    const ref = doc(db, "menu", id);
+    console.log("🔗 Referencia del documento:", ref.path);
+    
+    const snap = await getDoc(ref);
+    // Debug: Verifica si el documento existe
+    console.log("📄 Snap existe?", snap.exists());
 
-        const data = docSnap.data();
-        document.getElementById("nombreProducto").textContent = data.nombre;
-        document.getElementById("precioProducto").textContent = `$${data.precio}`;
-        document.getElementById("imgPrincipal").src = data.imagen;
-        document.getElementById("descripcionProducto").textContent = 
-          data.descripcion || "Sin descripción disponible";
+    if (!snap.exists()) {
+      console.error("⚠️ El documento no existe en Firestore");
+      mostrarError("Producto no encontrado");
+      return;
+    }
 
-        // Botones
-        const producto = { id, ...data };
-        document.getElementById("añadirCarrito").addEventListener("click", () => añadirAlCarrito(producto));
-        document.getElementById("comprarAhora").addEventListener("click", () => {
-          localStorage.setItem("carrito", JSON.stringify([producto]));
-          window.location.href = "index.html#carritoLista";
-        });
+    const data = snap.data();
+    // Debug: Muestra los datos obtenidos
+    console.log("✅ Datos del producto:", data);
 
-      } catch (error) {
-        console.error("Error:", error);
-        document.querySelector("main").innerHTML = `
-          <div style="text-align: center; padding: 40px;">
-            <h2>Error al cargar el producto</h2>
-            <a href="index.html" style="color: #000; text-decoration: underline;">Volver al catálogo</a>
-          </div>
-        `;
-      }
+    // Renderizar datos
+    document.getElementById("nombreProducto").textContent = data.nombre || "Sin nombre";
+    document.getElementById("precioProducto").textContent = `$${data.precio || "0"}`;
+    document.getElementById("imgPrincipal").src = data.imagen || "";
+    document.getElementById("descripcionProducto").textContent = 
+      data.descripcion || "Sin descripción disponible";
+
+    // Botones
+    const producto = { id, ...data };
+    document.getElementById("añadirCarrito").addEventListener("click", () => {
+      console.log("🛒 Añadiendo producto:", producto);
+      añadirAlCarrito(producto);
     });
+
+    document.getElementById("comprarAhora").addEventListener("click", () => {
+      localStorage.setItem("carrito", JSON.stringify([producto]));
+      window.location.href = "index.html#carritoLista";
+    });
+
+  } catch (err) {
+    console.error("❌ Error crítico:", err);
+    mostrarError("Error al cargar el producto");
+  }
+});
+
+function mostrarError(mensaje) {
+  const main = document.querySelector("main");
+  main.innerHTML = `
+    <div style="text-align: center; padding: 40px;">
+      <h2>${mensaje}</h2>
+      <a href="index.html" style="color: #000;">Volver al catálogo</a>
+    </div>
+  `;
+}
 
   </script>
   <!-- Footer idéntico a index.html -->
