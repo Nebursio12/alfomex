@@ -1,22 +1,28 @@
 function abrirModal() {
+  if (document.readyState !== "complete") {
+    window.addEventListener("DOMContentLoaded", abrirModal, { once: true });
+    return;
+  }
+
   try {
     if (typeof window.closeNav === "function") window.closeNav();
     if (typeof window.toggleFormulario === "function") window.toggleFormulario(false);
-    
+
     const modal = document.getElementById("loginModal");
     const overlay = document.getElementById("modalOverlay");
-    
+
     if (!modal || !overlay) {
-      console.error("Elementos del modal no encontrados");
+      console.error("❌ Elementos del modal no encontrados");
       return;
     }
-    
+
     modal.classList.add("active");
     overlay.classList.add("active");
   } catch (error) {
     console.error("Error en abrirModal:", error);
   }
 }
+
 
 function cerrarModal() {
   try {
