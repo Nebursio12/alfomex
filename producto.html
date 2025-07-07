@@ -96,7 +96,7 @@ function añadirAlCarrito(producto) {
   alert("Producto añadido al carrito ✅");
 }
 
-function comprarAhoraDirecto(producto) {
+function comprarAhoraDirecto(producto) { 
   localStorage.setItem("carrito", JSON.stringify([producto]));
   location.href = "index.html#carritoLista";
 }
