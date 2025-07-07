@@ -3,110 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Producto - Alfomex</title>
+  <title>Producto - ALFOMEX</title>
+  <!-- Mismos estilos que index.html -->
   <link rel="stylesheet" href="index.css">
-  <link rel="stylesheet" href="producto.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
+  <!-- Header idéntico a index.html -->
+  <header>
+    <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
+      <i class="fas fa-shopping-cart"></i>
+      <span id="contadorCarrito" class="contador-carrito">0</span>
+    </button>
+    <div class="logo">ALFOMEX</div>
+    <nav id="navOptions">
+      <button onclick="abrirModal()">Entrar</button>
+    </nav>
+  </header>
 
-<!-- Header dinámico -->
-<div id="headerContainer"></div>
+  <!-- Contenedor principal con estilo de index.html -->
+  <main class="producto-contenedor" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+    <div class="producto-grid"> <!-- Nuevo contenedor grid -->
+      <!-- Imagen del producto -->
+      <div class="producto-imagen">
+        <img id="imgPrincipal" src="" alt="Imagen del producto" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      </div>
 
-<main class="producto-contenedor">
-  <div class="producto-imagen">
-    <img id="imgPrincipal" src="" alt="Imagen del producto" loading="lazy">
-  </div>
+      <!-- Detalles del producto -->
+      <div class="producto-detalles">
+        <h1 id="nombreProducto" style="font-size: 2rem; margin-bottom: 10px;">Cargando...</h1>
+        <p id="precioProducto" style="font-size: 1.5rem; color: #000; font-weight: bold; margin-bottom: 20px;">$0.00</p>
+        <p id="descripcionProducto" style="color: #666; line-height: 1.6; margin-bottom: 30px;">Cargando descripción...</p>
 
-  <div class="producto-detalles">
-    <h1 id="nombreProducto">Cargando...</h1>
-    <p id="precioProducto">$0.00</p>
-    <p id="descripcionProducto">Cargando descripción...</p>
-
-    <div class="acciones">
-      <button id="añadirCarrito">🛒 Añadir al carrito</button>
-      <button id="comprarAhora">💳 Comprar ahora</button>
+        <!-- Botones con estilo de index.html -->
+        <div class="acciones" style="display: flex; gap: 15px;">
+          <button id="añadirCarrito" class="btn-añadir" style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            🛒 Añadir al carrito
+          </button>
+          <button id="comprarAhora" class="btn-comprar" style="padding: 12px 20px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            💳 Comprar ahora
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 
-<script type="module">
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-import { db } from "/js/indexmodulos/config.js";
-import "/js/indexmodulos/carritoindex.js";
-import "/js/indexmodulos/authindex.js";
-import "/js/indexmodulos/modal.js";
+  <!-- Footer idéntico a index.html -->
+  <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
+    <div style="margin: 10px 0;">
+      <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/_alfomex/" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
+    </div>
+    <p>Copyright&copy; 2024. Alfomex</p>
+  </footer>
 
-const params = new URLSearchParams(location.search);
-const id = params.get("id");
+  <!-- Mismos scripts que index.html -->
+  <script type="module">
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { db } from "/js/indexmodulos/config.js";
+    import { añadirAlCarrito } from "/js/indexmodulos/carritoindex.js";
 
-async function cargarHeader() {
-  try {
-    const res = await fetch("/header.html");
-    const html = await res.text();
-    document.getElementById("headerContainer").innerHTML = html;
-  } catch (e) {
-    console.error("❌ Error al cargar el encabezado:", e);
-    document.getElementById("headerContainer").innerHTML = "<header>Error al cargar encabezado</header>";
-  }
-}
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
 
-async function cargarProducto() {
-  try {
-    console.log("🔍 ID recibido:", id);
-    const ref = doc(db, "menu", id);
-    console.log("🔍 Referencia:", ref.path);
-    const snap = await getDoc(ref);
+      if (!id) {
+        document.querySelector("main").innerHTML = "<h2>Producto no encontrado</h2>";
+        return;
+      }
 
-    const main = document.querySelector("main");
+      try {
+        const docSnap = await getDoc(doc(db, "menu", id));
+        if (!docSnap.exists()) throw new Error("No existe");
 
-    if (!snap.exists()) {
-      console.warn("⚠️ Producto no encontrado para el ID:", id);
-      main.innerHTML = "<h2 style='text-align:center;'>Producto no encontrado</h2>";
-      return;
-    }
+        const data = docSnap.data();
+        document.getElementById("nombreProducto").textContent = data.nombre;
+        document.getElementById("precioProducto").textContent = `$${data.precio}`;
+        document.getElementById("imgPrincipal").src = data.imagen;
+        document.getElementById("descripcionProducto").textContent = 
+          data.descripcion || "Sin descripción disponible";
 
-    const data = snap.data();
-    console.log("✅ Datos del producto:", data);
+        // Botones
+        const producto = { id, ...data };
+        document.getElementById("añadirCarrito").addEventListener("click", () => añadirAlCarrito(producto));
+        document.getElementById("comprarAhora").addEventListener("click", () => {
+          localStorage.setItem("carrito", JSON.stringify([producto]));
+          window.location.href = "index.html#carritoLista";
+        });
 
-    document.getElementById("nombreProducto").textContent = data.nombre;
-    document.getElementById("precioProducto").textContent = `$${data.precio}`;
-    document.getElementById("imgPrincipal").src = data.imagen;
-    document.getElementById("descripcionProducto").textContent = data.descripcion || "Sin descripción disponible";
-
-    const producto = {
-      nombre: data.nombre,
-      precio: data.precio,
-      imagen: data.imagen
-    };
-
-    document.getElementById("añadirCarrito").addEventListener("click", () => añadirAlCarrito(producto));
-    document.getElementById("comprarAhora").addEventListener("click", () => comprarAhoraDirecto(producto));
-
-  } catch (err) {
-    console.error("❌ Error al cargar producto:", err);
-    document.querySelector("main").innerHTML = "<h2 style='text-align:center;'>Error al cargar producto</h2>";
-  }
-}
-
-function añadirAlCarrito(producto) {
-  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-  carrito.push(producto);
-  localStorage.setItem("carrito", JSON.stringify(carrito));
-  alert("Producto añadido al carrito ✅");
-}
-
-function comprarAhoraDirecto(producto) { 
-  localStorage.setItem("carrito", JSON.stringify([producto]));
-  location.href = "index.html#carritoLista";
-}
-
-(async () => {
-  await cargarHeader();
-  await cargarProducto();
-})();
-
-</script>
-
+      } catch (error) {
+        console.error("Error:", error);
+        document.querySelector("main").innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <h2>Error al cargar el producto</h2>
+            <a href="index.html" style="color: #000; text-decoration: underline;">Volver al catálogo</a>
+          </div>
+        `;
+      }
+    });
+  </script>
 </body>
 </html>
