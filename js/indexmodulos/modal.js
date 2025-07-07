@@ -1,28 +1,23 @@
+// Versión mejorada que soporta tanto módulos como uso global
 function abrirModal() {
-  if (document.readyState !== "complete") {
-    window.addEventListener("DOMContentLoaded", abrirModal, { once: true });
-    return;
-  }
-
   try {
     if (typeof window.closeNav === "function") window.closeNav();
     if (typeof window.toggleFormulario === "function") window.toggleFormulario(false);
-
+    
     const modal = document.getElementById("loginModal");
     const overlay = document.getElementById("modalOverlay");
-
+    
     if (!modal || !overlay) {
-      console.error("❌ Elementos del modal no encontrados");
+      console.error("Elementos del modal no encontrados");
       return;
     }
-
+    
     modal.classList.add("active");
     overlay.classList.add("active");
   } catch (error) {
     console.error("Error en abrirModal:", error);
   }
 }
-
 
 function cerrarModal() {
   try {
@@ -55,24 +50,32 @@ function cerrarModal() {
   }
 }
 
-// ✅ SIEMPRE expón al window, aunque esté dentro de type="module"
-window.abrirModal = abrirModal;
-window.cerrarModal = cerrarModal;
 
-// ✅ Esperar a que el DOM esté listo antes de añadir eventos
-document.addEventListener("DOMContentLoaded", () => {
-  const overlay = document.getElementById("modalOverlay");
-  if (overlay) {
-    overlay.addEventListener("click", () => {
-      cerrarModal();
-      if (typeof window.closeNav === "function") window.closeNav();
-    });
-  }
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      cerrarModal();
-      if (typeof window.closeNav === "function") window.closeNav();
+// Sistema dual: Soporta tanto módulos como global
+if (typeof module !== 'undefined' && module.exports) {
+  // Entorno Node/Module
+  module.exports = { abrirModal, cerrarModal };
+} else {
+  // Navegador
+  window.abrirModal = abrirModal;
+  window.cerrarModal = cerrarModal;
+
+  // Configura eventos solo si los elementos existen
+  document.addEventListener("DOMContentLoaded", () => {
+    const overlay = document.getElementById("modalOverlay");
+    if (overlay) {
+      overlay.addEventListener("click", () => {
+        cerrarModal();
+        if (typeof window.closeNav === "function") window.closeNav();
+      });
     }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        cerrarModal();
+        if (typeof window.closeNav === "function") window.closeNav();
+      }
+    });
   });
-});
+}
