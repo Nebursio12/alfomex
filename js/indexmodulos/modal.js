@@ -50,6 +50,9 @@ function cerrarModal() {
   }
 }
 
+window.abrirModal = abrirModal;
+window.cerrarModal = cerrarModal;
+
 // Sistema dual: Soporta tanto módulos como global
 if (typeof module !== 'undefined' && module.exports) {
   // Entorno Node/Module
