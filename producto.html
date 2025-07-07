@@ -8,6 +8,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    /* Estilos temporales para depuración */
+    .debug-border {
+      border: 2px solid red !important;
+    }
+    .debug-log {
+      color: white;
+      background: #333;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      font-family: monospace;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -22,12 +36,12 @@
   </header>
 
   <main class="producto-contenedor" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
-    <div class="producto-grid">
-      <div class="producto-imagen">
+    <div class="producto-grid debug-border">
+      <div class="producto-imagen debug-border">
         <img id="imgPrincipal" src="" alt="Imagen del producto" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
       </div>
 
-      <div class="producto-detalles">
+      <div class="producto-detalles debug-border">
         <h1 id="nombreProducto" style="font-size: 2rem; margin-bottom: 10px;">Cargando...</h1>
         <p id="precioProducto" style="font-size: 1.5rem; color: #000; font-weight: bold; margin-bottom: 20px;">$0.00</p>
         <p id="descripcionProducto" style="color: #666; line-height: 1.6; margin-bottom: 30px;">Cargando descripción...</p>
@@ -42,156 +56,13 @@
         </div>
       </div>
     </div>
+
+    <!-- Área de depuración visible -->
+    <div id="debugArea" style="margin-top: 40px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+      <h3>Información de Depuración</h3>
+      <div id="debugLogs" class="debug-log">Esperando datos...</div>
+    </div>
   </main>
-
-  <script type="module">
-    // 1. Importaciones con verificación
-    try {
-      var firestoreImported = false;
-      var configImported = false;
-      var carritoImported = false;
-      var modalImported = false;
-
-      const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-      firestoreImported = true;
-      console.log("✅ Firebase Firestore importado correctamente");
-
-      const { db } = await import("/js/indexmodulos/config.js");
-      configImported = true;
-      console.log("✅ Configuración de Firebase importada correctamente");
-
-      const { Carrito } = await import("/js/indexmodulos/carritoindex.js");
-      carritoImported = true;
-      console.log("✅ Módulo Carrito importado correctamente");
-
-      const { abrirModal } = await import("/js/indexmodulos/modal.js");
-      modalImported = true;
-      console.log("✅ Módulo Modal importado correctamente");
-    } catch (importError) {
-      console.error("❌ Error en imports:", importError);
-      mostrarError("Error al cargar los recursos necesarios");
-      throw importError; // Detiene la ejecución
-    }
-
-    // 2. Configuración de eventos
-    document.getElementById("btnCarrito").addEventListener("click", () => {
-      try {
-        Carrito.abrir();
-      } catch (error) {
-        console.error("Error al abrir carrito:", error);
-      }
-    });
-
-    document.getElementById("btnLogin").addEventListener("click", () => {
-      try {
-        abrirModal();
-      } catch (error) {
-        console.error("Error al abrir modal:", error);
-      }
-    });
-
-    // 3. Carga del producto
-    document.addEventListener("DOMContentLoaded", async () => {
-      console.group("🚀 Iniciando carga de producto");
-      
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
-        
-        console.log("🔍 ID del producto:", id);
-        if (!id) {
-          throw new Error("No se proporcionó ID de producto");
-        }
-
-        console.log("📡 Conectando a Firestore...");
-        const ref = doc(db, "menu", id);
-        console.log("🔗 Referencia creada:", ref.path);
-
-        const snap = await getDoc(ref);
-        console.log("📄 Snap obtenido:", {
-          exists: snap.exists(),
-          data: snap.data()
-        });
-
-        if (!snap.exists()) {
-          throw new Error("El producto no existe en la base de datos");
-        }
-
-        const data = snap.data();
-        console.log("✅ Datos recibidos:", data);
-
-        // Validación de datos
-        if (!data.nombre || !data.precio || !data.imagen) {
-          console.warn("⚠️ Datos incompletos:", {
-            nombre: !!data.nombre,
-            precio: !!data.precio,
-            imagen: !!data.imagen
-          });
-        }
-
-        // Renderizado
-        document.getElementById("nombreProducto").textContent = data.nombre || "Sin nombre";
-        document.getElementById("precioProducto").textContent = `$${data.precio?.toFixed(2) || "0.00"}`;
-        
-        const imgElement = document.getElementById("imgPrincipal");
-        imgElement.src = data.imagen || "https://via.placeholder.com/600x400?text=Sin+imagen";
-        imgElement.onerror = () => {
-          console.error("❌ Error al cargar imagen");
-          imgElement.src = "https://via.placeholder.com/600x400?text=Error+imagen";
-        };
-        
-        document.getElementById("descripcionProducto").textContent = 
-          data.descripcion || "Descripción no disponible";
-
-        // Configuración de botones
-        const producto = { 
-          id,
-          nombre: data.nombre || "Producto sin nombre",
-          precio: data.precio || 0,
-          imagen: data.imagen || "",
-          descripcion: data.descripcion || ""
-        };
-
-        document.getElementById("añadirCarrito").addEventListener("click", () => {
-          console.log("🛒 Añadiendo producto:", producto);
-          try {
-            Carrito.añadir(producto);
-          } catch (error) {
-            console.error("Error al añadir al carrito:", error);
-          }
-        });
-
-        document.getElementById("comprarAhora").addEventListener("click", () => {
-          console.log("💳 Iniciando compra...");
-          try {
-            Carrito.comprar();
-          } catch (error) {
-            console.error("Error al procesar compra:", error);
-          }
-        });
-
-        console.log("🎉 Producto cargado correctamente");
-
-      } catch (error) {
-        console.error("❌ Error en la carga:", error);
-        mostrarError(error.message || "Error al cargar el producto");
-      } finally {
-        console.groupEnd();
-      }
-    });
-
-    function mostrarError(mensaje) {
-      console.log("🛑 Mostrando error al usuario:", mensaje);
-      const main = document.querySelector("main");
-      main.innerHTML = `
-        <div style="text-align: center; padding: 40px;">
-          <h2 style="color: #d32f2f;">${mensaje}</h2>
-          <a href="index.html" style="color: #000; text-decoration: underline;">Volver al catálogo</a>
-          <p style="margin-top: 20px; color: #666;">Consulte la consola para más detalles</p>
-        </div>
-      `;
-    }
-  </script>
 
   <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
     <div style="margin: 10px 0;">
@@ -200,5 +71,164 @@
     </div>
     <p>Copyright&copy; 2024. Alfomex</p>
   </footer>
+
+  <script type="module">
+    // Función para mostrar logs en pantalla y consola
+    function debugLog(message, isError = false) {
+      const debugDiv = document.getElementById("debugLogs");
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = document.createElement("div");
+      
+      logEntry.innerHTML = `[${timestamp}] ${message}`;
+      logEntry.style.color = isError ? "red" : "green";
+      
+      debugDiv.prepend(logEntry);
+      console.log(`%c${message}`, `color: ${isError ? "red" : "green"}`);
+    }
+
+    // Mostrar inicio del proceso
+    debugLog("🔵 Iniciando carga del producto...");
+
+    try {
+      // 1. Importaciones
+      debugLog("🔵 Importando módulos...");
+      const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+      const { db } = await import("/js/indexmodulos/config.js");
+      const { Carrito } = await import("/js/indexmodulos/carritoindex.js");
+      
+      // Importación condicional del modal
+      let abrirModal;
+      try {
+        const modalModule = await import("/js/indexmodulos/modal.js");
+        abrirModal = modalModule.abrirModal || window.abrirModal;
+        debugLog("✅ Módulo modal cargado");
+      } catch (e) {
+        debugLog("⚠️ Usando modal global (fallback)", true);
+        abrirModal = window.abrirModal;
+      }
+
+      debugLog("✅ Todos los módulos importados correctamente");
+
+      // 2. Configuración de eventos
+      document.getElementById("btnCarrito")?.addEventListener("click", () => {
+        debugLog("🛒 Botón carrito clickeado");
+        Carrito.abrir();
+      });
+
+      document.getElementById("btnLogin")?.addEventListener("click", () => {
+        debugLog("🔑 Botón login clickeado");
+        abrirModal();
+      });
+
+      // 3. Carga del producto
+      debugLog("🔵 Obteniendo ID del producto...");
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      
+      debugLog(`🔍 ID del producto: ${id || "NO PROPORCIONADO"}`);
+      if (!id) {
+        throw new Error("No se proporcionó ID de producto");
+      }
+
+      debugLog("📡 Conectando a Firestore...");
+      const ref = doc(db, "menu", id);
+      debugLog(`🔗 Referencia creada: ${ref.path}`);
+
+      debugLog("⏳ Obteniendo documento...");
+      const snap = await getDoc(ref);
+      
+      const docData = {
+        exists: snap.exists(),
+        data: snap.data()
+      };
+      debugLog(`📄 Documento obtenido: ${JSON.stringify(docData, null, 2)}`);
+
+      if (!snap.exists()) {
+        throw new Error("El producto no existe en Firestore");
+      }
+
+      const data = snap.data();
+      debugLog(`✅ Datos recibidos: ${JSON.stringify(data, null, 2)}`);
+
+      // 4. Validación de datos
+      debugLog("🔍 Validando estructura de datos...");
+      const requiredFields = {
+        nombre: typeof data.nombre === "string",
+        precio: typeof data.precio === "number",
+        imagen: typeof data.imagen === "string"
+      };
+      debugLog(`🧾 Estructura válida: ${JSON.stringify(requiredFields)}`);
+
+      // 5. Renderizado
+      debugLog("🎨 Renderizando datos...");
+      document.getElementById("nombreProducto").textContent = data.nombre || "Sin nombre";
+      document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio.toFixed(2)}` : "$0.00";
+      
+      const imgElement = document.getElementById("imgPrincipal");
+      if (data.imagen) {
+        debugLog(`🖼️ Intentando cargar imagen: ${data.imagen}`);
+        imgElement.src = data.imagen;
+        imgElement.onerror = () => {
+          debugLog("❌ Error al cargar imagen", true);
+          imgElement.src = "https://via.placeholder.com/600x400?text=Imagen+no+disponible";
+        };
+      } else {
+        debugLog("⚠️ No hay URL de imagen proporcionada", true);
+        imgElement.src = "https://via.placeholder.com/600x400?text=Sin+imagen";
+      }
+      
+      document.getElementById("descripcionProducto").textContent = 
+        data.descripcion || "Descripción no disponible";
+
+      // 6. Configurar botones
+      debugLog("🛒 Configurando botones del carrito...");
+      const producto = { 
+        id,
+        nombre: data.nombre || "Producto sin nombre",
+        precio: data.precio || 0,
+        imagen: data.imagen || "",
+        descripcion: data.descripcion || ""
+      };
+
+      document.getElementById("añadirCarrito").addEventListener("click", () => {
+        debugLog("🛒 Añadiendo producto al carrito:", producto);
+        try {
+          Carrito.añadir(producto);
+          debugLog("✅ Producto añadido correctamente");
+        } catch (error) {
+          debugLog(`❌ Error al añadir al carrito: ${error.message}`, true);
+        }
+      });
+
+      document.getElementById("comprarAhora").addEventListener("click", () => {
+        debugLog("💳 Iniciando proceso de compra...");
+        try {
+          Carrito.comprar();
+          debugLog("✅ Proceso de compra iniciado");
+        } catch (error) {
+          debugLog(`❌ Error en compra: ${error.message}`, true);
+        }
+      });
+
+      debugLog("🎉 Producto cargado correctamente");
+
+    } catch (error) {
+      debugLog(`❌ Error crítico: ${error.message}`, true);
+      console.error("Detalles del error:", error);
+      
+      // Mostrar error en la interfaz
+      document.querySelector("main").innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <h2 style="color: #d32f2f;">Error al cargar el producto</h2>
+          <p style="color: #666;">${error.message}</p>
+          <a href="index.html" style="color: #000; text-decoration: underline;">Volver al catálogo</a>
+          <div style="margin-top: 20px; text-align: left; background: #f5f5f5; padding: 15px; border-radius: 8px;">
+            <h4>Detalles técnicos:</h4>
+            <pre style="font-family: monospace;">${error.stack || "No hay más detalles"}</pre>
+          </div>
+        </div>
+      `;
+    }
+  </script>
 </body>
 </html>
