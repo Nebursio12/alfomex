@@ -55,10 +55,11 @@
   <!-- Mismos scripts que index.html -->
   <script type="module">
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-import { db } from "/js/indexmodulos/config.js";
-import { añadirAlCarrito } from "/js/indexmodulos/carritoindex.js";
+    import { db } from "/js/indexmodulos/config.js";
+    // producto.html (en el módulo script)
+    import { añadirAlCarrito } from "/js/indexmodulos/carritoindex.js";
 
-// Debug: Verifica que el módulo se cargue
+    // Debug: Verifica que el módulo se cargue
 console.log("🔥 Módulo producto cargado");
 
 document.addEventListener("DOMContentLoaded", async () => {
