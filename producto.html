@@ -4,16 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Producto - ALFOMEX</title>
-  <!-- Mismos estilos que index.html -->
   <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
-  <!-- Header idéntico a index.html -->
   <header>
-    <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
+    <button onclick="Carrito.abrir()" title="Carrito" class="icon-btn btn-carrito">
       <i class="fas fa-shopping-cart"></i>
       <span id="contadorCarrito" class="contador-carrito">0</span>
     </button>
@@ -23,21 +21,17 @@
     </nav>
   </header>
 
-  <!-- Contenedor principal con estilo de index.html -->
   <main class="producto-contenedor" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
-    <div class="producto-grid"> <!-- Nuevo contenedor grid -->
-      <!-- Imagen del producto -->
+    <div class="producto-grid">
       <div class="producto-imagen">
         <img id="imgPrincipal" src="" alt="Imagen del producto" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
       </div>
 
-      <!-- Detalles del producto -->
       <div class="producto-detalles">
         <h1 id="nombreProducto" style="font-size: 2rem; margin-bottom: 10px;">Cargando...</h1>
         <p id="precioProducto" style="font-size: 1.5rem; color: #000; font-weight: bold; margin-bottom: 20px;">$0.00</p>
         <p id="descripcionProducto" style="color: #666; line-height: 1.6; margin-bottom: 30px;">Cargando descripción...</p>
 
-        <!-- Botones con estilo de index.html -->
         <div class="acciones" style="display: flex; gap: 15px;">
           <button id="añadirCarrito" class="btn-añadir" style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 8px; cursor: pointer;">
             🛒 Añadir al carrito
@@ -50,90 +44,75 @@
     </div>
   </main>
 
-  
-
-  <!-- Mismos scripts que index.html -->
   <script type="module">
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
     import { db } from "/js/indexmodulos/config.js";
-    // producto.html (en el módulo script)
-    import { añadirAlCarrito } from "/js/indexmodulos/carritoindex.js";
+    import { Carrito } from "/js/indexmodulos/carritoindex.js";
+    import { abrirModal } from "/js/indexmodulos/modal.js"; // Asegúrate de exportar esta función en modal.js
 
-    // Debug: Verifica que el módulo se cargue
-console.log("🔥 Módulo producto cargado");
+    console.log("🔥 Módulo producto cargado");
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-  
-  // Debug: Verifica el ID
-  console.log("🔍 ID del producto:", id);
-  if (!id) {
-    console.error("❌ No se encontró ID en la URL");
-    mostrarError("Producto no encontrado");
-    return;
-  }
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      
+      console.log("🔍 ID del producto:", id);
+      if (!id) {
+        mostrarError("Producto no encontrado");
+        return;
+      }
 
-  try {
-    // Debug: Verifica la conexión a Firestore
-    console.log("📡 Conectando a Firestore...");
-    const ref = doc(db, "menu", id);
-    console.log("🔗 Referencia del documento:", ref.path);
-    
-    const snap = await getDoc(ref);
-    // Debug: Verifica si el documento existe
-    console.log("📄 Snap existe?", snap.exists());
+      try {
+        console.log("📡 Conectando a Firestore...");
+        const ref = doc(db, "menu", id);
+        const snap = await getDoc(ref);
 
-    if (!snap.exists()) {
-      console.error("⚠️ El documento no existe en Firestore");
-      mostrarError("Producto no encontrado");
-      return;
+        if (!snap.exists()) {
+          mostrarError("Producto no encontrado");
+          return;
+        }
+
+        const data = snap.data();
+        console.log("✅ Datos del producto:", data);
+
+        // Renderizar datos
+        document.getElementById("nombreProducto").textContent = data.nombre || "Nombre no disponible";
+        document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio}` : "$0";
+        document.getElementById("imgPrincipal").src = data.imagen || "https://via.placeholder.com/600x400?text=Imagen+no+disponible";
+        document.getElementById("imgPrincipal").onerror = function() {
+          this.src = "https://via.placeholder.com/600x400?text=Error+al+cargar+imagen";
+        };
+        document.getElementById("descripcionProducto").textContent = 
+          data.descripcion !== undefined ? data.descripcion : "Sin descripción disponible";
+
+        // Configurar botones
+        const producto = { id, ...data };
+        document.getElementById("añadirCarrito").addEventListener("click", () => {
+          console.log("🛒 Añadiendo producto:", producto);
+          Carrito.añadir(producto);
+        });
+
+        document.getElementById("comprarAhora").addEventListener("click", () => {
+          Carrito.comprar();
+        });
+
+      } catch (err) {
+        console.error("❌ Error crítico:", err);
+        mostrarError("Error al cargar el producto");
+      }
+    });
+
+    function mostrarError(mensaje) {
+      const main = document.querySelector("main");
+      main.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <h2>${mensaje}</h2>
+          <a href="index.html" style="color: #000;">Volver al catálogo</a>
+        </div>
+      `;
     }
-
-    const data = snap.data();
-    // Debug: Muestra los datos obtenidos
-    console.log("✅ Datos del producto:", data);
-
-    // Renderizar datos
-    document.getElementById("nombreProducto").textContent = data.nombre || "Nombre no disponible";
-    document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio}` : "$0";
-    document.getElementById("imgPrincipal").src = data.imagen || "https://via.placeholder.com/600x400?text=Imagen+no+disponible";
-    document.getElementById("imgPrincipal").onerror = function() {
-      this.src = "https://via.placeholder.com/600x400?text=Error+al+cargar+imagen";
-    };
-    document.getElementById("descripcionProducto").textContent = 
-     data.descripcion !== undefined ? data.descripcion : "Sin descripción disponible"
-
-    // Botones
-    const producto = { id, ...data };
-    document.getElementById("añadirCarrito").addEventListener("click", () => {
-      console.log("🛒 Añadiendo producto:", producto);
-      añadirAlCarrito(producto);
-    });
-
-    document.getElementById("comprarAhora").addEventListener("click", () => {
-      localStorage.setItem("carrito", JSON.stringify([producto]));
-      window.location.href = "index.html#carritoLista";
-    });
-
-  } catch (err) {
-    console.error("❌ Error crítico:", err);
-    mostrarError("Error al cargar el producto");
-  }
-});
-
-function mostrarError(mensaje) {
-  const main = document.querySelector("main");
-  main.innerHTML = `
-    <div style="text-align: center; padding: 40px;">
-      <h2>${mensaje}</h2>
-      <a href="index.html" style="color: #000;">Volver al catálogo</a>
-    </div>
-  `;
-}
-
   </script>
-  <!-- Footer idéntico a index.html -->
+
   <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
     <div style="margin: 10px 0;">
       <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
