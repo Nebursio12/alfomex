@@ -43,6 +43,11 @@
       </div>
     </div>
 
+    <!-- Área de depuración visible -->
+    <div id="debugArea" style="margin-top: 40px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+      <h3>Información de Depuración</h3>
+      <div id="debugLogs" class="debug-log">Esperando datos...</div>
+    </div>
   </main>
 
   <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
@@ -54,6 +59,21 @@
   </footer>
 
   <script type="module">
+    // Función para mostrar logs en pantalla y consola
+    function debugLog(message, isError = false) {
+      const debugDiv = document.getElementById("debugLogs");
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = document.createElement("div");
+      
+      logEntry.innerHTML = `[${timestamp}] ${message}`;
+      logEntry.style.color = isError ? "red" : "green";
+      
+      debugDiv.prepend(logEntry);
+      console.log(`%c${message}`, `color: ${isError ? "red" : "green"}`);
+    }
+
+    // Mostrar inicio del proceso
+    debugLog("🔵 Iniciando carga del producto...");
 
     try {
       // 1. Importaciones
