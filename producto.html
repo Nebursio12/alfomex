@@ -18,7 +18,7 @@
     </button>
     <div class="logo">ALFOMEX</div>
     <nav id="navOptions">
-      <button id="btnLogin">Entrar</button>
+      <button onclick="abrirModal()">Entrar</button>
     </nav>
   </header>
   <main class="producto-contenedor" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
@@ -57,13 +57,9 @@
       const { db } = await import("/js/indexmodulos/config.js");
       const { Carrito } = await import("/js/indexmodulos/carritoindex.js");
       // Importación condicional del modal
-      let abrirModal;
-      try {
-        const modalModule = await import("/js/indexmodulos/modal.js");
-        abrirModal = modalModule.abrirModal || window.abrirModal;
-      } catch (e) {
-        abrirModal = window.abrirModal;
-      }
+      await import("/js/indexmodulos/modal.js"); // solo asegura la carga
+      const abrirModal = window.abrirModal;
+
       // 2. Configuración de eventos
       document.getElementById("btnCarrito")?.addEventListener("click", () => {
         Carrito.abrir();
@@ -170,6 +166,7 @@
 
 <!-- Toast para mensajes -->
 <div id="toastCarrito" class="toast-bienvenida"></div>
+
 <script type="module" src="js/indexmodulos/config.js"defer></script>
 <script type="module" src="js/indexmodulos/authindex.js"defer></script>
 <script type="module" src="js/indexmodulos/modal.js"defer></script>
