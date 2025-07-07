@@ -11,13 +11,13 @@
 </head>
 <body>
   <header>
-    <button onclick="Carrito.abrir()" title="Carrito" class="icon-btn btn-carrito">
+    <button id="btnCarrito" title="Carrito" class="icon-btn btn-carrito">
       <i class="fas fa-shopping-cart"></i>
       <span id="contadorCarrito" class="contador-carrito">0</span>
     </button>
     <div class="logo">ALFOMEX</div>
     <nav id="navOptions">
-      <button onclick="abrirModal()">Entrar</button>
+      <button id="btnLogin">Entrar</button>
     </nav>
   </header>
 
@@ -45,69 +45,149 @@
   </main>
 
   <script type="module">
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-    import { db } from "/js/indexmodulos/config.js";
-    import { Carrito } from "/js/indexmodulos/carritoindex.js";
-    import { abrirModal } from "/js/indexmodulos/modal.js";  
+    // 1. Importaciones con verificación
+    try {
+      var firestoreImported = false;
+      var configImported = false;
+      var carritoImported = false;
+      var modalImported = false;
 
-    console.log("🔥 Módulo producto cargado");
+      const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+      firestoreImported = true;
+      console.log("✅ Firebase Firestore importado correctamente");
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
-      
-      console.log("🔍 ID del producto:", id);
-      if (!id) {
-        mostrarError("Producto no encontrado");
-        return;
-      }
+      const { db } = await import("/js/indexmodulos/config.js");
+      configImported = true;
+      console.log("✅ Configuración de Firebase importada correctamente");
 
+      const { Carrito } = await import("/js/indexmodulos/carritoindex.js");
+      carritoImported = true;
+      console.log("✅ Módulo Carrito importado correctamente");
+
+      const { abrirModal } = await import("/js/indexmodulos/modal.js");
+      modalImported = true;
+      console.log("✅ Módulo Modal importado correctamente");
+    } catch (importError) {
+      console.error("❌ Error en imports:", importError);
+      mostrarError("Error al cargar los recursos necesarios");
+      throw importError; // Detiene la ejecución
+    }
+
+    // 2. Configuración de eventos
+    document.getElementById("btnCarrito").addEventListener("click", () => {
       try {
+        Carrito.abrir();
+      } catch (error) {
+        console.error("Error al abrir carrito:", error);
+      }
+    });
+
+    document.getElementById("btnLogin").addEventListener("click", () => {
+      try {
+        abrirModal();
+      } catch (error) {
+        console.error("Error al abrir modal:", error);
+      }
+    });
+
+    // 3. Carga del producto
+    document.addEventListener("DOMContentLoaded", async () => {
+      console.group("🚀 Iniciando carga de producto");
+      
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        
+        console.log("🔍 ID del producto:", id);
+        if (!id) {
+          throw new Error("No se proporcionó ID de producto");
+        }
+
         console.log("📡 Conectando a Firestore...");
         const ref = doc(db, "menu", id);
+        console.log("🔗 Referencia creada:", ref.path);
+
         const snap = await getDoc(ref);
+        console.log("📄 Snap obtenido:", {
+          exists: snap.exists(),
+          data: snap.data()
+        });
 
         if (!snap.exists()) {
-          mostrarError("Producto no encontrado");
-          return;
+          throw new Error("El producto no existe en la base de datos");
         }
 
         const data = snap.data();
-        console.log("✅ Datos del producto:", data);
+        console.log("✅ Datos recibidos:", data);
 
-        // Renderizar datos
-        document.getElementById("nombreProducto").textContent = data.nombre || "Nombre no disponible";
-        document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio}` : "$0";
-        document.getElementById("imgPrincipal").src = data.imagen || "https://via.placeholder.com/600x400?text=Imagen+no+disponible";
-        document.getElementById("imgPrincipal").onerror = function() {
-          this.src = "https://via.placeholder.com/600x400?text=Error+al+cargar+imagen";
+        // Validación de datos
+        if (!data.nombre || !data.precio || !data.imagen) {
+          console.warn("⚠️ Datos incompletos:", {
+            nombre: !!data.nombre,
+            precio: !!data.precio,
+            imagen: !!data.imagen
+          });
+        }
+
+        // Renderizado
+        document.getElementById("nombreProducto").textContent = data.nombre || "Sin nombre";
+        document.getElementById("precioProducto").textContent = `$${data.precio?.toFixed(2) || "0.00"}`;
+        
+        const imgElement = document.getElementById("imgPrincipal");
+        imgElement.src = data.imagen || "https://via.placeholder.com/600x400?text=Sin+imagen";
+        imgElement.onerror = () => {
+          console.error("❌ Error al cargar imagen");
+          imgElement.src = "https://via.placeholder.com/600x400?text=Error+imagen";
         };
+        
         document.getElementById("descripcionProducto").textContent = 
-          data.descripcion !== undefined ? data.descripcion : "Sin descripción disponible";
+          data.descripcion || "Descripción no disponible";
 
-        // Configurar botones
-        const producto = { id, ...data };
+        // Configuración de botones
+        const producto = { 
+          id,
+          nombre: data.nombre || "Producto sin nombre",
+          precio: data.precio || 0,
+          imagen: data.imagen || "",
+          descripcion: data.descripcion || ""
+        };
+
         document.getElementById("añadirCarrito").addEventListener("click", () => {
           console.log("🛒 Añadiendo producto:", producto);
-          Carrito.añadir(producto);
+          try {
+            Carrito.añadir(producto);
+          } catch (error) {
+            console.error("Error al añadir al carrito:", error);
+          }
         });
 
         document.getElementById("comprarAhora").addEventListener("click", () => {
-          Carrito.comprar();
+          console.log("💳 Iniciando compra...");
+          try {
+            Carrito.comprar();
+          } catch (error) {
+            console.error("Error al procesar compra:", error);
+          }
         });
 
-      } catch (err) {
-        console.error("❌ Error crítico:", err);
-        mostrarError("Error al cargar el producto");
+        console.log("🎉 Producto cargado correctamente");
+
+      } catch (error) {
+        console.error("❌ Error en la carga:", error);
+        mostrarError(error.message || "Error al cargar el producto");
+      } finally {
+        console.groupEnd();
       }
     });
 
     function mostrarError(mensaje) {
+      console.log("🛑 Mostrando error al usuario:", mensaje);
       const main = document.querySelector("main");
       main.innerHTML = `
         <div style="text-align: center; padding: 40px;">
-          <h2>${mensaje}</h2>
-          <a href="index.html" style="color: #000;">Volver al catálogo</a>
+          <h2 style="color: #d32f2f;">${mensaje}</h2>
+          <a href="index.html" style="color: #000; text-decoration: underline;">Volver al catálogo</a>
+          <p style="margin-top: 20px; color: #666;">Consulte la consola para más detalles</p>
         </div>
       `;
     }
