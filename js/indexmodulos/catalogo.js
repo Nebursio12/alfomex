@@ -4,28 +4,31 @@ import {
   query,
   where
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
 import { db } from "/js/indexmodulos/config.js";
 
-async function mostrarMenu() {
-  const categorias = ["originales", "personajes", "marcas", "futbos"];
+// Categorías que coinciden con los IDs del HTML
+const categorias = [
+  { firestore: "originales", htmlId: "originaless" },
+  { firestore: "personajes", htmlId: "personajess" },
+  { firestore: "marcas", htmlId: "marcass" },
+  { firestore: "futbos", htmlId: "futboss" } // Ajusta esto en Firestore si es necesario
+];
 
+async function mostrarMenu() {
   for (const cat of categorias) {
-    const snapshot = await getDocs(
-      query(collection(db, "menu"), where("categoria", "==", cat))
+    const q = query(
+      collection(db, "menu"),
+      where("categoria", "==", cat.firestore)
     );
+    const snapshot = await getDocs(q);
+
+    const contenedor = document.getElementById(cat.htmlId);
+    if (!contenedor) continue;
 
     snapshot.forEach(doc => {
       const data = doc.data();
-      const contenedor = document.getElementById(`${cat}s`);
       const tarjeta = document.createElement("div");
       tarjeta.className = "alfombra";
-
-      const producto = {
-        nombre: data.nombre,
-        precio: data.precio,
-        imagen: data.imagen
-      };
 
       tarjeta.innerHTML = `
         <img src="${data.imagen}" alt="${data.nombre}" width="200" height="200" loading="lazy" />
@@ -37,14 +40,20 @@ async function mostrarMenu() {
         </div>
       `;
 
-      // Botón para añadir al carrito
-      const btnAñadir = tarjeta.querySelector(".btn-añadir");
-      btnAñadir.addEventListener("click", () => añadirAlCarrito(producto));
+      // Añadir al carrito
+      tarjeta.querySelector(".btn-añadir").addEventListener("click", () => {
+        const producto = {
+          id: doc.id,
+          nombre: data.nombre,
+          precio: data.precio,
+          imagen: data.imagen
+        };
+        añadirAlCarrito(producto); // Asegúrate de que esta función esté definida en carritoindex.js
+      });
 
-      // Botón para ir a la página del producto
-      const btnVerMas = tarjeta.querySelector(".btn-ver-mas");
-      btnVerMas.addEventListener("click", () => {
-        location.href = `producto.html?id=${doc.id}`;
+      // Ver detalles
+      tarjeta.querySelector(".btn-ver-mas").addEventListener("click", () => {
+        window.location.href = `producto.html?id=${doc.id}`;
       });
 
       contenedor.appendChild(tarjeta);
@@ -52,11 +61,5 @@ async function mostrarMenu() {
   }
 }
 
+// Iniciar
 mostrarMenu();
-
-window.scrollToCategoria = (id) => {
-  const section = document.getElementById(id);
-  if (section) {
-    section.scrollIntoView({ behavior: "smooth" });
-  }
-};
