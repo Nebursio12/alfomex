@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Producto - ALFOMEX</title>
   <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="producto.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +21,6 @@
       <button id="btnLogin">Entrar</button>
     </nav>
   </header>
-
   <main class="producto-contenedor" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
     <div class="producto-grid debug-border">
       <div class="producto-imagen debug-border">
@@ -42,11 +42,7 @@
         </div>
       </div>
     </div>
-    <!-- Área de depuración visible -->
-    <div id="debugArea" style="margin-top: 40px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
-    </div>
   </main>
-
   <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
     <div style="margin: 10px 0;">
       <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
@@ -54,7 +50,6 @@
     </div>
     <p>Copyright&copy; 2024. Alfomex</p>
   </footer>
-
   <script type="module">
     try {
       // 1. Importaciones
@@ -76,60 +71,42 @@
       document.getElementById("btnLogin")?.addEventListener("click", () => {
         abrirModal();
       });
-
       // 3. Carga del producto
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
-      
-      
       if (!id) {
         throw new Error("No se proporcionó ID de producto");
       }
-
-   
       const ref = doc(db, "menu", id);
       const snap = await getDoc(ref);
       const docData = {
         exists: snap.exists(),
         data: snap.data()
       };
-      
-
       if (!snap.exists()) {
         throw new Error("El producto no existe en Firestore");
       }
-
       const data = snap.data();
-     
-
       // 4. Validación de datos
       const requiredFields = {
         nombre: typeof data.nombre === "string",
         precio: typeof data.precio === "number",
         imagen: typeof data.imagen === "string"
       };
-   
-
       // 5. Renderizado
       document.getElementById("nombreProducto").textContent = data.nombre || "Sin nombre";
-      document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio.toFixed(2)}` : "$0.00";
-      
+      document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio.toFixed(2)}` : "$0.00";  
       const imgElement = document.getElementById("imgPrincipal");
-      if (data.imagen) {
-       
+      if (data.imagen) {    
         imgElement.src = data.imagen;
-        imgElement.onerror = () => {
-          
+        imgElement.onerror = () => {  
           imgElement.src = "https://via.placeholder.com/600x400?text=Imagen+no+disponible";
         };
       } else {
-       
         imgElement.src = "https://via.placeholder.com/600x400?text=Sin+imagen";
       }
-      
       document.getElementById("descripcionProducto").textContent = 
         data.descripcion || "Descripción no disponible";
-
       // 6. Configurar botones
       const producto = { 
         id,
@@ -138,23 +115,18 @@
         imagen: data.imagen || "",
         descripcion: data.descripcion || ""
       };
-
       document.getElementById("añadirCarrito").addEventListener("click", () => {
         try {
           Carrito.añadir(producto);
         } catch (error) {  
         }
       });
-
       document.getElementById("comprarAhora").addEventListener("click", () => {    
         try {
           Carrito.comprar();
         } catch (error) {
-
         }
       });
-
-
     } catch (error) {
     }
   </script>
