@@ -53,7 +53,8 @@ async function mostrarMenu() {
 
       // Ver detalles
       tarjeta.querySelector(".btn-ver-mas").addEventListener("click", () => {
-        window.location.href = `producto.html?id=${doc.id}`;
+         const version = new Date().getTime();  // Usa el timestamp actual como versión única
+         location.href = `producto.html?id=${doc.id}&v=${version}`;
       });
 
       contenedor.appendChild(tarjeta);
