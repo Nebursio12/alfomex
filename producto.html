@@ -50,6 +50,7 @@
     </div>
     <p>Copyright&copy; 2024. Alfomex</p>
   </footer>
+  <script type="module" src="js/indexmodulos/modal.js"></script>
   <script type="module">
     try {
       // 1. Importaciones
@@ -171,13 +172,6 @@
 <script type="module" src="js/indexmodulos/modal.js"defer></script>
 <script type="module" src="js/indexmodulos/toasts.js"defer></script>
 
-<script>
-  // Asegura que abrirModal esté disponible globalmente para onclick
-  window.addEventListener("DOMContentLoaded", () => {
-    if (!window.abrirModal) {
-      console.warn("abrirModal aún no está disponible");
-    }
-  });
-</script>
+
 </body>
 </html>
