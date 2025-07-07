@@ -1,22 +1,23 @@
+// Versión mejorada que soporta tanto módulos como uso global
 function abrirModal() {
-  // Esperar a que el DOM esté listo si aún no lo está
-  if (document.readyState !== "complete" && document.readyState !== "interactive") {
-    document.addEventListener("DOMContentLoaded", abrirModal);
-    return;
+  try {
+    if (typeof window.closeNav === "function") window.closeNav();
+    if (typeof window.toggleFormulario === "function") window.toggleFormulario(false);
+    
+    const modal = document.getElementById("loginModal");
+    const overlay = document.getElementById("modalOverlay");
+    
+    if (!modal || !overlay) {
+      console.error("Elementos del modal no encontrados");
+      return;
+    }
+    
+    modal.classList.add("active");
+    overlay.classList.add("active");
+  } catch (error) {
+    console.error("Error en abrirModal:", error);
   }
-
-  const modal = document.getElementById("loginModal");
-  const overlay = document.getElementById("modalOverlay");
-
-  if (!modal || !overlay) {
-    console.error("❌ Elementos del modal no encontrados");
-    return;
-  }
-
-  modal.classList.add("active");
-  overlay.classList.add("active");
 }
-
 
 function cerrarModal() {
   try {
