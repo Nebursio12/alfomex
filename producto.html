@@ -94,11 +94,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("✅ Datos del producto:", data);
 
     // Renderizar datos
-    document.getElementById("nombreProducto").textContent = data.nombre || "Sin nombre";
-    document.getElementById("precioProducto").textContent = `$${data.precio || "0"}`;
-    document.getElementById("imgPrincipal").src = data.imagen || "";
+    document.getElementById("nombreProducto").textContent = data.nombre || "Nombre no disponible";
+    document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio}` : "$0";
+    document.getElementById("imgPrincipal").src = data.imagen || "https://via.placeholder.com/600x400?text=Imagen+no+disponible";
+    document.getElementById("imgPrincipal").onerror = function() {
+      this.src = "https://via.placeholder.com/600x400?text=Error+al+cargar+imagen";
+    };
     document.getElementById("descripcionProducto").textContent = 
-      data.descripcion !== undefined ? data.descripcion : "Sin descripción disponible";
+     data.descripcion !== undefined ? data.descripcion : "Sin descripción disponible"
 
     // Botones
     const producto = { id, ...data };
