@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    
     <meta name="description" content="Compra o personaliza tu alfombra ideal con diseños únicos, calidad artesanal y envío en México. Descubre nuestro catálogo de alfombras en ALFOMEX.">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,18 +10,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-  
-    <!-- Añade un parámetro de versión a tus archivos -->
-    <link rel="stylesheet" href="index.css?v=1.2">
-    <script src="app.js?v=1.2"></script>
-
   </head>
   <body>
-  
     <header>
       <button onclick="abrirCarrito()" title="Carrito" class="icon-btn btn-carrito">
         <i class="fas fa-shopping-cart"></i>
@@ -33,15 +25,11 @@
         <button onclick="abrirModal()">Entrar</button>
       </nav>
     </header>
-
-    
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">×</a>
       <a href="alfomex.html">Pedido personalizado</a>
       <a href="#originaless">Originales</a>
     </div>
-
-    
     <div id="carritoLista" class="carrito-lista oculto">
       <div id="mensajeCarritoVacio" style="text-align:center; color:#666;">🛒 El carrito está vacío</div>
       <div id="resumenCarrito" style="margin-top: 15px; display: none;">
@@ -50,8 +38,6 @@
         <button onclick="comprarAhora()" style="width: 100%; padding: 10px; background: black; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Comprar Ahora</button>
       </div>
     </div>
-
-   
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal" id="loginModal">
       <h3 id="modalTitle">Entrar</h3>
@@ -87,28 +73,20 @@
       </div>
       <div id="errorMsg" class="error"></div>
     </div>
-
-   
     <div class="banner-solido">
       <div class="banner-imagenes">
         <img class="banner-img active" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/1.webp"width="300" height="200" loading="lazy" />
-
         <img class="banner-img" src="https://raw.githubusercontent.com/Nebursio12/alfomex/main/2.webp" width="300" height="200" loading="lazy" />
-
       </div>
       <a href="alfomex.html" class="boton-banner">🧶 Pedido personalizado</a>
       <div class="puntos-banner" id="puntosBanner"></div>
     </div>
-
-   
     <div class="botones-categorias">
       <button onclick="scrollToCategoria('originaless')">🎨 Originales</button>
       <button onclick="scrollToCategoria('personajess')">🎭 Personajes</button>
       <button onclick="scrollToCategoria('marcass')">💼 Marcas</button>
       <button onclick="scrollToCategoria('futboss')">⚽ Futbol</button>
     </div>
-
-   
     <main style="padding: 20px;">
       <h2>Originales</h2>
       <div id="originaless" class="catalogo"></div>
@@ -119,8 +97,6 @@
       <h2>Futbol</h2>
       <div id="futboss" class="catalogo"></div>
     </main>
-
-    
     <div id="recaptcha-container"></div>
     <div id="modalCodigo">
       <div class="modal" id="modalSMS" style="min-width:300px;">
@@ -134,12 +110,8 @@
         <div id="errorSMS" class="error red" style="margin-top:10px;"></div>
       </div>
     </div>
-
-    
     <div id="toastBienvenida" class="toast-bienvenida"></div>
     <div id="toastCarrito" class="toast-bienvenida"></div>
-
-  
     <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
       <div style="margin: 10px 0;">
         <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
@@ -147,8 +119,6 @@
       </div>
       <p>Copyright&copy; 2024. Alfomex</p>
     </footer>
-
-
     <script type="module" src="js/indexmodulos/config.js"defer></script>
     <script type="module" src="js/indexmodulos/authindex.js"defer></script>
     <script type="module" src="js/indexmodulos/catalogo.js"defer></script>
