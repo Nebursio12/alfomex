@@ -15,6 +15,42 @@
 </head>
 
 <body>
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal" id="loginModal">
+    <h3 id="modalTitle">Entrar</h3>
+    <div class="form-wrapper">
+      <div id="formLogin" class="form-slide active">
+        <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+        <input type="password" id="loginPassword" placeholder="Contraseña" />
+      </div>
+      <div id="recuperacion" style="display: none; margin-top: 10px;">
+        <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
+        <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 10px;">Enviar enlace</button>
+      </div>
+      <div id="formRegister" class="form-slide">
+        <input type="text" id="nombreRegistro" placeholder="Nombre" />
+        <input type="text" id="apellidoRegistro" placeholder="Apellido" />
+        <div style="display:flex; align-items:center;">
+          <span style="padding: 10px; background:#eee; border:1px solid #ccc; border-radius:6px 0 0 6px;">+52</span>
+          <input type="tel" id="telefonoRegistro" placeholder="10 dígitos" maxlength="10" inputmode="numeric" style="flex:1; border-radius:0 6px 6px 0;" />
+        </div>
+        <input type="email" id="registroEmail" placeholder="Correo electrónico" />
+        <input type="password" id="registroPassword" placeholder="Contraseña" />
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+      <button id="submitBtn"></button>
+      <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+      <button onclick="mostrarRecuperacion()" style="background: none; border: none; color: #000;">¿Olvidaste tu contraseña?</button>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+      <button onclick="toggleFormulario()" style="background: none; border: none; color: #000;">¿No tienes cuenta? Regístrate</button>
+    </div>
+    <div id="errorMsg" class="error"></div>
+  </div>
+
   <div id="overlayDrag" class="drag-overlay">
     <div class="drag-message" id="mensajeDrag">¡Suelta tu imagen aquí!</div>
   </div>
@@ -39,7 +75,7 @@
           🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
         </div>
       </div>
-      
+
     </div>
 
     <div class="logo">ALFOMEX</div>
@@ -159,6 +195,22 @@
     <p>&copy; 2024–2025 Alfomex. Todos los derechos reservados.</p>
   </footer>
 
+<div id="recaptcha-container"></div>
+    <div id="modalCodigo">
+      <div class="modal" id="modalSMS" style="min-width:300px;">
+        <h3>Verificación por SMS</h3>
+        <p>Te enviamos un código. Escríbelo abajo:</p>
+        <input type="text" id="codigoSMS" placeholder="Ej. 123456" maxlength="6" style="text-align:center;" autofocus />
+        <div style="display:flex; justify-content:space-between; margin-top:10px;">
+          <button id="btnVerificarCodigo">Verificar</button>
+          <button class="close-btn" onclick="cerrarModalCodigo()">Cancelar</button>
+        </div>
+        <div id="errorSMS" class="error red" style="margin-top:10px;"></div>
+      </div>
+    </div>
+  <div id="toastCarrito" class="toast-bienvenida"></div>
+  
+  <script type="module" src="js/indexmodulos/toasts.js"></script>
   <script type="module" src="js/modulos/firebase-config.js"defer></script>
   <script type="module" src="js/modulos/auth.js"defer></script>
   <script src="js/modulos/canvas.js"defer></script>
