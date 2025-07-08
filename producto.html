@@ -11,8 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
-
-  <!-- ✅ MODAL HTML debe ir antes de los scripts -->
   <div class="modal-overlay" id="modalOverlay"></div>
   <div class="modal" id="loginModal">
     <h3 id="modalTitle">Entrar</h3>
@@ -48,12 +46,6 @@
     </div>
     <div id="errorMsg" class="error"></div>
   </div>
-
-  
-
-  
-
-  <!-- Header -->
   <header>
     <button id="btnCarrito" title="Carrito" class="icon-btn btn-carrito">
       <i class="fas fa-shopping-cart"></i>
@@ -64,8 +56,6 @@
       <button onclick="abrirModal()">Entrar</button>
     </nav>
   </header>
-
-  <!-- Main -->
   <main class="producto-contenedor" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
     <div class="producto-grid debug-border">
       <div class="producto-imagen debug-border">
@@ -86,8 +76,6 @@
       </div>
     </div>
   </main>
-
-  <!-- Footer -->
   <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
     <div style="margin: 10px 0;">
       <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
@@ -95,7 +83,6 @@
     </div>
     <p>&copy; 2024. Alfomex</p>
   </footer>
-
   <div id="recaptcha-container"></div>
     <div id="modalCodigo">
       <div class="modal" id="modalSMS" style="min-width:300px;">
@@ -109,49 +96,34 @@
         <div id="errorSMS" class="error red" style="margin-top:10px;"></div>
       </div>
     </div>
-
   <div id="toastCarrito" class="toast-bienvenida"></div>
- 
-
-  
-
   <script type="module" src="js/indexmodulos/config.js"></script>
   <script type="module" src="js/indexmodulos/modal.js"></script>
   <script type="module" src="js/indexmodulos/authindex.js"></script>
   <script type="module" src="js/indexmodulos/toasts.js"></script>
-  <!-- Script principal -->
   <script type="module">
     const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
     const { db } = await import("/js/indexmodulos/config.js");
-    const { Carrito } = await import("/js/indexmodulos/carritoindex.js");
-
+    const { Carrito } = await import("/js/indexmodulos/carritoindex.js")
     const abrirModal = window.abrirModal;
-
     document.getElementById("btnCarrito")?.addEventListener("click", () => {
       Carrito.abrir();
     });
-
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
     if (!id) throw new Error("No se proporcionó ID de producto");
-
     const ref = doc(db, "menu", id);
     const snap = await getDoc(ref);
     if (!snap.exists()) throw new Error("El producto no existe en Firestore");
-
     const data = snap.data();
-
     document.getElementById("nombreProducto").textContent = data.nombre || "Sin nombre";
     document.getElementById("precioProducto").textContent = data.precio ? `$${data.precio.toFixed(2)}` : "$0.00";
-
     const imgElement = document.getElementById("imgPrincipal");
     imgElement.src = data.imagen || "https://via.placeholder.com/600x400?text=Sin+imagen";
     imgElement.onerror = () => {
       imgElement.src = "https://via.placeholder.com/600x400?text=Imagen+no+disponible";
     };
-
     document.getElementById("descripcionProducto").textContent = data.descripcion || "Descripción no disponible";
-
     const producto = {
       id,
       nombre: data.nombre || "Producto sin nombre",
@@ -159,15 +131,12 @@
       imagen: data.imagen || "",
       descripcion: data.descripcion || ""
     };
-
     document.getElementById("añadirCarrito").addEventListener("click", () => {
       Carrito.añadir(producto);
     });
-
     document.getElementById("comprarAhora").addEventListener("click", () => {
       Carrito.comprar();
     });
   </script>
-  
 </body>
 </html>
