@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=550, initial-scale=1, maximum-scale=5, user-scalable=yes" />
@@ -12,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="estilos.css">
 </head>
+
 <body>
   <div id="overlayDrag" class="drag-overlay">
     <div class="drag-message" id="mensajeDrag">¡Suelta tu imagen aquí!</div>
@@ -21,6 +23,7 @@
     <div class="aviso-movimiento">
       Por el momento, solo hay envíos en México
     </div>
+
     <button onclick="cerrarAviso()" class="cerrar-aviso">&times;</button>
   </div>
 
@@ -30,29 +33,35 @@
         <i class="fas fa-shopping-cart"></i>
         <span id="contadorCarrito" style="position:absolute; top:-6px; right:-6px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none;"></span>
       </button>
+
       <div id="carritoLista" class="carrito-lista oculto">
         <div id="mensajeCarritoVacio" style="display: none; color: #666; font-size: 0.95rem; text-align: center; padding: 20px;">
           🛒 Aún no hay nada en el carrito.<br>Agrega productos para verlos aquí.
         </div>
       </div>
+      
     </div>
+
     <div class="logo">ALFOMEX</div>
+
     <nav class="header-right" id="navOptions">
       <span style="color: white;">Cargando...</span>
     </nav>
+
   </header>
 
   <div class="modal-overlay" id="modalOverlay"></div>
 
   <input type="file" accept="image/png, image/jpeg" id="imgInput" style="display:none">
-
   <div class="contenedor-principal con-aviso-margin">
     <div class="lateral-izquierda" id="panelEstambre">
       <div id="descripcionContenido">
         <h3 style="color: black; margin-top: 0;">Descripción del Material</h3>
+
         <p>
           Nuestras alfombras están elaboradas con hilo de estambre 100% acrílico de la mejor calidad. Cada pieza es hecha a mano con dedicación y cuidado, brindando una textura suave, resistente y elegante para cualquier espacio del hogar.
         </p>
+
         <p>
           <strong>Cuidados:</strong><br>
           - Lavar a mano con agua fría y jabón neutro.<br>
@@ -60,54 +69,71 @@
           - Secar colgada a la sombra.<br>
           - Evitar el uso de lavadora o secadora para prolongar su vida útil.
         </p>
+
         <div class="vista-cuarto-toggle">
           <button class="btn-preview-cuarto" title="Vista previa en cuarto">
             <img src="cuarto.webp" alt="Vista previa" />
           </button>
         </div>
+
         <div id="vistaCuarto" class="zoom-container">
           <img src="cuarto.webp" alt="Cuarto de muestra" style="width: 100%; display: block;">
           <img id="vistaAlfombra" src="" class="zoom-img" alt="Vista previa" style="display: none;" />
         </div>
+
       </div>
+
     </div>
 
     <div class="canvas-contenedor">
       <canvas id="lienzo"></canvas>
+
       <div id="contenedorBotonImagen" style="text-align: center; margin-top: 10px;">
         <div id="botonCentralImagen" class="boton-central-imagen" onclick="document.getElementById('imgInput').click()">
           <i class="fas fa-image"></i> Seleccionar imagen
         </div>
       </div>
+
       <div id="toastNotificacion" class="toast-notificacion"></div>
+
       <div class="controls" id="zoomControles">
         <button id="zoomMas" class="zoom-btn" title="Zoom +">
           <i class="fas fa-search-plus"></i>
         </button>
+
         <button id="zoomMenos" class="zoom-btn" title="Zoom -">
           <i class="fas fa-search-minus"></i>
         </button>
+
       </div>
+
       <div id="areaCubierta"></div>
+
     </div>
 
     <div class="lateral">
       <div id="resultado"></div>
+
       <button id="añadirCarrito" class="boton-total">
         <i class="fas fa-paper-plane"></i>
         <span id="totalFinal">Solicitar pedido</span>
       </button>
-    </div>
-  </div>
 
+    </div>
+
+  </div>
+  
   <div id="modalVistaCuarto" class="modal-vista-cuarto" onclick="cerrarVistaCuarto()">
     <div class="modal-contenido" onclick="event.stopPropagation()">
       <div class="contenedor-superpuesto">
         <img id="modalFondoCuarto" src="cuarto.webp" alt="Cuarto" />
         <img id="modalImagenAlfombra" src="" alt="Alfombra" />
       </div>
+
       <button class="cerrar-modal" onclick="cerrarVistaCuarto()">✖</button>
+
     </div>
+
   </div>
 
   <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 9999;">
@@ -124,13 +150,14 @@
   <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
     <p><strong>¿Quiénes somos?</strong> Alfomex es una empresa dedicada a la personalización artesanal de alfombras únicas, combinando creatividad y calidad mexicana.</p>
     <p>Síguenos en redes sociales:</p>
+
     <div style="margin: 10px 0;">
       <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
       <a href="https://www.instagram.com/_alfomex/" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
     </div>
+
     <p>&copy; 2024–2025 Alfomex. Todos los derechos reservados.</p>
   </footer>
-
 
   <script type="module" src="js/modulos/firebase-config.js"defer></script>
   <script type="module" src="js/modulos/auth.js"defer></script>
