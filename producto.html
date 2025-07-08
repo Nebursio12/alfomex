@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Producto - ALFOMEX</title>
@@ -9,80 +11,133 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
 </head>
+
 <body>
+
   <div class="modal-overlay" id="modalOverlay"></div>
+
   <div class="modal" id="loginModal">
+
     <h3 id="modalTitle">Entrar</h3>
+
     <div class="form-wrapper">
+
       <div id="formLogin" class="form-slide active">
+
         <input type="email" id="loginEmail" placeholder="Correo electrónico" />
         <input type="password" id="loginPassword" placeholder="Contraseña" />
+
       </div>
+
       <div id="recuperacion" style="display: none; margin-top: 10px;">
+
         <input type="email" id="emailRecuperar" placeholder="Correo para recuperar" />
         <button onclick="enviarRecuperacion()" style="width: 100%; margin-top: 10px;">Enviar enlace</button>
+
       </div>
+
       <div id="formRegister" class="form-slide">
+
         <input type="text" id="nombreRegistro" placeholder="Nombre" />
         <input type="text" id="apellidoRegistro" placeholder="Apellido" />
+
         <div style="display:flex; align-items:center;">
           <span style="padding: 10px; background:#eee; border:1px solid #ccc; border-radius:6px 0 0 6px;">+52</span>
           <input type="tel" id="telefonoRegistro" placeholder="10 dígitos" maxlength="10" inputmode="numeric" style="flex:1; border-radius:0 6px 6px 0;" />
         </div>
+
         <input type="email" id="registroEmail" placeholder="Correo electrónico" />
         <input type="password" id="registroPassword" placeholder="Contraseña" />
+
       </div>
+
     </div>
+
     <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+
       <button id="submitBtn"></button>
       <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+
     </div>
+
     <div style="text-align: center; margin-top: 10px;">
+
       <button onclick="mostrarRecuperacion()" style="background: none; border: none; color: #000;">¿Olvidaste tu contraseña?</button>
+
     </div>
+
     <div style="text-align: center; margin-top: 10px;">
+
       <button onclick="toggleFormulario()" style="background: none; border: none; color: #000;">¿No tienes cuenta? Regístrate</button>
+
     </div>
+
     <div id="errorMsg" class="error"></div>
+
   </div>
+
   <header>
+
     <button id="btnCarrito" title="Carrito" class="icon-btn btn-carrito">
+
       <i class="fas fa-shopping-cart"></i>
       <span id="contadorCarrito" class="contador-carrito">0</span>
+
     </button>
+
     <div class="logo">ALFOMEX</div>
     <nav id="navOptions">
+
       <button onclick="abrirModal()">Entrar</button>
+
     </nav>
+
   </header>
+
   <main class="producto-contenedor" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
     <div class="producto-grid debug-border">
       <div class="producto-imagen debug-border">
         <img id="imgPrincipal" src="" alt="Imagen del producto" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
       </div>
+
       <div class="producto-detalles debug-border">
+
         <h1 id="nombreProducto" style="font-size: 2rem; margin-bottom: 10px;">Cargando...</h1>
         <p id="precioProducto" style="font-size: 1.5rem; color: #000; font-weight: bold; margin-bottom: 20px;">$0.00</p>
         <p id="descripcionProducto" style="color: #666; line-height: 1.6; margin-bottom: 30px;">Cargando descripción...</p>
+
         <div class="acciones" style="display: flex; gap: 15px;">
+
           <button id="añadirCarrito" class="btn-añadir" style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 8px; cursor: pointer;">
             🛒 Añadir al carrito
           </button>
+
           <button id="comprarAhora" class="btn-comprar" style="padding: 12px 20px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer;">
             💳 Comprar ahora
           </button>
+
         </div>
+
       </div>
+
     </div>
+
   </main>
+
   <footer style="background: #000; color: white; text-align: center; padding: 20px; margin-top: 40px;">
+    <p><strong>¿Quiénes somos?</strong> Alfomex es una empresa dedicada a la personalización artesanal de alfombras únicas, combinando creatividad y calidad mexicana.</p>
+    <p>Síguenos en redes sociales:</p>
+
     <div style="margin: 10px 0;">
       <a href="https://www.facebook.com/profile.php?id=61559232980025" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
       <a href="https://www.instagram.com/_alfomex/" target="_blank" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
     </div>
+
     <p>&copy; 2024. Alfomex</p>
   </footer>
+
   <div id="recaptcha-container"></div>
     <div id="modalCodigo">
       <div class="modal" id="modalSMS" style="min-width:300px;">
