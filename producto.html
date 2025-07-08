@@ -96,9 +96,25 @@
     <p>&copy; 2024. Alfomex</p>
   </footer>
 
-  <!-- Toast -->
+  <div id="recaptcha-container"></div>
+    <div id="modalCodigo">
+      <div class="modal" id="modalSMS" style="min-width:300px;">
+        <h3>Verificación por SMS</h3>
+        <p>Te enviamos un código. Escríbelo abajo:</p>
+        <input type="text" id="codigoSMS" placeholder="Ej. 123456" maxlength="6" style="text-align:center;" autofocus />
+        <div style="display:flex; justify-content:space-between; margin-top:10px;">
+          <button id="btnVerificarCodigo">Verificar</button>
+          <button class="close-btn" onclick="cerrarModalCodigo()">Cancelar</button>
+        </div>
+        <div id="errorSMS" class="error red" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
   <div id="toastCarrito" class="toast-bienvenida"></div>
-      <!-- Scripts -->
+ 
+
+  
+
   <script type="module" src="js/indexmodulos/config.js"></script>
   <script type="module" src="js/indexmodulos/modal.js"></script>
   <script type="module" src="js/indexmodulos/authindex.js"></script>
